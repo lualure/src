@@ -4,7 +4,7 @@
 load() { ## ## reload environment ## shell
  . $Here/etc/bashrc
 }
-install() { ## ## install DARE (need only be run once) ## install
+install() { ## ## install LURE (need only be run once) ## install
   if [ "$(uname)" == "Darwin" ]; then
       /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
   fi
@@ -54,7 +54,7 @@ locco() {
    git add $Here/docs/*.html
    git add $Here/docs/*.css
 }
-vi() { ## FILE ## edit files using the DARE config stuff ## shell
+vi() { ## FILE ## edit files using the LURE config stuff ## shell
     vim -u "$Here/etc/vimrc" $*
     echo "Done!"
 }
@@ -152,13 +152,13 @@ EOF
 }
 twins() { ## STEM ## makes STEM.lua and unit test file STEMok.lua ## shell
   f=$(basename $1 ".lua")
-  if [ ! -f "${f}.lua" ]; then 
-	   _twins1 $f utilities  > ${f}.lua
+  if [ ! -f "$Here/src/${f}.lua" ]; then 
+	   _twins1 $f utilities  > $Here/src/${f}.lua
   fi
-  if [ ! -f "${f}ok.lua" ]; then
-	   _twins1 ${f}ok "unit tests for $f" > ${f}ok.lua
+  if [ ! -f "$Here/tests/${f}ok.lua" ]; then
+	   _twins1 ${f}ok "unit tests for $f" > $Here/tests/${f}ok.lua
 	   git add ${f}ok.lua
-	   cat <<-EOF >> ${f}ok.lua
+	   cat <<-EOF >> $Here/tests/${f}ok.lua
 	local o=require "tests"	
 	local r=require "random"
 	local x=require "$f"
@@ -171,9 +171,9 @@ twins() { ## STEM ## makes STEM.lua and unit test file STEMok.lua ## shell
 	o.k{_test1}
 	EOF
   fi
-  git add ${f}.lua
-  git add ${f}ok.lua
-  wc ${f}.lua ${f}ok.lua
+  git add $Here/src/${f}.lua
+  git add $Here/tests/${f}ok.lua
+  wc $Here/src/${f}.lua $Here/tests/${f}ok.lua
 }
 norman() { ## ## about Norman Vaughan ## misc
   cat<<-EOF | fmt -60
@@ -224,7 +224,7 @@ setup() {
   alias ls='ls -G'
   export LESS='-R'
   export LESSOPEN='|$Here/etc/lessfilter %s'
-  Tag="DARE"
+  Tag="LURE"
   _c1="\[\033[01;32m\]"
   _c2="\[\033[01;34m\]"
   _c3="\[\033[31m\]"
@@ -238,7 +238,7 @@ setup() {
   white=$(tput setaf 15)
 }
 promptcom() {
-   PROMPT_COMMAND='echo  -ne "${_c6}${Tag}> \033]0; $(here ../..)/$(here ..)/$(here .)\007";PS1="${_c1} $(here ../..)/$_c2$(here ..)/$_c3$(here .) ${_c6}\!>${_c0}\e[m "'
+   PROMPT_COMMAND='echo  -ne "${_c6}${Tag}> \033]0;$(here ../..)/$(here ..)/$(here .)\007";PS1="${_c1}$(here ../..)/$_c2$(here ..)/$_c3$(here .) ${_c6}\!>${_c0}\e[m "'
 } 
 banner() {
   echo -n "${ltyl}" 

@@ -3,8 +3,16 @@
 
 ## Coding Style
 
+For speed reasons, using luajit rather than just (slower) old lua.
+
 Test-driven development (ish). Many files in `src/X.lua` are paired
-with `tests/Xok.lua` with test, demo examples.
+with `tests/Xok.lua` with test, demo examples. So best to
+start this with
+
+So my environment uses the following alias for LUA:
+
+    Here="the directory that contains src and tests"
+    alias lua="LUA_PATH=\"$Here/src/?.lua;$Here/tests/?.lua;;\" $(which luajit) "
 
 Written for teaching purposes. So many many small files, each with
 specific functions.
