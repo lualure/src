@@ -259,11 +259,12 @@ AoS    "V""    "V"
 EOF
 echo -n "${white}"
 }
-
+##########################################################
+# start up actions
 setup
 promptcom
-if [ -f "$HOME/.config/dare/config" ]; then
-  . "$HOME/.config/dare/config"
+if [ -f "$HOME/.config/lure/config" ]; then
+  . "$HOME/.config/lure/config"
 fi
 banner
 help
