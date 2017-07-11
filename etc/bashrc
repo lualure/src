@@ -1,0 +1,276 @@
+#!/bin/bash
+# -*- sh -*-
+
+load() { ## ## reload environment ## shell
+ . $Here/etc/bashrc
+}
+install() { ## ## install DARE (need only be run once) ## install
+  if [ "$(uname)" == "Darwin" ]; then
+      /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+  fi
+  sudo easy_install Pygments
+  for f in lua luajit vim git make gawk htop ranger asciiquarium cmatrix ; do
+    if which $f; then true; else 
+     if [ "$(uname)" == "Darwin" ]; then
+        brew install $f
+     elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+        sudo apt-get install $f
+     elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
+        choco install $f
+     elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW64_NT" ]; then
+        choco install $f
+     fi 
+   fi
+  done
+  if  [ ! -d "$HOME/.vim/bundle/Vundle.vim" ]; then
+    git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim
+    vim -u "$Here/etc/vimrc" -c 'PluginInstall' -c 'qa!'
+  fi
+  if [ ! -f "$Here/.gitignore" ]; then
+     cat <<EOF > "$Here/.gitignore"
+#vimstuff
+[._]*.s[a-w][a-z]
+[._]s[a-w][a-z]
+*.un~
+Session.vim
+netrwhist
+*~
+# doc stuff
+locco
+# mac stuff
+.DS_Store
+EOF
+  fi
+  if [ ! -d "$Here/etc/locco" ]; then
+    git clone https://github.com/rgieseke/locco etc/locco
+  fi
+  gitting
+  timm
+}
+locco() {
+   (cd $Here/etc/locco
+   ./locco.lua ../../$1)
+   git add $Here/docs
+   git add $Here/docs/*.html
+   git add $Here/docs/*.css
+}
+vi() { ## FILE ## edit files using the DARE config stuff ## shell
+    vim -u "$Here/etc/vimrc" $*
+    echo "Done!"
+}
+ok() { ## STEM ## shorthand for lua STEMok.lua ## shell
+  luajit ${1}ok.lua
+}
+show() { ## FUN ## display definition of FUN ## shell
+  type $1
+}
+oks() { ## ## run all the Xok.lua files ## shell
+  luajit -e "$(ls *ok.lua | gawk -F\. '{print "require \""$1"\""}')"
+}
+bye() { ## ## push all to on-line repo ## git
+  gitting
+	git status
+	git commit -am "saving"
+ git push origin master
+}
+hi() { ## ## pull updates from on-line repo ## git
+  gitting
+	git push origin master
+}
+gitting() {
+	git config --global credential.helper cache
+	git config credential.helper 'cache --timeout=3600'
+	git config --global push.default simple
+}
+timm() { ## ## Private: sets up this repo for timm ## install
+	git config --global user.name "Tim Menzies"
+	git config --global user.email tim.menzies@gmail.com
+}
+legal() { ## ## show copyright notice ## misc
+  cat $Here/LICENSE.md
+}
+help() { ## ## show help ## misc
+  echo "${blue}"
+  echo "Options:"
+  grep '##' $Here/etc/bashrc | 
+  sort -t\# -k 7  | 
+  grep -v 'grep' |
+  gawk '  function trim(x) {
+            sub(/^[ \t]*/,"",x)
+            sub(/[ \t]*$/,"",x)
+            return x
+          }
+           BEGIN  { FS="##" }  
+          /BEGIN/ { next    }
+          { for(i=1;i<=NF;i++)
+               $i=trim($i)
+            pad="         "
+            pre=  $NF==last ? pad : toupper($NF)":\n" pad
+            last=$NF 
+            gsub(/[(){]/,"",$1)
+            opts= NF==4 ? $2 : ""
+            text= NF==4 ? $3 : $2
+            printf("%s%-8s%-10s%s\n",pre,$1,opts,text)}
+              '
+  echo -n "${white}"
+}
+quit() { ## ## exit ## shell
+  exit
+}
+make() { ## [OPTS] ## run any Makefile at the root of this repo ## shell
+  root=$(git rev-parse --show-toplevel)
+  if [ -n "$root" ]; then
+    ( cd $root; _make1 $*)
+  else
+    /usr/bin/make $*
+  fi
+}
+_make1() {
+    if [ -f Makefile ]; then
+        echo "My making..."
+        /usr/bin/make $*
+        return 0
+    fi
+    echo "nothing to do"
+}
+_twins1() {
+cat <<EOF
+--[[
+
+# $1 : $2
+
+$(cat $Here/LICENSE.md)
+
+------------------------------------------------------
+
+--]]
+
+require "show"
+local the=require "config"
+	
+EOF
+}
+twins() { ## STEM ## makes STEM.lua and unit test file STEMok.lua ## shell
+  f=$(basename $1 ".lua")
+  if [ ! -f "${f}.lua" ]; then 
+	   _twins1 $f utilities  > ${f}.lua
+  fi
+  if [ ! -f "${f}ok.lua" ]; then
+	   _twins1 ${f}ok "unit tests for $f" > ${f}ok.lua
+	   git add ${f}ok.lua
+	   cat <<-EOF >> ${f}ok.lua
+	local o=require "tests"	
+	local r=require "random"
+	local x=require "$f"
+ 
+	local function _test1()
+        	assert(true)
+	end
+
+	r.seed(1)
+	o.k{_test1}
+	EOF
+  fi
+  git add ${f}.lua
+  git add ${f}ok.lua
+  wc ${f}.lua ${f}ok.lua
+}
+norman() { ## ## about Norman Vaughan ## misc
+  cat<<-EOF | fmt -60
+  
+	"Dream big and dare to fail."   
+	 -- Norman Vaughan
+
+	Norman Vaughan was born on December 19, 1905, in Salem, Massachusetts,
+	as the son of a wealthy leather tanner and shoe manufacturer.
+
+	In his youth, he became fascinated by tales of early-century polar
+	explorers. He dropped out of Harvard in 1928 when he heard that
+	Admiral Richard E. Byrd was organizing an expedition to Antarctica.
+	Admiral Byrd accepted him on the 1928–1930 expedition, eventually
+	naming a mountain on the continent in his honor. 
+	In 1994, at the age of 88, Vaughan participated in an expedition
+	to climb the 10,302 ft (3,150 m) Mount Vaughan. 
+
+	In 1932, he competed in the Winter Olympics in Lake Placid, New
+	York, in the sprint mushing demonstration sport.
+
+	During World War II, Vaughan was employed by U.S. Army Air Forces
+	Search and Rescue as a dogsled driver, attaining the rank of
+	colonel and engaging in many rescue missions in Greenland. 
+
+	Norman Vaughan moved to Alaska at the age of 68. Bankrupt and
+	divorced, he rebuilt his life, competing in 13 Iditarod races and
+	"crashing" the Presidential Inauguration parade in 1977, bringing
+	sled dogs to represent his adopted state. In 1981 and 1985, he
+	and his Alaskan contingent formally participated in the parade.
+	He also had a mountain named after him in the Antarctic.
+
+	He is survived by his fourth wife, the former Carolyn Muegge, who
+	has also raced in the Iditarod, and a son and daughter from his
+	earlier marriages. On the celebration of his 100th birthday on
+	December 18, 2005, surrounded by over 100 friends and family, he
+	had champagne, his first drink of liquor in his life, after
+	promising his mother he wouldn't drink until he was 100. Several
+	days later, he died in the Providence Alaska Medical Center in
+	Anchorage at around 10:30 AM on December 23, 2005. His wife and
+	some close friends were with him.
+	EOF
+}
+here() { cd $1; basename "$PWD"; }
+
+setup() {
+  alias lua="LUA_PATH=\"$Here/src/?.lua;$Here/tests/?.lua;;\" $(which luajit) "
+  lias ls='ls -G'
+  export LESS='-R'
+  export LESSOPEN='|$Here/etc/lessfilter %s'
+  Tag="DARE"
+  _c1="\[\033[01;32m\]"
+  _c2="\[\033[01;34m\]"
+  _c3="\[\033[31m\]"
+  _c6="\033[33m"
+  _c5="\[\033[35m\]$"
+  _c0="\[\033[00m\]"
+  _c7="[\033]01;19\]"
+  red=$(tput setaf 1)
+  blue=$(tput setaf 6)
+  ltyl=$(tput setaf 11)
+  white=$(tput setaf 15)
+}
+promptcom() {
+   PROMPT_COMMAND='echo  -ne "${_c6}${Tag}> \033]0; $(here ../..)/$(here ..)/$(here .)\007";PS1="${_c1} $(here ../..)/$_c2$(here ..)/$_c3$(here .) ${_c6}\!>${_c0}\e[m "'
+} 
+banner() {
+  echo -n "${ltyl}" 
+
+  cat <<'EOF'
+
+ +                       |  Lua Lure v1.00                  
+        _.--"~~ __"-.  . |  https://github.com/lualure/info       
+ .   ,-"     .-~  ~"-\   | 
+   .^       /       ( )  |  A little Lua goes a long way.
+  /    .  Y              |     
+ /      \_j       .      |  "Dream big and dare to fail."
+Y     ( --l__            |   -- Norman Vaughan
+|            "-.                            
+|      (___     \             
+|        .)~-.__/    .    
+l        _)                
+ \      "l                
+  \       \        +       
+   \       ^.             
++   ^.       "-.          
+ .    "-.__     ~-.___,    
+           "--.._____.^  -- Row     
+EOF
+echo -n "${white}"
+}
+
+setup
+promptcom
+if [ -f "$HOME/.config/dare/config" ]; then
+  . "$HOME/.config/dare/config"
+fi
+banner
+help
+
