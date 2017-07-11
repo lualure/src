@@ -221,7 +221,7 @@ here() { cd $1; basename "$PWD"; }
 
 setup() {
   alias lua="LUA_PATH=\"$Here/src/?.lua;$Here/tests/?.lua;;\" $(which luajit) "
-  lias ls='ls -G'
+  alias ls='ls -G'
   export LESS='-R'
   export LESSOPEN='|$Here/etc/lessfilter %s'
   Tag="DARE"
@@ -245,23 +245,17 @@ banner() {
 
   cat <<'EOF'
 
- +                       |  Lua Lure v1.00                  
-        _.--"~~ __"-.  . |  https://github.com/lualure/info       
- .   ,-"     .-~  ~"-\   | 
-   .^       /       ( )  |  A little Lua goes a long way.
-  /    .  Y              |     
- /      \_j       .      |  "Dream big and dare to fail."
-Y     ( --l__            |   -- Norman Vaughan
-|            "-.                            
-|      (___     \             
-|        .)~-.__/    .    
-l        _)                
- \      "l                
-  \       \        +       
-   \       ^.             
-+   ^.       "-.          
- .    "-.__     ~-.___,    
-           "--.._____.^  -- Row     
+           .'|_.-            | Lure v1.00
+         .'  '  /_           | https://github.com/lualure/info
+      .-"    -.   '>         |
+   .- -. -.    '. /    /|_   | "Dream big and date to fail."
+  .-.--.-.       ' >  /  /   | -- Norman Vaughan
+ (o( o( o )       \_."  <  
+  '-'-''-'            ) <
+(       _.-'-.   ._\.  _\ 
+ '----"/--.__.-) _-  \|
+AoS    "V""    "V"  
+  
 EOF
 echo -n "${white}"
 }
