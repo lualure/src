@@ -1,4 +1,4 @@
-DARE, Copyright (c) 2017, Tim Menzies
+LURE, Copyright (c) 2017, Tim Menzies
 All rights reserved, BSD 3-Clause License
 
 Redistribution and use in source and binary forms, with
