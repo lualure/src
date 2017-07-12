@@ -11,8 +11,8 @@ start this with
 
 So my environment uses the following alias for LUA:
 
-    Here="the directory that contains src and tests"
-    alias lua="LUA_PATH=\"$Here/src/?.lua;$Here/tests/?.lua;;\" $(which luajit) "
+    Here="the directory that contains lib and tests"
+    alias lua="LUA_PATH=\"$Here/lib/?.lua;$Here/tests/?.lua;;\" $(which luajit) "
 
 Written for teaching purposes. So many many small files, each with
 specific functions.
@@ -34,4 +34,4 @@ DOCCO-stype documentation; i.e. comments in Markdown get redered
 as html.
 
 Github pages: the repo `github.com/lualure/info` stores html files
-rendered from `github.com/lualure/src`.
+rendered from `github.com/lualure/lib`.

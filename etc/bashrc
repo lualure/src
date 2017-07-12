@@ -57,13 +57,20 @@ doco() { ## ## generate html doco files ## shell
      echo "   git clone http://github.com/lualure/info"
    else  
      cd $Here/etc/locco
-     for i in ${Here}/src/*.lua; do
+     (echo "-- # Index"
+     echo ""
+     for i in ${Here}/lib/*.lua; do
+       f=$(basename $i '.lua')
+       l="$(basename $i '.lua').html"
+       echo "-- - [$f]($l) "
+     done
+     echo "") > $Here/lib/index.lua
+     for i in ../../lib/*.lua; do
        ./locco.lua $i
      done
-     for i in ${Here}/src/*.lua; do
      cd $Here
      cd $Here/../info
-     cp $Here/src/docs/* .
+     cp $Here/lib/docs/* .
      git add *
      make
      cd "$Here"
@@ -125,7 +132,8 @@ help() { ## ## show help ## misc
             gsub(/[(){]/,"",$1)
             opts= NF==4 ? $2 : ""
             text= NF==4 ? $3 : $2
-            printf("%s%-8s%-10s%s\n",pre,$1,opts,text)}
+	    if ($3)
+	       printf("%s%-8s%-10s%s\n",pre,$1,opts,text)}
               '
   echo -n "${white}"
 }
@@ -167,8 +175,8 @@ EOF
 }
 twins() { ## STEM ## makes STEM.lua and unit test file STEMok.lua ## shell
   f=$(basename $1 ".lua")
-  if [ ! -f "$Here/src/${f}.lua" ]; then 
-	   _twins1 $f utilities  > $Here/src/${f}.lua
+  if [ ! -f "$Here/lib/${f}.lua" ]; then 
+	   _twins1 $f utilities  > $Here/lib/${f}.lua
   fi
   if [ ! -f "$Here/tests/${f}ok.lua" ]; then
 	   _twins1 ${f}ok "unit tests for $f" > $Here/tests/${f}ok.lua
@@ -186,9 +194,9 @@ twins() { ## STEM ## makes STEM.lua and unit test file STEMok.lua ## shell
 	o.k{_test1}
 	EOF
   fi
-  git add $Here/src/${f}.lua
+  git add $Here/lib/${f}.lua
   git add $Here/tests/${f}ok.lua
-  wc $Here/src/${f}.lua $Here/tests/${f}ok.lua
+  wc $Here/lib/${f}.lua $Here/tests/${f}ok.lua
 }
 norman() { ## ## about Norman Vaughan ## misc
   cat<<-EOF | fmt -60
@@ -237,11 +245,11 @@ here() { cd $1; basename "$PWD"; }
 lua() {
   f=$1
   shift
-  if [ -f "$Here/src/$f" ]; then
-    LUA_PATH="$Here/src/?.lua;$Here/tests/?.lua;;" $(which lua) $Here/$d/$f "$*"
-    d=src
+  if [ -f "$Here/lib/$f" ]; then
+    LUA_PATH="$Here/lib/?.lua;$Here/tests/?.lua;;" $(which lua) $Here/$d/$f "$*"
+    d=lib
   elif [ -f "$Here/tests/$f" ]; then
-  LUA_PATH="$Here/src/?.lua;$Here/tests/?.lua;;" $(which lua) $Here/$d/$f "$*"
+  LUA_PATH="$Here/lib/?.lua;$Here/tests/?.lua;;" $(which lua) $Here/$d/$f "$*"
     d=tests
   else
     echo "not found $f"
