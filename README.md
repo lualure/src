@@ -1,5 +1,32 @@
 # LURE
 
+## Install
+
+    git clone http://github.com/lualure/src src
+    Here=$PWD/src 
+
+## Usage
+
+Here's my shell `lua` function. Note that it looks for
+files either in `tests` or `lib`. Also, it calls the
+code using `luajit`.
+
+    lua() {
+      f=$1
+      shift
+      for d in lib tests; do
+        if [ -f "$Here/$d/$f" ]; then
+          LUA_PATH="$Here/lib/?.lua;$Here/tests/?.lua;;" \
+            $(which luajit) $Here/$d/$f "$*"
+          return 0
+        fi
+      done
+      echo "not found $f"
+    }
+
+For example, this call runs the unit tests for `lists.lua` found in `listsok.lua`.
+
+    lua listsok.lua 
 
 ## Coding Style
 
@@ -7,11 +34,7 @@
 - Test-driven development (ish). Many files in `src/X.lua` are paired
   with `tests/Xok.lua` with test, demo examples. So best to
   start this with
-- So my environment uses the following alias for LUA:
-
-    Here="the directory that contains lib and tests"
-    alias lua="LUA_PATH=\"$Here/lib/?.lua;$Here/tests/?.lua;;\" $(which luajit) "
-
+- So my environment uses the calling convention shown above.
 - Written for teaching purposes. So many many small files, each with
   specific functions.
 - Much encapsulation: nearly all my functions and variables are `local`.

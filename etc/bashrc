@@ -258,14 +258,14 @@ here() { cd $1; basename "$PWD"; }
 lua() {
   f=$1
   shift
-  if [ -f "$Here/lib/$f" ]; then
-    LUA_PATH="$Here/lib/?.lua;$Here/tests/?.lua;;" $(which lua) $Here/lib/$f "$*"
-  elif [ -f "$Here/tests/$f" ]; then
-    LUA_PATH="$Here/lib/?.lua;$Here/tests/?.lua;;" $(which lua) $Here/tests/$f "$*"
-  else
-    echo "not found $f"
-    return 1
-  fi
+  for d in lib tests; do
+    if [ -f "$Here/$d/$f" ]; then
+      LUA_PATH="$Here/lib/?.lua;$Here/tests/?.lua;;" \
+        $(which luajit) $Here/$d/$f "$*"
+      return 0
+    fi
+  done
+  echo "not found $f"
 }
 setup() {
   alias ls='ls -G'
