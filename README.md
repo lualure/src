@@ -23,6 +23,7 @@
   do that in Lua. Too tempting to make base code on B.S. OO choices.
 - Much functional style. Lots of passing functions as arguments,
   returning closures, etc etc.
+- Instead of using `self` , this code used `i`.
 - DOCCO-stype documentation; i.e. comments in Markdown get redered
   as html.
 = Github pages: the repo `github.com/lualure/info` stores html files

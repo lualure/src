@@ -49,7 +49,9 @@ local function update(i,cells)
 local function copy(i) 
   return header(create(),i.spec) end
 -------------------------------------------------------------
-local discretize 
+local function discretize (i)
+  local = map(function (w) end, i.spec)
+  j= copy(i) end
 -------------------------------------------------------------
 local function dominates(i)
   for _,r in pairs(i.rows) do 
