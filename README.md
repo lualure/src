@@ -45,25 +45,51 @@ This call runs the unit tests for `lists.lua` found in `listsok.lua`.
 
 ## Coding Style
 
-- For speed reasons, this code uses `luajit` rather than just (slower) old `lua`.
-- Test-driven development (ish). Many files in `src/X.lua` are paired
-  with `tests/Xok.lua` with test, demo examples. So best to
-  start this with
-- So my environment uses the calling convention shown above.
-- Written for teaching purposes. So many many small files, each with
-  specific functions.
-- Much encapsulation: nearly all my functions and variables are `local`.
-     - Exception1: I define the global definition of `print` so it can display tables.
-     - Exception2: there are others... not many... can't think of them right now.
-- Some (module-based) polymorphism. When the one verb applies to many
-  types, those verbs are in different files and differntiated by
-  public interface.
-- No inheritance, hence no object-oriented style. Too many ways to
-  do that in Lua. Too tempting to make base code on B.S. OO choices.
+Speed freak: 
+
+- I uses `luajit` rather than just (slower) old `lua`.
+
+Test-driven development (ish):
+
+- Many files in `src/X.lua` have demos, tests in
+  with `tests/Xok.lua` with test, demo examples. 
+
+Written for teaching purposes:
+
+- So many many small files, each with specific functions.
+
+Functional programming rules:
+
 - Much functional style. Lots of passing functions as arguments,
   returning closures, etc etc.
-- Instead of using `self` , this code used `i`.
+
+Encapsulation rules: 
+
+- Nearly all my functions and variables are `local`.
+- Exception1: I define the global definition of `print` so it can display tables.
+- Exception2: there are others... not many... can't think of them right now.
+
+Module-based polymorphism. 
+
+- When the one verb applies to many
+  types, those verbs are in different files and differntiated by
+  public interface.
+- For example, look at `create` and `update` in [num.lua](lib/num.lua) and [sym.lua](lib/sym.lua)
+
+No inheritance, so no object-oriented style. 
+
+- Too many ways to do that in Lua.
+- Too tempting to make base code on B.S. OO choices.
+
+Not `self` , but  `i`:
+
+- When my module functions are passing round a table of data,
+  that table is called `i`, not `self`.
+
+Literate programming:
+
 - DOCCO-stype documentation; i.e. comments in Markdown get rendered
   as html.
-= Github pages: the repo `github.com/lualure/info` stores html files
-  rendered from `github.com/lualure/lib`.
+= These are rendered and written to `github.com/lualure/info` 
+  which, in turn, is rendered using tGithub pages
+   at `github.com/lualure/lib`.

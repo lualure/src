@@ -1,1 +1,1 @@
-Here=$(pwd) bash --init-file etc/bashrc -i
+Lure=$(pwd) bash --init-file etc/bashrc -i

@@ -2,10 +2,10 @@
 # -*- sh -*-
 
 load() { ## ## reload environment ## shell
- . $Here/etc/bashrc
+ . $Lure/etc/bashrc
 }
 install() { ## ## install LURE (need only be run once) ## install
-  cd $Here
+  cd $Lure
   if [ "$(uname)" == "Darwin" ]; then
       /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
   fi
@@ -25,10 +25,10 @@ install() { ## ## install LURE (need only be run once) ## install
   done
   if  [ ! -d "$HOME/.vim/bundle/Vundle.vim" ]; then
     git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim
-    vim -u "$Here/etc/vimrc" -c 'PluginInstall' -c 'qa!'
+    vim -u "$Lure/etc/vimrc" -c 'PluginInstall' -c 'qa!'
   fi
-  if [ ! -f "$Here/.gitignore" ]; then
-     cat <<EOF > "$Here/.gitignore"
+  if [ ! -f "$Lure/.gitignore" ]; then
+     cat <<EOF > "$Lure/.gitignore"
 #vimstuff
 [._]*.s[a-w][a-z]
 [._]s[a-w][a-z]
@@ -45,43 +45,43 @@ locco
 _allok.lua
 EOF
   fi
-  if [ ! -d "$Here/etc/locco" ]; then
+  if [ ! -d "$Lure/etc/locco" ]; then
     git clone https://github.com/rgieseke/locco etc/locco
   fi
   gitting
   timm
 }
 doco() { ## ## generate html doco files ## shell
-   if [ ! -d "$Here/../info" ]; then
+   if [ ! -d "$Lure/../info" ]; then
      echo "Missing target repo: [info]"
      echo "I suggest you:"
-     echo "   cd $Here/.."
+     echo "   cd $Lure/.."
      echo "   git clone http://github.com/lualure/info"
    else  
-     cd $Here/etc/locco
+     cd $Lure/etc/locco
      (echo "-- # Index"
      echo ""
      echo "(Auto-generated. Do not edit.)"
      echo ""
-     for i in ${Here}/lib/*.lua; do
+     for i in ${Lure}/lib/*.lua; do
        f=$(basename $i '.lua')
        l="$(basename $i '.lua').html"
        echo "-- - [$f]($l) "
      done
-     echo "") > $Here/lib/index.lua
+     echo "") > $Lure/lib/index.lua
      for i in ../../lib/*.lua; do
        ./locco.lua $i
      done
-     cd $Here
-     cd $Here/../info/docs
-     cp $Here/lib/docs/* .
+     cd $Lure
+     cd $Lure/../info/docs
+     cp $Lure/lib/docs/* .
      git add *
      make
-     cd $Here
+     cd $Lure
    fi 
 }
 vi() { ## FILE ## edit files using the LURE config stuff ## shell
-    vim -u "$Here/etc/vimrc" $*
+    vim -u "$Lure/etc/vimrc" $*
     echo "Done!"
 }
 ok() { ## STEM ## shorthand for lua STEMok.lua ## shell
@@ -92,15 +92,15 @@ show() { ## FUN ## display definition of FUN ## shell
 }
 oks() { ## ## run all the Xok.lua files ## shell
 
-  ls ${Here}/tests/*ok.lua | 
+  ls ${Lure}/tests/*ok.lua | 
   grep -v _allok |
   gawk '{sub(/.lua/,"",$0) 
          sub(/^.*\//,"",$0)
-         printf(" require \"%s\";\n",$0)}' > ${Here}/tests/_allok.lua
-  cd ${Here}/tests
+         printf(" require \"%s\";\n",$0)}' > ${Lure}/tests/_allok.lua
+  cd ${Lure}/tests
   lua _allok.lua
   rm  _allok.lua
-  cd $Here
+  cd $Lure
 }
 bye() { ## ## push all to on-line repo ## git
   gitting
@@ -122,12 +122,12 @@ timm() { ## ## Private: sets up this repo for timm ## install
 	git config --global user.email tim.menzies@gmail.com
 }
 legal() { ## ## show copyright notice ## misc
-  cat $Here/LICENSE.md
+  cat $Lure/LICENSE.md
 }
 help() { ## ## show help ## misc
   echo "${blue}"
   echo "Options:"
-  grep '##' $Here/etc/bashrc | 
+  grep '##' $Lure/etc/bashrc | 
   sort -t\# -k 7  | 
   grep -v 'grep' |
   gawk '  function trim(x) {
@@ -175,7 +175,7 @@ cat <<EOF
 
 # $1 : $2
 
-$(cat $Here/LICENSE.md)
+$(cat $Lure/LICENSE.md)
 
 ------------------------------------------------------
 
@@ -188,13 +188,13 @@ EOF
 }
 twins() { ## STEM ## makes STEM.lua and unit test file STEMok.lua ## shell
   f=$(basename $1 ".lua")
-  if [ ! -f "$Here/lib/${f}.lua" ]; then 
-	   _twins1 $f utilities  > $Here/lib/${f}.lua
+  if [ ! -f "$Lure/lib/${f}.lua" ]; then 
+	   _twins1 $f utilities  > $Lure/lib/${f}.lua
   fi
-  if [ ! -f "$Here/tests/${f}ok.lua" ]; then
-	   _twins1 ${f}ok "unit tests for $f" > $Here/tests/${f}ok.lua
+  if [ ! -f "$Lure/tests/${f}ok.lua" ]; then
+	   _twins1 ${f}ok "unit tests for $f" > $Lure/tests/${f}ok.lua
 	   git add ${f}ok.lua
-	   cat <<-EOF >> $Here/tests/${f}ok.lua
+	   cat <<-EOF >> $Lure/tests/${f}ok.lua
 	local o=require "tests"	
 	local r=require "random"
 	local x=require "$f"
@@ -207,9 +207,9 @@ twins() { ## STEM ## makes STEM.lua and unit test file STEMok.lua ## shell
 	o.k{_test1}
 	EOF
   fi
-  git add $Here/lib/${f}.lua
-  git add $Here/tests/${f}ok.lua
-  wc $Here/lib/${f}.lua $Here/tests/${f}ok.lua
+  git add $Lure/lib/${f}.lua
+  git add $Lure/tests/${f}ok.lua
+  wc $Lure/lib/${f}.lua $Lure/tests/${f}ok.lua
 }
 norman() { ## ## about Norman Vaughan ## misc
   cat<<-EOF | fmt -60
@@ -259,9 +259,9 @@ lua() {
   f=$1
   shift
   for d in lib tests; do
-    if [ -f "$Here/$d/$f" ]; then
-      LUA_PATH="$Here/lib/?.lua;$Here/tests/?.lua;;" \
-        $(which luajit) $Here/$d/$f "$*"
+    if [ -f "$Lure/$d/$f" ]; then
+      LUA_PATH="$Lure/lib/?.lua;$Lure/tests/?.lua;;" \
+        $(which luajit) $Lure/$d/$f "$*"
       return 0
     fi
   done
@@ -270,7 +270,7 @@ lua() {
 setup() {
   alias ls='ls -G'
   export LESS='-R'
-  export LESSOPEN='|$Here/etc/lessfilter %s'
+  export LESSOPEN='|$Lure/etc/lessfilter %s'
   Tag="LURE"
   _c1="\[\033[01;32m\]"
   _c2="\[\033[01;34m\]"

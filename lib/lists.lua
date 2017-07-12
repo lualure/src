@@ -53,7 +53,7 @@ local function collect(t,f)
 -- The identity function
 local function same(x) return x end
 -- Copy top-level items 
-local function shallowCopy(t) return map(t,same) end
+local function shallowCopy(t) return collect(t,same) end
 -- Recursive copy of contents
 local function copy(t)  --recursive       
   return type(t) ~= 'table' and t or collect(t,copy) end
