@@ -5,6 +5,7 @@ load() { ## ## reload environment ## shell
  . $Here/etc/bashrc
 }
 install() { ## ## install LURE (need only be run once) ## install
+  cd $Here
   if [ "$(uname)" == "Darwin" ]; then
       /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
   fi
@@ -36,6 +37,7 @@ Session.vim
 netrwhist
 *~
 # doc stuff
+docs
 locco
 # mac stuff
 .DS_Store
@@ -47,12 +49,25 @@ EOF
   gitting
   timm
 }
-locco() {
-   (cd $Here/etc/locco
-   ./locco.lua ../../$1)
-   git add $Here/docs
-   git add $Here/docs/*.html
-   git add $Here/docs/*.css
+doco() { ## ## generate html doco files ## shell
+   if [ ! -d "$Here/../info" ]; then
+     echo "Missing target repo: [info]"
+     echo "I suggest you:"
+     echo "   cd $Here/.."
+     echo "   git clone http://github.com/lualure/info"
+   else  
+     cd $Here/etc/locco
+     for i in ${Here}/src/*.lua; do
+       ./locco.lua $i
+     done
+     for i in ${Here}/src/*.lua; do
+     cd $Here
+     cd $Here/../info
+     cp $Here/src/docs/* .
+     git add *
+     make
+     cd "$Here"
+   fi 
 }
 vi() { ## FILE ## edit files using the LURE config stuff ## shell
     vim -u "$Here/etc/vimrc" $*
@@ -219,8 +234,21 @@ norman() { ## ## about Norman Vaughan ## misc
 }
 here() { cd $1; basename "$PWD"; }
 
+lua() {
+  f=$1
+  shift
+  if [ -f "$Here/src/$f" ]; then
+    LUA_PATH="$Here/src/?.lua;$Here/tests/?.lua;;" $(which lua) $Here/$d/$f "$*"
+    d=src
+  elif [ -f "$Here/tests/$f" ]; then
+  LUA_PATH="$Here/src/?.lua;$Here/tests/?.lua;;" $(which lua) $Here/$d/$f "$*"
+    d=tests
+  else
+    echo "not found $f"
+    return 1
+  fi
+}
 setup() {
-  alias lua="LUA_PATH=\"$Here/src/?.lua;$Here/tests/?.lua;;\" $(which luajit) "
   alias ls='ls -G'
   export LESS='-R'
   export LESSOPEN='|$Here/etc/lessfilter %s'

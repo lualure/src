@@ -7,5 +7,6 @@ Session.vim
 *~
 # doc stuff
 locco
+docs
 # mac stuff
 .DS_Store
