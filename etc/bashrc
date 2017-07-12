@@ -61,6 +61,8 @@ doco() { ## ## generate html doco files ## shell
      cd $Here/etc/locco
      (echo "-- # Index"
      echo ""
+     echo "(Auto-generated. Do not edit.)"
+     echo ""
      for i in ${Here}/lib/*.lua; do
        f=$(basename $i '.lua')
        l="$(basename $i '.lua').html"
@@ -71,11 +73,11 @@ doco() { ## ## generate html doco files ## shell
        ./locco.lua $i
      done
      cd $Here
-     cd $Here/../info
+     cd $Here/../info/docs
      cp $Here/lib/docs/* .
      git add *
      make
-     cd "$Here"
+     cd $Here
    fi 
 }
 vi() { ## FILE ## edit files using the LURE config stuff ## shell
@@ -257,11 +259,9 @@ lua() {
   f=$1
   shift
   if [ -f "$Here/lib/$f" ]; then
-    LUA_PATH="$Here/lib/?.lua;$Here/tests/?.lua;;" $(which lua) $Here/$d/$f "$*"
-    d=lib
+    LUA_PATH="$Here/lib/?.lua;$Here/tests/?.lua;;" $(which lua) $Here/lib/$f "$*"
   elif [ -f "$Here/tests/$f" ]; then
-  LUA_PATH="$Here/lib/?.lua;$Here/tests/?.lua;;" $(which lua) $Here/$d/$f "$*"
-    d=tests
+    LUA_PATH="$Here/lib/?.lua;$Here/tests/?.lua;;" $(which lua) $Here/tests/$f "$*"
   else
     echo "not found $f"
     return 1

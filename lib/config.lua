@@ -1,3 +1,6 @@
+-- # Global settings
+-- Used by many files
+
 return {ignore="?",
         sep=",",
         sample={most=256},

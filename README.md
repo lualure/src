@@ -14,8 +14,9 @@
 
 - Written for teaching purposes. So many many small files, each with
   specific functions.
-- Much encapsulation: most file functions are not in the public
-  interface.
+- Much encapsulation: nearly all my functions and variables are `local`.
+     - Exception1: I define the global definition of `print` so it can display tables.
+     - Exception2: there are others... not many... can't think of them right now.
 - Some (module-based) polymorphism. When the one verb applies to many
   types, those verbs are in different files and differntiated by
   public interface.
@@ -24,7 +25,7 @@
 - Much functional style. Lots of passing functions as arguments,
   returning closures, etc etc.
 - Instead of using `self` , this code used `i`.
-- DOCCO-stype documentation; i.e. comments in Markdown get redered
+- DOCCO-stype documentation; i.e. comments in Markdown get rendered
   as html.
 = Github pages: the repo `github.com/lualure/info` stores html files
   rendered from `github.com/lualure/lib`.
