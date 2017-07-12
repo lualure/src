@@ -2,29 +2,44 @@
 
 ## Install
 
+### Using LuaRocks
+
+Currently not available.
+
+### Using Github
+
+Check out the repo, then create an environment
+variable `Lure` to hold the repo's localtion.
+
     git clone http://github.com/lualure/src src
-    Here=$PWD/src 
+    Lure=$PWD/src 
 
-## Usage
-
-Here's my shell `lua` function. Note that it looks for
+Add the following function to your $HOME/.bashrc.
+Note that this function looks for
 files either in `tests` or `lib`. Also, it calls the
-code using `luajit`.
+code using `luajit` (the faster version of `lua`).
 
     lua() {
       f=$1
       shift
       for d in lib tests; do
-        if [ -f "$Here/$d/$f" ]; then
-          LUA_PATH="$Here/lib/?.lua;$Here/tests/?.lua;;" \
-            $(which luajit) $Here/$d/$f "$*"
+        if [ -f "$Lure/$d/$f" ]; then
+          LUA_PATH="$Lure/lib/?.lua;$Lure/tests/?.lua;;" \
+            $(which luajit) $Lure/$d/$f "$*"
           return 0
         fi
       done
       echo "not found $f"
     }
 
-For example, this call runs the unit tests for `lists.lua` found in `listsok.lua`.
+Make sure your source this code; e.g. logout then log
+back in or (much faster):
+
+    . ~/.bashrc
+
+## Test
+
+This call runs the unit tests for `lists.lua` found in `listsok.lua`.
 
     lua listsok.lua 
 
