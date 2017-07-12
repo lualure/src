@@ -97,6 +97,7 @@ oks() { ## ## run all the Xok.lua files ## shell
          printf(" require \"%s\";\n",$0)}' > ${Here}/tests/_allok.lua
   cd ${Here}/tests
   lua _allok.lua
+  rm  _allok.lua
   cd $Here
 }
 bye() { ## ## push all to on-line repo ## git
