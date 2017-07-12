@@ -41,6 +41,8 @@ docs
 locco
 # mac stuff
 .DS_Store
+# testing stuff
+_allok.lua
 EOF
   fi
   if [ ! -d "$Here/etc/locco" ]; then
@@ -81,13 +83,21 @@ vi() { ## FILE ## edit files using the LURE config stuff ## shell
     echo "Done!"
 }
 ok() { ## STEM ## shorthand for lua STEMok.lua ## shell
-  luajit ${1}ok.lua
+  lua ${1}ok.lua
 }
 show() { ## FUN ## display definition of FUN ## shell
   type $1
 }
 oks() { ## ## run all the Xok.lua files ## shell
-  luajit -e "$(ls *ok.lua | gawk -F\. '{print "require \""$1"\""}')"
+
+  ls ${Here}/tests/*ok.lua | 
+  grep -v _allok |
+  gawk '{sub(/.lua/,"",$0) 
+         sub(/^.*\//,"",$0)
+         printf(" require \"%s\";\n",$0)}' > ${Here}/tests/_allok.lua
+  cd ${Here}/tests
+  lua _allok.lua
+  cd $Here
 }
 bye() { ## ## push all to on-line repo ## git
   gitting
