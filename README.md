@@ -91,5 +91,5 @@ Literate programming:
 - DOCCO-stype documentation; i.e. comments in Markdown get rendered
   as html.
 = These are rendered and written to `github.com/lualure/info` 
-  which, in turn, is rendered using tGithub pages
-   at `github.com/lualure/lib`.
+  which, in turn, is rendered using Github pages
+   at [https://lualure.github.io/info/](https://lualure.github.io/info/).
