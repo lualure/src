@@ -1,31 +1,30 @@
---[[
-Lua's math.random() is an interface to the C rand() function
-provided by the OS libc. This implementation varies by platform
-so the numbers it generates also varies. 
-
-Can't have that (tests won't port across platforms)
-
-The following is library is recommended as a
-replacement for the ANSI C rand() and srand()
-functions, particularly in simulation applications
-where the statistical 'goodness' of the random
-number generator is important. 
-
-The generator used in this library is a so-called
-'Lehmer random number generator' which returns a
-pseudo-random number uniformly distributed 0.0 and
-1.0. The period is (m - 1) where m = 2,147,483,647
-and the smallest and largest possible values are (1
-/ m) and 1 - (1 / m) respectively. For more details
-see:
-
-"Random Number Generators: Good Ones Are Hard To Find"
-Steve Park and Keith Miller
-Communications of the ACM, October 1988
-
-Also, the raw random number generator is wrapped in a
-97 table to increase randomness.
---]]
+-- # random
+-- Lua's math.random() is an interface to the C rand() function
+-- provided by the OS libc. This implementation varies by platform
+-- so the numbers it generates also varies. 
+-- 
+-- Can't have that (tests won't port across platforms)
+-- 
+-- The following is library is recommended as a
+-- replacement for the ANSI C rand() and srand()
+-- functions, particularly in simulation applications
+-- where the statistical 'goodness' of the random
+-- number generator is important. 
+-- 
+-- The generator used in this library is a so-called
+-- 'Lehmer random number generator' which returns a
+-- pseudo-random number uniformly distributed 0.0 and
+-- 1.0. The period is (m - 1) where m = 2,147,483,647
+-- and the smallest and largest possible values are (1
+-- / m) and 1 - (1 / m) respectively. For more details
+-- see:
+-- 
+-- "Random Number Generators: Good Ones Are Hard To Find"
+-- Steve Park and Keith Miller
+-- Communications of the ACM, October 1988
+-- 
+-- Also, the raw random number generator is wrapped in a
+-- 97 table to increase randomness.
 
 local seed0 = 10013
 local seed  = seed0

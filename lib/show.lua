@@ -1,11 +1,13 @@
+-- # show
+--
 -- Matias Guijarro wrote:
 -- > I would like to change the default behaviour of Lua when
 -- > representing a table through the tostring() function ; I
 -- > would prefer to have something more like in Python for
 -- > example (instead of having "table: 0x8062ac0", I would
 -- > like to see the contents, for example { 1, 2, 3 }).
--- >
--- > So first of all I tried to set a new metatable for tables,
+-- 
+-- So first of all I tried to set a new metatable for tables,
 -- As Shmuel pointed out, table metatables are per-table, so
 -- they don't really work for what you want to do.
 --   Lua 5.1.1  Copyright (C) 1994-2006 Lua.org, PUC-Rio
@@ -16,6 +18,7 @@
 --   Hello!
 --   > print({}) -- but doesn't work for other tables.
 --   table: 0x493378
+--
 -- A way that will work is to simply replace the tostring
 -- function itself.  Replace it with a function that calls your
 -- table-to-string function for tables, and calls the original
@@ -28,7 +31,7 @@
 -- below, but I encourage you to try whipping together at least
 -- a simple version of your own before looking at mine.
 -- - Aaron
--- 
+--
 -- This script makes tostring convert tables to a
 -- representation of their contents.
 
@@ -63,9 +66,7 @@ end
 -- digit after it:
 local function EscapeableToEscaped(Char, FollowingDigit)
   if IsEscapeable(Char) then
-    local Format = FollowingDigit == ""
-      and "\\%d"
-      or "\\%03d" .. FollowingDigit
+    local Format = FollowingDigit == "" and "\\%d" or "\\%03d" .. FollowingDigit
     return BsChars[Char]
       or string.format(Format, string.byte(Char))
   else
@@ -77,8 +78,7 @@ end
 -- replacement for string.format's %q placeholder, whose result
 -- isn't always human readable.)
 local function StrToStr(Str)
-  return '"' .. string.gsub(Str, "(.)(%d?)",
-    EscapeableToEscaped) .. '"'
+  return '"' .. string.gsub(Str, "(.)(%d?)", EscapeableToEscaped) .. '"'
 end
 
 -- Quote a string into lua form (including the non-printable characters from
@@ -86,15 +86,14 @@ end
 local function quote(_)
   local fmt = string.format
   local _ = fmt("%q", _)
-
   _ = string.gsub(_, "\\\n", "\\n")
   _ = string.gsub(_, "[%z\1-\31,\127-\255]", function (x)
     --print("x=", x)
     return fmt("\\%03d",string.byte(x))
   end)
-
   return _
 end
+
 StrToStr = quote
 
 -- Lua keywords:
@@ -109,9 +108,6 @@ local Keywords = {["and"] = true, ["break"] = true, ["do"] = true,
 local function IsIdent(Str)
   return not Keywords[Str] and string.find(Str, "^[%a_][%w_]*$")
 end
-local function eman(x)
-  for k,v in pairs(_G) do
-    if v==x then return k end end end
 
 -- Converts a non-table to a Lua- and human-readable string:
 local function ScalarToStr(Val)
@@ -119,8 +115,6 @@ local function ScalarToStr(Val)
   local Type = type(Val)
   if Type == "string" then
     Ret = StrToStr(Val)
-  --elseif Type == "function" then
-    -- Ret =  "FUNC(" .. (eman(Val) or "") ..  ")"
   elseif Type == "function" or Type == "userdata" or Type == "thread" then
     -- Punt:
     Ret = "<" .. _tostring(Val) .. ">"
@@ -215,7 +209,4 @@ local function _tostringTest()
       "Assertion failed on " .. _tostring(tostring(Tbl)))
   end
 end
-
-
---if arg[1]=="--tostring" then _tostringTest() end
 
