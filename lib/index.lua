@@ -1,7 +1,5 @@
 -- # Index
 
-(Auto-generated. Do not edit.)
-
 -- - [args](args.html) 
 -- - [config](config.html) 
 -- - [csv](csv.html) 
