@@ -18,11 +18,11 @@ local function create(cells) return {
 -------------------------------------------------------------
 local function meta(i,txt)
   local spec =  {
-    {when= "%$", what= num, weight= 1, where= {i.all.cols, i.x.cols, i.all.nums, i.x.nums}},
+    {when= "%$", what= num, weight= 1, where= {i.all.cols, i.x.cols, i.all.nums,                  i.x.nums}},
     {when= "<",  what= num, weight=-1, where= {i.all.cols, i.y.cols, i.all.nums, i.goals, i.less, i.y.nums}},
     {when= ">",  what= num, weight= 1, where= {i.all.cols, i.y.cols, i.all.nums, i.goals, i.more, i.y.nums}},
     {when= "!",  what= sym, weight= 1, where= {i.all.cols, i.y.cols,             i.all.syms}},
-    {when= "",   what= sym, weight= 1, where= {i.all.cols, i.x.cols,             i.all.syms, i.x.syms}}}
+    {when= "",   what= sym, weight= 1, where= {i.all.cols, i.x.cols,             i.all.syms,      i.x.syms}}}
   for _,want in pairs(spec) do
     if string.find(txt,want.when) ~= nil then
       return want.what, want.weight, want.where end end end
@@ -49,9 +49,15 @@ local function update(i,cells)
 local function copy(i) 
   return header(create(),i.spec) end
 -------------------------------------------------------------
+local function discretizeHeader(z) 
+  return string.gsub(head.txt , "%$","") end
+-------------------------------------------------------------
 local function discretize (i)
-  -- local = map(function (w) end, i.spec)
-  j= copy(i) end
+  j= header(create(), collect(i.spec, discretizeHeaders))
+  for _,head in pairs(i.x.nums) do
+    print(ranges(i.rows, function (z) z.cells[head.pos] end 
+                         function (z) row.dominate(z,i) end))
+end
 -------------------------------------------------------------
 local function dominates(i)
   for _,r in pairs(i.rows) do 
