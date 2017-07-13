@@ -18,16 +18,11 @@ local function create(cells) return {
 -------------------------------------------------------------
 local function meta(i,txt)
   local spec =  {
-    {when= "%$", what= num, weight= 1, 
-     where= {i.all.cols, i.x.cols, i.all.nums, i.x.nums}},
-    {when= "<",  what= num, weight=-1, 
-     where= {i.all.cols,i.y.cols,i.all.nums,i.goals,i.less,i.y.nums}},
-    {when= ">",  what= num, weight= 1, 
-     where= {i.all.cols,i.y.cols,i.all.nums,i.goals,i.more,i.y.nums}},
-    {when= "!",  what= sym, weight= 1, 
-     where= {i.all.cols, i.y.cols, i.all.syms}},
-    {when= "",   what= sym, weight= 1, 
-     where= {i.all.cols, i.x.cols, i.all.syms,i.x.syms}}}
+    {when= "%$", what= num, weight= 1, where= {i.all.cols, i.x.cols, i.all.nums, i.x.nums}},
+    {when= "<",  what= num, weight=-1, where= {i.all.cols, i.y.cols, i.all.nums, i.goals, i.less, i.y.nums}},
+    {when= ">",  what= num, weight= 1, where= {i.all.cols, i.y.cols, i.all.nums, i.goals, i.more, i.y.nums}},
+    {when= "!",  what= sym, weight= 1, where= {i.all.cols, i.y.cols,             i.all.syms}},
+    {when= "",   what= sym, weight= 1, where= {i.all.cols, i.x.cols,             i.all.syms, i.x.syms}}}
   for _,want in pairs(spec) do
     if string.find(txt,want.when) ~= nil then
       return want.what, want.weight, want.where end end end
