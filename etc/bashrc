@@ -9,6 +9,20 @@ install() { ## ## install LURE (need only be run once) ## install
   if [ "$(uname)" == "Darwin" ]; then
       /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
   fi
+  if [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
+     cat <<-EOF
+    
+  Have you run the choco install commands? See https://github.com/chocolatey/choco/wiki/Installation
+
+  EOF
+  fi
+  if [ "$(expr substr $(uname -s) 1 10)" == "MINGW64_NT" ]; then
+     cat <<-EOF
+    
+  Have you run the choco install commands? See https://github.com/chocolatey/choco/wiki/Installation
+
+  EOF
+  fi
   sudo easy_install Pygments
   for f in lua luajit vim git make gawk htop ranger asciiquarium cmatrix ; do
     if which $f; then true; else 
@@ -291,18 +305,30 @@ banner() {
   echo -n "${ltyl}" 
 
   cat <<'EOF'
-
-           .'|_.-            | Lure v1.00
-         .'  '  /_           | https://github.com/lualure/info
-      .-"    -.   '>         |
-   .- -. -.    '. /    /|_   | "Dream big and date to fail."
-  .-.--.-.       ' >  /  /   | -- Norman Vaughan
- (o( o( o )       \_."  <  
-  '-'-''-'            ) <
-(       _.-'-.   ._\.  _\ 
- '----"/--.__.-) _-  \|
-AoS    "V""    "V"  
-  
+                                   _H_                | Lure v1.00
+                                   /___\              | https://github.com/lualure/info
+                                   \888/              |
+~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~U~^~^~^~^~^~^~^  | "Dream big and dare to fail."
+                      ~              |                | -- Norman Vaughan
+      ~                        o     |        ~
+                ___        o         |
+       _,.--,.'`   `~'-.._    O      |
+      /_  .-"      _   /_\'.         |   ~
+     .-';'       (( `  \0/  `\       #
+    /__;          ((_  ,_     |      #
+    .-;                  \_   /  #  _#, 
+   /  ;    .-' /  _.--""-.\`~`   `#(('\\        ~
+   ;-';   /   / .'                  )) \\
+       ; /.--'.'                   ((   ))
+        \     |        ~            \\ ((
+         \    |                      )) `
+   ~      \   |                      `
+           \  |
+      jgs  .` `""-.
+         .'        \         ~               ~
+         |    |\    |
+         \   /  '-._|
+          \.'
 EOF
 echo -n "${white}"
 }

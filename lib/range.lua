@@ -62,19 +62,24 @@ local function rangeManager(lst, x)
 --   _epsilon_ in size.
 return function (lst, x,       last)
   x= x or function (z) return z end -- _x_ defaults to the identity
-  table.sort(lst, function (z1,z2) return x(z1) < x(z2) end)
+  table.sort(lst, function (z1,z2) 
+                    local one,two=x(z1),x(z2)
+                    return one ~=the.ignore and 
+                           two ~=the.ignore and 
+                           one < two end )
   local i= rangeManager(lst, x)
   for j,one in pairs(lst) do
-    local x1 = update(i.now, one, x(one))
-    if j > 1 and
-       x1 > last and
-       i.now.n       > i.enough  and
-       i.now.span    > i.epsilon and
-       i.num.n - j   > i.enough  and
-       i.num.hi - x1 > i.epsilon 
-    then nextRange(i) end 
-    last = x1 
-  end 
+    local x1 = x(one)
+    if x1 ~= the.ignore then
+      update(i.now, one, x1)
+      if j > 1 and
+         x1 > last and
+         i.now.n       > i.enough  and
+         i.now.span    > i.epsilon and
+         i.num.n - j   > i.enough  and
+         i.num.hi - x1 > i.epsilon 
+      then nextRange(i) end 
+      last = x1  end end
   return i.ranges end
 --------------------------------
 -- ## Copyleft

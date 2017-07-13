@@ -5,8 +5,9 @@ local num=require "num"
 local sym=require "sym"
 local row=require "row"
 local csv=require "csv"
+local lst=require "lists"
 -------------------------------------------------------------
-local function create(cells) return {
+local function create() return {
   rows={}, 
   spec={}, 
   goals={} , less={}, more={}, 
@@ -28,6 +29,7 @@ local function meta(i,txt)
       return want.what, want.weight, want.where end end end
 -------------------------------------------------------------
 local function header(i,cells)
+  print("::: ",cells)
   i.spec = cells
   for col,cell in ipairs(cells) do
     local what, weight, wheres = meta(i,cell)
@@ -36,27 +38,35 @@ local function header(i,cells)
     one.txt   = cell
     one.what  = what
     one.weight= weight
-    for _,where in ipairs(wheres) do
+    for _,where in pairs(wheres) do
       where[ #where + 1 ] = one end end end
 -------------------------------------------------------------
 local function data(i,cells)
+  print(#i.rows)
   i.rows[#i.rows+1] = row.update(row.create(), cells,i) end
 -------------------------------------------------------------
 local function update(i,cells) 
   local fn= #i.spec==0 and header or data
   fn(i,cells) end
 -------------------------------------------------------------
-local function copy(i) 
-  return header(create(),i.spec) end
+local function copy(i, mode) 
+  local j=create()
+  header(j, lst.copy(i.spec)) 
+  if mode=="full" then
+    for _,row in pairs(i.rows) do
+      data(j, lst.copy(row.cells)) end end
+  return j end
 -------------------------------------------------------------
 local function discretizeHeader(z) 
-  return string.gsub(head.txt , "%$","") end
+  return string.gsub(z , "%$","") end
 -------------------------------------------------------------
 local function discretize (i)
-  j= header(create(), collect(i.spec, discretizeHeaders))
-  for _,head in pairs(i.x.nums) do
-    print(ranges(i.rows, function (z) z.cells[head.pos] end 
-                         function (z) row.dominate(z,i) end))
+   local j=create()
+   header(j, lst.collect(i.spec, discretizeHeader))
+   print(j)
+   --for _,head in pairs(i.x.nums) do
+     --print(ranges(i.rows, function (z) z.cells[head.pos] end ,
+       --                   function (z) row.dominate(z,i) end)) end
 end
 -------------------------------------------------------------
 local function dominates(i)
@@ -70,4 +80,5 @@ local function fromCsv(f)
   csv(f, function (cells) update(out,cells) end)
   return out end
 -------------------------------------------------------------
-return {copy=copy, dominates=dominates,create=fromCsv} 
+return {copy=copy, dominates=dominates,
+        create=fromCsv,  discretize=discretize} 
