@@ -42,7 +42,6 @@ local function header(i,cells)
       where[ #where + 1 ] = one end end end
 -------------------------------------------------------------
 local function data(i,cells)
-  print(#i.rows)
   i.rows[#i.rows+1] = row.update(row.create(), cells,i) end
 -------------------------------------------------------------
 local function update(i,cells) 
@@ -54,16 +53,23 @@ local function copy(i, mode)
   header(j, lst.copy(i.spec)) 
   if mode=="full" then
     for _,row in pairs(i.rows) do
-      data(j, lst.copy(row.cells)) end end
-  return j end
+      data(j, lst.copy(row.cells)) end 
+  elseif type(mode)=='number' then
+    lst.shuffle(i.rows)
+    for k=1,mode do
+      data(j, lst.copy(i.rows[k].cells)) end end
+  return j
+end
 -------------------------------------------------------------
-local function discretizeHeader(z) 
-  return string.gsub(z , "%$","") end
+local function discretizeHeaders(i)
+  local function discretizeHeader(z)  
+    return string.gsub(z , "%$","") end
+  return lst.collect(i.spec, discretizeHeader) end
 -------------------------------------------------------------
-local function discretize (i)
+local function discretize (i,j)
+   local ranges=sup
    local j=create()
    header(j, lst.collect(i.spec, discretizeHeader))
-   print(j)
    --for _,head in pairs(i.x.nums) do
      --print(ranges(i.rows, function (z) z.cells[head.pos] end ,
        --                   function (z) row.dominate(z,i) end)) end
@@ -80,5 +86,5 @@ local function fromCsv(f)
   csv(f, function (cells) update(out,cells) end)
   return out end
 -------------------------------------------------------------
-return {copy=copy, dominates=dominates,
-        create=fromCsv,  discretize=discretize} 
+return {copy=copy, t0=create,dominates=dominates,header=header,update=update,
+        create=fromCsv,  discretizeHeaders=discretizeHeaders}

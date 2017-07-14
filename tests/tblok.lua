@@ -1,11 +1,13 @@
 -- # tableok : unit tests for table
 
 require "show"	
+local rand=  require "random"
 local the=  require "config"
 local o=    require "tests"	
 local tbl=  require "tbl"
 local row=  require "row"
 local super=require "superrange"
+local lst=require "lists"
 ----------------------------------------------------------
 -- process 14 rows
  local function _test1()
@@ -37,26 +39,37 @@ local function _test3()
   --for i=1,250 do row.dominates(t.rows[i],t) print(t.rows[i].dom) end
 end 
 ----------------------------------------------------------
-local function _test4()
-   local t=tbl.create(the.here .. "/data/auto.csv")
-   for _,head in pairs(t.x.nums) do
-     print("")
-     for j,ran in pairs(super(t.rows, 
-                        function (z) return z.cells[head.pos] end,
-                        function (z) return row.dominate(z,t) end)) do
-        print(head.pos,j,ran)
-    end end  end
-
+local function lookup(x,ran)
+  if x==the.ignore then return x end
+  local r
+  for j=1,#ran do
+    r=ran[j].label
+    if x<=ran[j].most then return r end end
+  return r end
 ----------------------------------------------------------
-local function _test5(    t1)
-   local t=tbl.create(the.here .. "/data/weather.csv")
-   t1=tbl.copy(t,"full")
-  print(t)
-  print("==")
-  print(t1)
- end
----------------------------------------------------------
+local function _test4()
+   local t1=tbl.create(the.here .. "/data/auto.csv")
+   local t2=tbl.t0()
+   tbl.header(t2, tbl.discretizeHeaders(t2))
+   print(22)
+   local bins={}
+   for _,head in pairs(t1.x.nums) do
+     bins[head.pos] =  super(t1.rows, 
+                        function (_) return _.cells[head.pos] end,
+                        function (_) return row.dominate(_,t1) end) end
+
+    for k=1,#t1.rows do
+       local tmp=lst.copy(t1.rows[k].cells)
+       for pos,ran in pairs(bins) do
+         --print(pos,ran)
+         tmp[pos] = lookup(tmp[pos],ran) end
+       print(k,tmp)
+       --print(t2.x.cols[2])
+       tbl.update(t2,tmp) end end 
+---------------------------------------------
+rand.r(1)
+
 -- o.k{_test1,_test2,_test3,test4}
-_test5()
+_test4()
 
 
