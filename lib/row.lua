@@ -4,11 +4,10 @@ local num= require "num"
 -----------------------------------------------------------
 
 local function create()
-  return {id=id.new(),   cells={},   cooked={}} end
+  return {id=id.new(),   cells={}} end
 -----------------------------------------------------------
 local function update(i,cells,t)
   i.cells=lst.copy(cells)
-  i.cooked=lst.copy(cells)
   for _,head in pairs(t.all.cols) do
     head.what.update(head, cells[head.pos]) end
   return i end

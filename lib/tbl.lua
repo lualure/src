@@ -6,6 +6,7 @@ local sym=require "sym"
 local row=require "row"
 local csv=require "csv"
 local lst=require "lists"
+local super=require "superrange"
 -------------------------------------------------------------
 local function create() return {
   rows={}, 
@@ -61,19 +62,34 @@ local function copy(i, mode)
   return j
 end
 -------------------------------------------------------------
-local function discretizeHeaders(i)
+local function discretize(i)
+  ---- local convenience functions
   local function discretizeHeader(z)  
     return string.gsub(z , "%$","") end
-  return lst.collect(i.spec, discretizeHeader) end
--------------------------------------------------------------
-local function discretize (i,j)
-   local ranges=sup
-   local j=create()
-   header(j, lst.collect(i.spec, discretizeHeader))
-   --for _,head in pairs(i.x.nums) do
-     --print(ranges(i.rows, function (z) z.cells[head.pos] end ,
-       --                   function (z) row.dominate(z,i) end)) end
-end
+  local function lookup(x,breaks,    r)
+    if x==the.ignore then return x end
+    for _,b in pairs(breaks) do
+      r = b.label
+      if x<=b.most then break end end
+    return r end
+  ----- main sequence
+  j= create()
+  header(j, lst.collect(i.spec, discretizeHeader))
+  local bins={}
+  -- learn breaks from i
+  for _,head in pairs(i.x.nums) do
+    bins[head.pos]= super(i.rows, 
+                      function (_) return _.cells[head.pos] end,
+                      function (_) return row.dominate(_,i) end) end
+  -- apply breaks to k
+  for k,row in pairs(i.rows) do
+    local tmp=lst.copy(row.cells)
+    -- print(tmp)
+    for pos,breaks in pairs(bins) do
+         tmp[pos] = lookup(tmp[pos],breaks) end
+    update(j,tmp) end 
+  -- all done
+  return j end
 -------------------------------------------------------------
 local function dominates(i)
   for _,r in pairs(i.rows) do 
@@ -86,8 +102,5 @@ local function fromCsv(f)
   csv(f, function (cells) update(out,cells) end)
   return out end
 -------------------------------------------------------------
-return {copy=copy, t0=create,dominates=dominates,header=header,update=update,
-        create=fromCsv,  discretizeHeaders=discretizeHeaders}
-
-
-        -- discretizeations hould be inside tbl
+return {copy=copy, dominates=dominates,header=header,update=update,
+        create=fromCsv,  discretize=discretize}

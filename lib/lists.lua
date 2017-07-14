@@ -47,6 +47,13 @@ local function collect(t,f)
     for i,v in pairs(t) do out[i] = f(v) end end
   return out end
 
+-- printing
+function maprint(t, first, last)
+  first = first or #t
+  for j=1,first do print(j,t[j]) end
+  if last then
+    print("...")
+    for j=#t+last, #t do print(j,t[j]) end end end
 -----------------------------------
 -- ### Copying (and saming)
 
@@ -61,6 +68,7 @@ local function copy(t)  --recursive
 -------------------------------------------------------
 -- ### Public interface
 
-return { first=first, last=last,same=same,copy=copy,
+return { maprint=maprint,
+         first=first, last=last,same=same,copy=copy,
          shallowCopy=shallowCopy, member=member,map=map, 
          map2=map2, collect=collect,shuffle=shuffle}

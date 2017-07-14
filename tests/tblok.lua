@@ -39,36 +39,18 @@ local function _test3()
   --for i=1,250 do row.dominates(t.rows[i],t) print(t.rows[i].dom) end
 end 
 ----------------------------------------------------------
-local function lookup(x,ran)
-  if x==the.ignore then return x end
-  local r
-  for j=1,#ran do
-    r=ran[j].label
-    if x<=ran[j].most then return r end end
-  return r end
-----------------------------------------------------------
 local function _test4()
    local t1=tbl.create(the.here .. "/data/auto.csv")
-   local t2=tbl.t0()
-   tbl.header(t2, tbl.discretizeHeaders(t2))
-   print(22)
-   local bins={}
-   for _,head in pairs(t1.x.nums) do
-     bins[head.pos] =  super(t1.rows, 
-                        function (_) return _.cells[head.pos] end,
-                        function (_) return row.dominate(_,t1) end) end
-
-    for k=1,#t1.rows do
-       local tmp=lst.copy(t1.rows[k].cells)
-       for pos,ran in pairs(bins) do
-         --print(pos,ran)
-         tmp[pos] = lookup(tmp[pos],ran) end
-       print(k,tmp)
-       --print(t2.x.cols[2])
-       tbl.update(t2,tmp) end end 
+   local t2=tbl.discretize(t1)
+   print("rows ",#t1.rows, #t2.rows)
+   local function order(t,x,y) return row.dominate(x,t) < row.dominate(y,t) end 
+   table.sort(t1.rows,function(x,y) return order(t1,x,y) end)
+   table.sort(t2.rows,function(x,y) return order(t2,x,y) end)
+   lst.maprint(t1.rows,5,-5) 
+   print("--")
+   lst.maprint(t2.rows,5,-5) end
 ---------------------------------------------
 rand.r(1)
-
 -- o.k{_test1,_test2,_test3,test4}
 _test4()
 
