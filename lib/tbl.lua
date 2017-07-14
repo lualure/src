@@ -88,3 +88,6 @@ local function fromCsv(f)
 -------------------------------------------------------------
 return {copy=copy, t0=create,dominates=dominates,header=header,update=update,
         create=fromCsv,  discretizeHeaders=discretizeHeaders}
+
+
+        -- discretizeations hould be inside tbl
