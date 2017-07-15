@@ -294,7 +294,7 @@ setup() {
   white=$(tput setaf 15)
 }
 promptcom() {
-   PROMPT_COMMAND='echo  -ne "${_c6}${Tag}> \033]0;$(here ../..)/$(here ..)/$(here .)\007";PS1="${_c1}$(here ../..)/$_c2$(here ..)/$_c3$(here .) ${_c6}\!>${_c0}\e[m "'
+  PROMPT_COMMAND='echo  -ne "${_c6}${Tag}\033]0;$(here ../..)/$(here ..)/$(here .)\007";PS1="${_c1}(\A) $(here ../..)/$_c2$(here ..)/$_c3$(here .) ${_c6}\!>${_c0}\e[m "'
 } 
 banner() {
   echo -n "${ltyl}" 
