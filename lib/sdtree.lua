@@ -28,7 +28,6 @@ return function (t,y,z,     cols)
     local col = {pos=head.pos, nums={},_score=nil,n=0} 
     for _,row in pairs(t.rows) do
        local x = row.cells[col.pos]
-       print(row, y(row))
        if x ~= the.ignore then
          col.n = col.n + 1
          col.nums[x] = num.update(col.nums[x] or num.create(), 

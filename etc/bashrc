@@ -293,6 +293,21 @@ setup() {
   ltyl=$(tput setaf 11)
   white=$(tput setaf 15)
 }
+news1() {
+  while true; do
+    clear
+     curl --silent "$1" | grep -E '(title>|description>)' |  
+     sed  -n '4,100p' | 
+     sed -e 's/<title>/\
+/' -e 's/<\/title>//' -e 's/<description>/ /'  -e 's/<\/description>//' \
+     -e 's/\&.*//' -e 's/^[ \\\t]*//'
+    sleep 60
+  done
+}
+news() {
+    news1 'http://feeds.reuters.com/reuters/topNews'
+}
+
 promptcom() {
   PROMPT_COMMAND='echo  -ne "${_c6}${Tag}\033]0;$(here ../..)/$(here ..)/$(here .)\007";PS1="${_c1}(\A) $(here ../..)/$_c2$(here ..)/$_c3$(here .) ${_c6}\!>${_c0}\e[m "'
 } 
