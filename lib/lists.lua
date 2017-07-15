@@ -24,7 +24,11 @@ local function shuffle( t )
     t[i],t[j] = t[j], t[i] 
   end
   return t end
-
+-- Sorting
+local function sort(t,f)
+  f=f or function (x,y) return x < y end
+  table.sort(t,f)
+  return t end
 -----------------------------------
 -- ### Mapping
 
@@ -48,7 +52,7 @@ local function collect(t,f)
   return out end
 
 -- printing
-function maprint(t, first, last)
+local function maprint(t, first, last)
   first = first or #t
   for j=1,first do print(j,t[j]) end
   if last then
@@ -68,7 +72,7 @@ local function copy(t)  --recursive
 -------------------------------------------------------
 -- ### Public interface
 
-return { maprint=maprint,
+return { maprint=maprint,sort=sort,
          first=first, last=last,same=same,copy=copy,
          shallowCopy=shallowCopy, member=member,map=map, 
          map2=map2, collect=collect,shuffle=shuffle}

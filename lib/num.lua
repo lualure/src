@@ -12,7 +12,8 @@ local function update(i,x)
     i.mu = i.mu + delta / i.n
     i.m2 = i.m2 + delta * (x - i.mu) 
     if i.n > 1 then 
-      i.sd = (i.m2 / (i.n - 1))^0.5 end end end
+      i.sd = (i.m2 / (i.n - 1))^0.5 end end 
+  return i end
 ------------------------------------------------------
 local function updates(lst,f,i)
   i = i or create()

@@ -185,15 +185,10 @@ _make1() {
 }
 _twins1() {
 cat <<EOF
---[[
+-- # $1 : $2
 
-# $1 : $2
-
-$(cat $Lure/LICENSE.md)
 
 ------------------------------------------------------
-
---]]
 
 require "show"
 local the=require "config"
@@ -303,28 +298,27 @@ promptcom() {
 } 
 banner() {
   echo -n "${ltyl}" 
-
   cat <<'EOF'
-                                   _H_                | Lure v1.00
+                                   _H_                | LURE v1.00
                                    /___\              | https://github.com/lualure/info
                                    \888/              |
 ~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~U~^~^~^~^~^~^~^  | "Dream big and dare to fail."
-                      ~              |                | -- Norman Vaughan
-      ~                        o     |        ~
-                ___        o         |
-       _,.--,.'`   `~'-.._    O      |
-      /_  .-"      _   /_\'.         |   ~
-     .-';'       (( `  \0/  `\       #
-    /__;          ((_  ,_     |      #
-    .-;                  \_   /  #  _#, 
-   /  ;    .-' /  _.--""-.\`~`   `#(('\\        ~
-   ;-';   /   / .'                  )) \\
-       ; /.--'.'                   ((   ))
-        \     |        ~            \\ ((
-         \    |                      )) `
-   ~      \   |                      `
-           \  |
-      jgs  .` `""-.
+                      ~              |                |  -- Norman Vaughan
+      ~                        o     |        ~       |
+                ___        o         |                | "The charm of fishing is that it is 
+       _,.--,.'`   `~'-.._    O      |                |  the pursuit of what is elusive but 
+      /_  .-"      _   /_\'.         |   ~            |  attainable, a perpetual series of 
+     .-';'       (( `  \0/  `\       #                |  occasions of hope." 
+    /__;          ((_  ,_     |      #                |  -- Jack Nicklaus
+    .-;                  \_   /  #  _#,               |
+   /  ;    .-' /  _.--""-.\`~`   `#(('\\        ~     | "There are always new places to go 
+   ;-';   /   / .'                  )) \\             |  fishing. For any fisherman (sic), 
+       ; /.--'.'                   ((   ))            |  there's always a new place, always
+        \     |        ~            \\ ((             |  a new horizon." 
+         \    |                      )) `             |  -- John Buchan
+   ~      \   |                      `                |
+           \  |                                       | "Gone fishin', for a new idea." 
+      jgs  .` `""-.                                   |  -- Tim Menzies
          .'        \         ~               ~
          |    |\    |
          \   /  '-._|

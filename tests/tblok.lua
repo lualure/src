@@ -52,6 +52,6 @@ local function _test4()
 ---------------------------------------------
 rand.r(1)
 -- o.k{_test1,_test2,_test3,test4}
-_test4()
+o.k{_test4()}
 
 

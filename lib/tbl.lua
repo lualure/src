@@ -12,6 +12,7 @@ local function create() return {
   rows={}, 
   spec={}, 
   goals={} , less={}, more={}, 
+  bins={},
   -- goals={less={}, more={}, cols={}}
   all={nums={}, syms={}, cols={}}, -- all columns
   x  ={nums={}, syms={}, cols={}}, -- all independent columns
@@ -49,16 +50,19 @@ local function update(i,cells)
   local fn= #i.spec==0 and header or data
   fn(i,cells) end
 -------------------------------------------------------------
-local function copy(i, mode) 
+local function copy(i, from) 
   local j=create()
   header(j, lst.copy(i.spec)) 
-  if mode=="full" then
+  if from=="full" then
     for _,row in pairs(i.rows) do
       data(j, lst.copy(row.cells)) end 
-  elseif type(mode)=='number' then
+  elseif type(from)=='number' then
     lst.shuffle(i.rows)
-    for k=1,mode do
-      data(j, lst.copy(i.rows[k].cells)) end end
+    for k=1,from do
+      data(j, lst.copy(i.rows[k].cells)) end 
+  elseif type(from)=='table' then
+    for _,row in pairs(from) do
+      data(j, lst.copy(row)) end end
   return j
 end
 -------------------------------------------------------------
@@ -73,19 +77,18 @@ local function discretize(i)
       if x<=b.most then break end end
     return r end
   ----- main sequence
-  j= create()
+  local j= create()
   header(j, lst.collect(i.spec, discretizeHeader))
-  local bins={}
   -- learn breaks from i
   for _,head in pairs(i.x.nums) do
-    bins[head.pos]= super(i.rows, 
+    j.bins[head.pos]= super(i.rows, 
                       function (_) return _.cells[head.pos] end,
                       function (_) return row.dominate(_,i) end) end
   -- apply breaks to k
   for k,row in pairs(i.rows) do
     local tmp=lst.copy(row.cells)
     -- print(tmp)
-    for pos,breaks in pairs(bins) do
+    for pos,breaks in pairs(j.bins) do
          tmp[pos] = lookup(tmp[pos],breaks) end
     update(j,tmp) end 
   -- all done
