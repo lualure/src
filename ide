@@ -1,1 +1,9 @@
+# Q: why use unix shell as an ide?
+# A1: ease of portability. New machine? Check out, type "install". Done
+# A2: cause all the tools are free. Why not use free stuff?
+# A3: cause some very useful stuff can be coded that way
+# A4: cause its fun!
+# A5: cause its empowering. New ideas? Not in the current IDE? Just add!
+# A6: cause less is more. Death to code bloat!
+
 Lure=$(pwd) bash --init-file etc/bashrc -i

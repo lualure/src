@@ -31,7 +31,6 @@ local function meta(i,txt)
       return want.what, want.weight, want.where end end end
 -------------------------------------------------------------
 local function header(i,cells)
-  print("::: ",cells)
   i.spec = cells
   for col,cell in ipairs(cells) do
     local what, weight, wheres = meta(i,cell)
