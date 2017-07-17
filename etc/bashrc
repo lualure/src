@@ -99,20 +99,19 @@ vi() { ## FILE ## edit files using the LURE config stuff ## shell
     echo "Done!"
 }
 ok() { ## STEM ## shorthand for lua STEMok.lua ## shell
-  lua ${1}ok.lua
+  l ${1}ok.lua
 }
 show() { ## FUN ## display definition of FUN ## shell
   type $1
 }
 oks() { ## ## run all the Xok.lua files ## shell
-
   ls ${Lure}/tests/*ok.lua | 
   grep -v _allok |
   gawk '{sub(/.lua/,"",$0) 
          sub(/^.*\//,"",$0)
          printf(" require \"%s\";\n",$0)}' > ${Lure}/tests/_allok.lua
   cd ${Lure}/tests
-  lua _allok.lua
+  l _allok.lua
   rm  _allok.lua
   cd $Lure
 }
@@ -264,8 +263,8 @@ norman() { ## ## about Norman Vaughan ## misc
 }
 here() { cd $1; basename "$PWD"; }
 
-lua() {
-  f=$1
+l() { ## FILE ## call "lua FILE" in this environment (.lua extension optional) ## shell
+  f=$(basename $1 .lua).lua
   shift
   for d in lib tests; do
     if [ -f "$Lure/$d/$f" ]; then

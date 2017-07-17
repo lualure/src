@@ -13,6 +13,7 @@ local function create() return {
   spec={}, 
   goals={} , less={}, more={}, 
   bins={},
+  index={},
   -- goals={less={}, more={}, cols={}}
   all={nums={}, syms={}, cols={}}, -- all columns
   x  ={nums={}, syms={}, cols={}}, -- all independent columns
@@ -39,29 +40,34 @@ local function header(i,cells)
     one.txt   = cell
     one.what  = what
     one.weight= weight
+    i.index[one.txt] = one
     for _,where in pairs(wheres) do
       where[ #where + 1 ] = one end end end
 -------------------------------------------------------------
 local function data(i,cells)
-  i.rows[#i.rows+1] = row.update(row.create(), cells,i) end
+  local new = row.update(row.create(),cells,i)
+  i.rows[#i.rows+1] = new
+  return new end
 -------------------------------------------------------------
 local function update(i,cells) 
   local fn= #i.spec==0 and header or data
-  fn(i,cells) end
+  return fn(i,cells) end
 -------------------------------------------------------------
 local function copy(i, from) 
   local j=create()
   header(j, lst.copy(i.spec)) 
   if from=="full" then
-    for _,row in pairs(i.rows) do
-      data(j, lst.copy(row.cells)) end 
+    for _,r in pairs(i.rows) do
+      data(j, lst.copy(r.cells))  end
   elseif type(from)=='number' then
     lst.shuffle(i.rows)
     for k=1,from do
       data(j, lst.copy(i.rows[k].cells)) end 
   elseif type(from)=='table' then
-    for _,row in pairs(from) do
-      data(j, lst.copy(row)) end end
+    for _,r in pairs(from) do
+      local new = data(j, lst.copy(r.cells))
+      new.dom = r.dom 
+      end  end
   return j
 end
 -------------------------------------------------------------

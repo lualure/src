@@ -4,13 +4,20 @@ local num= require "num"
 -----------------------------------------------------------
 
 local function create()
-  return {id=id.new(),   cells={}} end
+  return {id=id.new(),   cells={}, dom=nil} end
 -----------------------------------------------------------
 local function update(i,cells,t)
   i.cells=lst.copy(cells)
   for _,head in pairs(t.all.cols) do
     head.what.update(head, cells[head.pos]) end
   return i end
+-----------------------------------------------------------
+local function copy(i)
+  local j = create()
+  j.cells = lst.copy(i.cells)
+  j.dom   = i.dom
+  return j
+end
 -----------------------------------------------------------
 local function dominate1(i,j,t)
   local e,n = 2.71828,#t.goals
@@ -26,7 +33,7 @@ local function dominate1(i,j,t)
 end
 -----------------------------------------------------------
 local function dominate(i,t) 
-  if not i.dom then
+  if  i.dom==nil then
     i.dom=0
     for x,j in pairs(t.rows) do
       if i.id ~= j.id then 
@@ -34,4 +41,4 @@ local function dominate(i,t)
           i.dom = i.dom + 1  end end end end 
   return i.dom end
 -----------------------------------------------------------
-return {create=create, update=update,dominate=dominate}
+return {create=create, update=update,dominate=dominate,copy=copy}
