@@ -45,21 +45,19 @@ local function splits(t,y,z,     cols)
 end
 ------------------------------------------------
 local function grow1(above,rows,lvl,b4,attr,val)
-  local function pad() return string.rep('|.. ',1+lvl) end
+  local function pad()       return str.fmt("%-20s",string.rep('| ',lvl)) end
+  local function likeAbove() return tbl.copy(above._t,rows)  end
   if #rows >= the.tree.min then 
     if lvl <= the.tree.maxDepth then 
-      local here = lvl == 0 and above or create(tbl.copy(above,rows),attr,val)
-      print(pad(), #here._)
+      local here = lvl == 0 and above or create(likeAbove(), attr,val) 
       if here.stats.sd < b4 then 
         above._kids[ #above._kids+1 ] = here
-        print("here> ",here._t)
-        print(splits(here._t))
         local cut= splits(here._t)[1] -- where to splot?
-        print("cut", cut)
+        print(str.fmt("%5.2f %5.2f %5s",here.stats.mu, here.stats.sd, here.stats.n),
+              pad(),attr,val)
         -- divide the rows on the values in that split
         local kids= {}
         for _,r in pairs(rows) do
-          print("r",pad(),r)
           local val = r.cells[cut.pos]
           if val ~= the.ignore then  -- remember to skip the ignores
             local with    = kids[val] or {}
@@ -67,21 +65,30 @@ local function grow1(above,rows,lvl,b4,attr,val)
             kids[val]     = with end end
         -- return a node
         for val,with in pairs(kids) do
-          print(#with)
-          grow1(here,with,lvl+1,here.stats.sd,cut.what,val) 
-end end end end end
+          if #with <  #rows then
+            grow1(here,with,lvl+1,here.stats.sd,cut.what,val) end end end end end end
 ------------------------------------------------
 local function grow(t)
   local root = create(t)
   grow1(root, t.rows,0,10^32) 
+  print(#root._kids)
   return root end
 ------------------------------------------------
-local function tprint(tr,    lvl)
-  if tr then
-    lvl = lvl or 0
-    print(str.fmt("n= %5.0f mu=%8.3f sd=%8.3f",tr.stats.n, tr.stats.mu, tr.stats.sd), tr)
-          --string.rep("|   ",lvl)) -- ..  tr.what .. " = " .. tr.what)
-    for what,tr1 in pairs(tr._kids) do
-      tprint(tr1,lvl+1) end end end
+local function tprint(tr,    seen,lvl)
+  local function pad()       return string.rep('| ',lvl-1) end
+  local function left(x)     return str.fmt("%-20s",x) end
+  lvl = lvl or 0
+  seen= seen or {}
+  if not seen[tr]  then
+    seen[tr] = true
+    local suffix=""
+    if #tr._kids == 0 then
+      suffix =  str.fmt("\t: n=%s mu=%-.2f sd=%-.2f",tr.stats.n, tr.stats.mu, tr.stats.sd) end
+    print(left(pad() .. (tr.attr or "") .. " = " .. (tr.val or "")), suffix)
+    for j=1,#tr._kids do
+        tprint(tr._kids[j],seen,lvl+1) end end  end
+---------------------------------------------
+---- leaft prune with t-test.
+---- print the ranges
 
 return {splits=splits,grow=grow,show=tprint}
