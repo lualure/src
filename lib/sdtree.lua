@@ -50,11 +50,13 @@ local function grow1(above,rows,lvl,b4,attr,val)
   if #rows >= the.tree.min then 
     if lvl <= the.tree.maxDepth then 
       local here = lvl == 0 and above or create(likeAbove(), attr,val) 
+      print("bins> ",here.bins)
       if here.stats.sd < b4 then 
         above._kids[ #above._kids+1 ] = here
-        local cut= splits(here._t)[1] -- where to splot?
-        print(str.fmt("%5.2f %5.2f %5s",here.stats.mu, here.stats.sd, here.stats.n),
-              pad(),attr,val)
+        local cuts= splits(here._t) -- where to split?
+        local cut= cuts[1] -- where to split?
+        --print(str.fmt("%5.2f %5.2f %5s",here.stats.mu, here.stats.sd, here.stats.n),
+        --    pad(),attr,val)
         -- divide the rows on the values in that split
         local kids= {}
         for _,r in pairs(rows) do
@@ -69,9 +71,9 @@ local function grow1(above,rows,lvl,b4,attr,val)
             grow1(here,with,lvl+1,here.stats.sd,cut.what,val) end end end end end end
 ------------------------------------------------
 local function grow(t)
+  print("bins> ",t.bins[1])
   local root = create(t)
   grow1(root, t.rows,0,10^32) 
-  print(#root._kids)
   return root end
 ------------------------------------------------
 local function tprint(tr,    seen,lvl)
@@ -82,9 +84,12 @@ local function tprint(tr,    seen,lvl)
   if not seen[tr]  then
     seen[tr] = true
     local suffix=""
-    if #tr._kids == 0 then
-      suffix =  str.fmt("\t: n=%s mu=%-.2f sd=%-.2f",tr.stats.n, tr.stats.mu, tr.stats.sd) end
-    print(left(pad() .. (tr.attr or "") .. " = " .. (tr.val or "")), suffix)
+    if #tr._kids == 0 or lvl ==0 then
+      suffix =  str.fmt("n=%s mu=%-.2f sd=%-.2f",tr.stats.n, tr.stats.mu, tr.stats.sd) end
+    if lvl ==0 then
+      print("\n".. suffix)
+    else
+      print(left(pad() .. (tr.attr or "") .. " = " .. (tr.val or "")),"\t:",suffix) end 
     for j=1,#tr._kids do
         tprint(tr._kids[j],seen,lvl+1) end end  end
 ---------------------------------------------

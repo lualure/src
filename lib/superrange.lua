@@ -21,8 +21,8 @@ local function labels(nums)
 local function same(_)    return _ end
 local function sd(_)      return _.sd end
 local function ent(_)     return sym.ent(_)  end
-local function below(x,y) return x*1.01 < y end
-local function above(x,y) return x > y*1.01 end
+local function below(x,y) return x*the.tree.ish < y end
+local function above(x,y) return x              > y*the.tree.ish end
 --------------------------------------------
 return function (things,x,y,   nump, lessp)
   -- setting up

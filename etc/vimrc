@@ -61,6 +61,7 @@ Plugin 'vim-airline/vim-airline-themes'
 Plugin 'croaker/mustang-vim'
 Plugin 'ap/vim-buftabline'
 Plugin 'enricobacis/vim-airline-clock'
+"Plugin 'majutsushi/tagbar'
 
 let g:airline#extensions#clock#format = 'TIME= %H:%M'
 
@@ -85,3 +86,4 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 set path=.,../etc,../src,../tests
 
 map <F1> :find 
+"nmap <F8> :TagbarToggle<CR>

@@ -71,16 +71,17 @@ local function copy(i, from)
   return j
 end
 -------------------------------------------------------------
+local function lookup(x,breaks,    r)
+  if x==the.ignore then return x end
+  for _,b in pairs(breaks) do
+    r = b.label
+    if x<=b.most then break end end
+  return r end
+-------------------------------------------------------------
 local function discretize(i)
   ---- local convenience functions
   local function discretizeHeader(z)  
     return string.gsub(z , "%$","") end
-  local function lookup(x,breaks,    r)
-    if x==the.ignore then return x end
-    for _,b in pairs(breaks) do
-      r = b.label
-      if x<=b.most then break end end
-    return r end
   ----- main sequence
   local j= create()
   header(j, lst.collect(i.spec, discretizeHeader))
