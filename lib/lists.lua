@@ -13,10 +13,15 @@ local function member(x,t)
 ----------------------------------
 -- ### Positions
 
+
 -- Return First item in a table
 local function first(x) return x[1]  end
 -- Return last item in a table
 local function last(x)  return x[#x] end
+-- Push to end 
+local function push(t,x)
+  t[#t+1] = x
+  return x end
 -- Randomly change an items position
 local function shuffle( t )
   for i= 1,#t do
@@ -24,11 +29,16 @@ local function shuffle( t )
     t[i],t[j] = t[j], t[i] 
   end
   return t end
+-- Return any item in a list
+local function any(t)
+  return t[ math.floor((#t-1) * r.r() + 0.5) ]
+end
 -- Sorting
 local function sort(t,f)
   f=f or function (x,y) return x < y end
   table.sort(t,f)
   return t end
+
 -----------------------------------
 -- ### Mapping
 
@@ -75,4 +85,4 @@ local function copy(t)  --recursive
 return { maprint=maprint,sort=sort,
          first=first, last=last,same=same,copy=copy,
          shallowCopy=shallowCopy, member=member,map=map, 
-         map2=map2, collect=collect,shuffle=shuffle}
+         push=push,map2=map2, collect=collect,shuffle=shuffle}

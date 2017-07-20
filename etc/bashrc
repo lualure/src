@@ -24,7 +24,7 @@ install() { ## ## install LURE (need only be run once) ## install
   EOF
   fi
   sudo easy_install Pygments
-  for f in lua luajit vim git make ctags gawk htop ranger asciiquarium cmatrix ; do
+  for f in lua luajit vim git make ctags gawk mc htop ranger asciiquarium cmatrix ; do
     if which $f; then true; else 
      if [ "$(uname)" == "Darwin" ]; then
         brew install $f

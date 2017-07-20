@@ -67,7 +67,9 @@ local function copy(i, from)
     for _,r in pairs(from) do
       local new = data(j, lst.copy(r.cells))
       new.dom = r.dom 
+      print(">> ",lst.last(j.rows))
       end  end
+    if i.bins then j.bins = lst.copy(i.bins) end 
   return j
 end
 -------------------------------------------------------------
@@ -96,7 +98,9 @@ local function discretize(i)
     -- print(tmp)
     for pos,breaks in pairs(j.bins) do
          tmp[pos] = lookup(tmp[pos],breaks) end
-    update(j,tmp) end 
+    print("!!!! ",lst.last(j.rows))
+    update(j,tmp) 
+  end 
   -- all done
   return j end
 -------------------------------------------------------------
@@ -112,4 +116,4 @@ local function fromCsv(f)
   return out end
 -------------------------------------------------------------
 return {copy=copy, dominates=dominates,header=header,update=update,
-        create=fromCsv,  discretize=discretize}
+        create=fromCsv,  discretize=discretize,lookup=lookup}
