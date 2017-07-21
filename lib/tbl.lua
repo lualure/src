@@ -67,10 +67,10 @@ local function copy(i, from)
     for _,r in pairs(from) do
       local new = data(j, lst.copy(r.cells))
       new.dom = r.dom 
-      print(">> ",lst.last(j.rows))
-      end  end
+      new.xpect = r.xpect 
+    end  end
     if i.bins then j.bins = lst.copy(i.bins) end 
-  return j
+  return j 
 end
 -------------------------------------------------------------
 local function lookup(x,breaks,    r)
@@ -98,7 +98,6 @@ local function discretize(i)
     -- print(tmp)
     for pos,breaks in pairs(j.bins) do
          tmp[pos] = lookup(tmp[pos],breaks) end
-    print("!!!! ",lst.last(j.rows))
     update(j,tmp) 
   end 
   -- all done

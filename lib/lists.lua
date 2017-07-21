@@ -20,8 +20,8 @@ local function first(x) return x[1]  end
 local function last(x)  return x[#x] end
 -- Push to end 
 local function push(t,x)
-  t[#t+1] = x
-  return x end
+ t[#t+1] = x
+ return x end
 -- Randomly change an items position
 local function shuffle( t )
   for i= 1,#t do
@@ -38,7 +38,18 @@ local function sort(t,f)
   f=f or function (x,y) return x < y end
   table.sort(t,f)
   return t end
-
+----------------
+local function firsts(x,y)
+  return first(x) < first(y) end
+local function lasts(x,y)
+  return last(x) < last(y) end
+local function without(t,n)
+  out={}
+  for j,x in pairs(t) do
+    if j ~= n then
+      push(out,x) end end
+  return out
+end
 -----------------------------------
 -- ### Mapping
 
@@ -83,6 +94,6 @@ local function copy(t)  --recursive
 -- ### Public interface
 
 return { maprint=maprint,sort=sort,
-         first=first, last=last,same=same,copy=copy,
+         without=without, firsts=firsts,lasts=lasts,first=first, last=last,same=same,copy=copy,
          shallowCopy=shallowCopy, member=member,map=map, 
          push=push,map2=map2, collect=collect,shuffle=shuffle}

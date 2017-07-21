@@ -195,13 +195,14 @@ local the=require "config"
 EOF
 }
 twins() { ## STEM ## makes STEM.lua and unit test file STEMok.lua ## shell
+  set -x
   f=$(basename $1 ".lua")
   if [ ! -f "$Lure/lib/${f}.lua" ]; then 
 	   _twins1 $f utilities  > $Lure/lib/${f}.lua
   fi
   if [ ! -f "$Lure/tests/${f}ok.lua" ]; then
 	   _twins1 ${f}ok "unit tests for $f" > $Lure/tests/${f}ok.lua
-	   git add ${f}ok.lua
+	   git add $Lure/tests/${f}ok.lua
 	   cat <<-EOF >> $Lure/tests/${f}ok.lua
 	local o=require "tests"	
 	local r=require "random"
@@ -218,6 +219,7 @@ twins() { ## STEM ## makes STEM.lua and unit test file STEMok.lua ## shell
   git add $Lure/lib/${f}.lua
   git add $Lure/tests/${f}ok.lua
   wc $Lure/lib/${f}.lua $Lure/tests/${f}ok.lua
+  set +x
 }
 norman() { ## ## about Norman Vaughan ## misc
   cat<<-EOF | fmt -60

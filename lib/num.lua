@@ -21,6 +21,22 @@ local function updates(lst,f,i)
   for _,one in pairs(lst) do
     update(i, f(one)) end 
   return i end
+
+-----------------------------------------------------
+local function distance(i,j,k) 
+  if j == the.ignore and k == the.ignore then
+    return 0,0 
+  elseif  j == the.ignore then
+    k = norm(i,k)
+    j =  k < 0.5 and 1 or 0
+  elseif k == the.ignore then
+    j = norm(i,j)
+    k = j < 0.5 and 1 or 0
+  else
+    j,k = norm(i,j), norm(i,k)
+  end
+  return math.abs(j-k)^2,1
+end
 -----------------------------------------------------
 local function spread(i) return i.sd end
 -----------------------------------------------------

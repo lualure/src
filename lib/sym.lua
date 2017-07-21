@@ -19,6 +19,16 @@ local function updates(lst,f,i)
   for _,one in pairs(lst) do
     update(i, f(one)) end 
   return i end
+-----------------------------------------------------
+local function distance(i,j,k) 
+  local no = the.ignore
+  if     j==no and k==no then return 0,0
+  elseif j == the.ignore then return 1,1
+  elseif k == the.ignore then return 1,1
+  elseif j==k            then return 0,1
+  else                        return 1,1
+  end
+end
 ------------------------------------------------------
 local function ent(i)
   if i._ent == nil then 
