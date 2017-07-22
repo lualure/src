@@ -15,7 +15,7 @@ local tree=require "sdtree"
 local function _test0(f)
   f = f or "/data/auto.csv"
   print(f)
-  for j=1,20 do
+  for j=1,1 do
     local t1=   tbl.create( the.here .. f)
     local function run1() bpo(t1) end
   --local t2=tbl.discretize(t1)  
@@ -33,6 +33,7 @@ local function _test3() _test0("/data/POM3A_short.csv") end
 local function _test4() _test0("/data/xomo_all.csv") end
 
 r.seed(1)
-_test4()
-_test2()
-_test3()
+-- _test4()
+_test1()
+--_test2()
+--_test3()

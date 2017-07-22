@@ -39,19 +39,27 @@ local function _test3()
   --for i=1,250 do row.dominates(t.rows[i],t) print(t.rows[i].dom) end
 end 
 ----------------------------------------------------------
-local function _test4()
-   local t1=tbl.create(the.here .. "/data/auto.csv")
+local function _test4(f)
+   local function y(i,r) 
+      return row.dominate(r,i)
+   end
+   f = f or "/data/auto.csv"
+   local t1=tbl.create(the.here .. f)
+   --lst.maprint(t1.rows)
    local t2=tbl.discretize(t1)
-   print("rows ",#t1.rows, #t2.rows)
-   local function order(t,x,y) return row.dominate(x,t) < row.dominate(y,t) end 
-   table.sort(t1.rows,function(x,y) return order(t1,x,y) end)
-   table.sort(t2.rows,function(x,y) return order(t2,x,y) end)
-   lst.maprint(t1.rows,5,-5) 
-   print("--")
-   lst.maprint(t2.rows,5,-5) end
+   local ys={}
+   for _,r in pairs(t2.rows) do
+     ys[r.id] = y(t2,r) end
+   t2.rows = lst.sort(t2.rows,function (x,y)
+                               return ys[x.id] > ys[y.id] end)
+  print{t2.spec}
+   print("---")
+   lst.maprint(t2.rows,5,-5) 
+   print(doms)
+end
 ---------------------------------------------
 rand.r(1)
 -- o.k{_test1,_test2,_test3,test4}
-o.k{_test4()}
+_test4()
 
 

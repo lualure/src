@@ -12,7 +12,6 @@ local function create() return {
   rows={}, 
   spec={}, 
   goals={} , less={}, more={}, 
-  bins={},
   index={},
   -- goals={less={}, more={}, cols={}}
   all={nums={}, syms={}, cols={}}, -- all columns
@@ -65,13 +64,18 @@ local function copy(i, from)
       data(j, lst.copy(i.rows[k].cells)) end 
   elseif type(from)=='table' then
     for _,r in pairs(from) do
-      local new = data(j, lst.copy(r.cells))
-      new.dom = r.dom 
-      new.xpect = r.xpect 
-    end  end
-    if i.bins then j.bins = lst.copy(i.bins) end 
+      data(j, lst.copy(r.cells)) end end
   return j 
 end
+-------------------------------------------------------------
+local function dominates(i)
+  local cache={}
+  for j,r in pairs(i.rows) do 
+    io.write(j .. '.')
+    cache[r.id] = row.dominate(r,i) end
+  return cache end
+--  table.sort(i.rows,function (r1,r2) 
+--                      return cache[r1.id] > cache[r2.id]  end) end
 -------------------------------------------------------------
 local function lookup(x,breaks,    r)
   if x==the.ignore then return x end
@@ -80,34 +84,44 @@ local function lookup(x,breaks,    r)
     if x<=b.most then break end end
   return r end
 -------------------------------------------------------------
-local function discretize(i)
+local function firstNumericGoal(i,r)
+  return r.cells [ i.y.nums[1].pos ] end 
+-------------------------------------------------------------
+local function discretize(i, y,   ys)
+  y = y or firstNumericGoal -- y has 2 args: table and row
   ---- local convenience functions
   local function discretizeHeader(z)  
     return string.gsub(z , "%$","") end
+  --
+  local function allYvalues(ys)
+    for _,r in pairs(i.rows) do 
+      ys[r.id] = y(i,r) end 
+    return ys end
   ----- main sequence
   local j= create()
   header(j, lst.collect(i.spec, discretizeHeader))
-  -- learn breaks from i
-  for _,head in pairs(i.x.nums) do
-    j.bins[head.pos]= super(i.rows, 
-                      function (_) return _.cells[head.pos] end,
-                      function (_) return row.dominate(_,i) end) end
-  -- apply breaks to k
+  -- keep list of columns we are changing
+  local todo = lst.collect(i.x.nums, function (_) return _.pos end )
+  -- cache all the y values (important for slow inference)
+  local ys = ys or allYvalues({}) --XXX get rid of this an go for rawy
+  -- find all the bins we need
+  for _,k in pairs(todo) do
+    local cooked = j.all.cols[k]
+    cooked.bins = super(i.rows, 
+           function (_) return _.cells[cooked.pos] end,
+           function (_) return ys[_.id]  end) end
+  -- apply that bin knowledge to the data
   for k,row in pairs(i.rows) do
     local tmp=lst.copy(row.cells)
     -- print(tmp)
-    for pos,breaks in pairs(j.bins) do
-         tmp[pos] = lookup(tmp[pos],breaks) end
-    update(j,tmp) 
+    for _,k in pairs(todo) do
+      local cooked    = j.all.cols[k]
+      local new       = sym.discretize(cooked, tmp[cooked.pos])  
+      tmp[cooked.pos] = new end
+    data(j,tmp) 
   end 
   -- all done
   return j end
--------------------------------------------------------------
-local function dominates(i)
-  for _,r in pairs(i.rows) do 
-    row.dominate(r,i) end
-  table.sort(i.rows,function (r1,r2) 
-                      return r1.dom > r2.dom end) end
 -------------------------------------------------------------
 local function fromCsv(f)
   local out = create()
@@ -115,4 +129,5 @@ local function fromCsv(f)
   return out end
 -------------------------------------------------------------
 return {copy=copy, dominates=dominates,header=header,update=update,
-        create=fromCsv,  discretize=discretize,lookup=lookup}
+        create=fromCsv,  dominates=dominates,
+        discretize=discretize,lookup=lookup}

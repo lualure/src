@@ -29,6 +29,16 @@ local function distance(i,j,k)
   else                        return 1,1
   end
 end
+----------------------------------------------------
+local function discretize(i,x) 
+  local r
+  if x==the.ignore then return x end
+  if not i.bins    then return x end
+  for _,b in pairs(i.bins) do
+    r = b.label
+    if x<=b.most then break end end
+  return r end
+
 ------------------------------------------------------
 local function ent(i)
   if i._ent == nil then 
@@ -49,4 +59,4 @@ local function ke(i)
   e = -1*e
   return k,e,k*e end
 ------------------------------------------------------
-return {create=create, update=update, updates=updates, ent=ent, spread=ent, ke=ke}
+return {create=create, update=update, updates=updates, ent=ent, spread=ent, discretize=discretize,ke=ke}

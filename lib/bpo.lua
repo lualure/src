@@ -7,6 +7,7 @@ local tbl=require "tbl"
 local tree=require "sdtree"
 local row=require "row"
 local num=require "num"
+local watch=require "watch"
 
 local function someRest(n,all)
   local some,rest={},{}
@@ -32,7 +33,7 @@ local function worker(lives,t1,some, rest, history)
                           function (_) return row.dominate(_,t2) end)
   local tr=tree.grow(t2)
   if lives < 1 or #rest==0 then
-    print(history.mu, history.sd)
+    watch.report(history)
     return -- tree.show(tr)
   end
   local cache = {}
@@ -50,8 +51,7 @@ local function worker(lives,t1,some, rest, history)
   rest = lst.without(rest,doomed)
   lst.push(some,best3[3])
   local t3=tbl.copy(t1,some)
-  num.update(history,
-             (log.hi - row.dominate(lst.last(t3.rows),t3))/ (log.hi - log.lo))
+  watch.update(history, row.dominate(lst.last(t3.rows),t3))
   --print(lives,#t3.rows,surprises(t3))
   worker(lives-1,t3,some,rest,history)
 
@@ -66,9 +66,9 @@ local function main(lives,t)
   local some,rest = someRest(the.bpo.pop0,t.rows)
   --local t1=T.discretize(t)
   local t0=tbl.copy(t,some)
-  worker(lives, t0,some,rest,num.create()) end
+  worker(lives, t0,some,rest,watch.create(20)) end
 --------------------------------------------
 return function (t)
-  main(32,t)
+  main(400,t)
 end
 
