@@ -46,6 +46,12 @@ local function _test4(f,y)
    local t1=tbl.create(the.here .. f)
    print(f,#t1.rows)
    local t2=tbl.discretize(t1, y) -- tbl[y](t1)) --  y, false)
+   for _,r1 in pairs(t1.rows) do
+     local found = false
+     for _,r2 in pairs(t2.rows) do
+       if r2.id == r1.id then
+         found= true end end
+     if not found then print("????") end end
    for _,head in pairs(t2.x.cols) do
      if head.bins then
        print(#head.bins,head.txt) end end
@@ -60,7 +66,7 @@ local function _test1(f) _test4(f) end
 local function _test2() _test4("/data/xomo_all_short.csv") end
 local function _test3() _test4("/data/POM3A_short.csv") end
 
-o.k{_test1,_test2,_test3}
+o.k{_test1} --_test2,_test3}
 -- o.k{_test1,_test2,_test3,test4}
 --_test4()
 

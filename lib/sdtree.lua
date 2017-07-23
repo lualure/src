@@ -10,8 +10,7 @@ local row=require "row"
 local tbl=require "tbl"
 local str=require "str"
 ------------------------------------------------
-local function create(t,y,pos,attr,val)  
-  local yfun = tbl[y](t)
+local function create(t,yfun,pos,attr,val)  
   return { _t=t, 
           _kids={},
           yfun = yfun,
@@ -45,19 +44,18 @@ local function splits(t,y)
   return lst.collect(out, function (x) 
                               return x.val end) end
 ------------------------------------------------
-local function grow1(above,y,rows,lvl,b4,pos,attr,val)
+local function grow1(above,yfun,rows,lvl,b4,pos,attr,val)
   local function pad()       return str.fmt("%-20s",string.rep('| ',lvl)) end
   local function likeAbove() return tbl.copy(above._t,rows)  end
   --print(pad())
   if #rows >= the.tree.min then 
     if lvl <= the.tree.maxDepth then 
-      local here = lvl == 0 and above or create(likeAbove(), y,pos,attr,val) 
+      local here = lvl == 0 and above or create(likeAbove(), yfun,pos,attr,val) 
       if here.stats.sd < b4 then 
         if lvl > 0 then 
           above._kids[ #above._kids+1 ] = here 
         end
-        print(lvl)
-        local cuts= splits(here._t, here.yfun) -- where to split?
+        local cuts= splits(here._t, yfun) -- where to split?
         local cut= cuts[1] -- where to split?
         -- divide the rows on the values in that split
         local kids= {}
@@ -66,15 +64,18 @@ local function grow1(above,y,rows,lvl,b4,pos,attr,val)
           if val ~= the.ignore then  -- remember to skip the ignores
             local rows1    = kids[val] or {}
             rows1[#rows1+1] = r  -- push row 
-            kids[val]     = with end end
+            kids[val]     = rows1 end end
         -- return a node
         for val,rows1 in pairs(kids) do
           if #rows1 <  #rows then
-            grow1(here,y,rows1,lvl+1,here.stats.sd,cut.pos,cut.what,val) end end end end end end
+            grow1(here,yfun,rows1,lvl+1,here.stats.sd,cut.pos,cut.what,val) 
+  end end end end end end
 ------------------------------------------------
 local function grow(t, y)
-  local root = create(t,y)
-  grow1(root, y, t.rows,0,10^32) 
+  local yfun = tbl[y](t)
+  local root = create(t,yfun)
+  print("----------")
+  grow1(root, yfun, t.rows,0,10^32) 
   return root end
 ------------------------------------------------
 local function tprint(tr,    lvl)
@@ -93,17 +94,11 @@ local function tprint(tr,    lvl)
   for j=1,#tr._kids do
       tprint(tr._kids[j],lvl+1) end end  
 ---------------------------------------------
-local function leaf(tr,cells,bins,  lvl)
+local function leaf(tr,cells,  lvl)
   lvl=lvl or 0
-  if lvl==0 then 
-    for pos,breaks in pairs(bins) do
-      cells[pos] = tbl.lookup(cells[pos], breaks) end 
-    -- print(""); print(cells)
-  end
   for j,kid in pairs(tr._kids) do
     local pos,val = kid.pos, kid.val
     if cells[kid.pos] == kid.val then
-      -- print{here=pos,val=val,attr=kid.attr}
       return leaf(kid, cells, bins, lvl+1) end end 
   return tr end
 --------------------------------------------

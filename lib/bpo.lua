@@ -27,18 +27,20 @@ local function surprises(t)
       inc = want-got end end
   return {want=want,got=got,inc=inc/#t.rows}
 end
-local function worker(lives,t1,some, rest, history)
-  local t2=tbl.discretize(t1)  
-  local log = num.updates(t2.rows, 
-                          function (_) return row.dominate(_,t2) end)
-  local tr=tree.grow(t2)
+local function worker(lives,t1,y,some, rest, history)
+  print(1)
+  local t2=tbl.discretize(t1,y)  
+  local tr=tree.grow(t2,y)
+  print(lives, #rest)
   if lives < 1 or #rest==0 then
     watch.report(history)
     return -- tree.show(tr)
   end
+  print(2) 
   local cache = {}
   for j=1,256 do
     local r = rest[j]
+    print(j)
     local leaf= tree.leaf(tr,r.cells,t2.bins)
     lst.push(cache,{leaf.stats.mu,
                     j,r}) end
@@ -50,10 +52,10 @@ local function worker(lives,t1,some, rest, history)
   local doomed=best3[2]
   rest = lst.without(rest,doomed)
   lst.push(some,best3[3])
-  local t3=tbl.copy(t1,some)
+  local t3=tbl.copy(t1,some,t2)
   watch.update(history, row.dominate(lst.last(t3.rows),t3))
   --print(lives,#t3.rows,surprises(t3))
-  worker(lives-1,t3,some,rest,history)
+  worker(lives-1,y,t3,some,rest,history)
 
   -- computer error!!! XXXX
   --print("bins ",t1.bins)
@@ -62,11 +64,12 @@ local function worker(lives,t1,some, rest, history)
   --S.show(root)
 end
 --------------------------------------------
-local function main(lives,t)
+local function main(lives,t,y)
+  y = y or "goal1"
   local some,rest = someRest(the.bpo.pop0,t.rows)
   --local t1=T.discretize(t)
-  local t0=tbl.copy(t,some)
-  worker(lives, t0,some,rest,watch.create(20)) end
+  local t0=tbl.copy(t,some,t)
+  worker(lives, t0,y,some,rest,watch.create(20)) end
 --------------------------------------------
 return function (t)
   main(400,t)

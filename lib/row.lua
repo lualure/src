@@ -14,7 +14,8 @@ local function update(i,cells,t)
 -----------------------------------------------------------
 local function copy(i)
   local j = create()
-  j.cells = lst.copy(i.cells)
+  j.cells = lst.copy(i.cells) -- get different cells
+  j.id = i.id -- keep their same id (for reference purposes)
   return j
 end
 ----------------------------------------------------------

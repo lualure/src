@@ -44,9 +44,11 @@ local function header(i,cells)
       where[ #where + 1 ] = one end end 
   return i end
 -------------------------------------------------------------
-local function data(i,cells)
+local function data(i,cells,old)
   local new = row.update(row.create(),cells,i)
   i.rows[#i.rows+1] = new
+  if old then
+    new.id=old.id end
   return new end
 -------------------------------------------------------------
 local function update(i,cells) 
@@ -65,39 +67,43 @@ local function copy(i, from)
       data(j, lst.copy(i.rows[k].cells)) end 
   elseif type(from)=='table' then
     for _,r in pairs(from) do
-      data(j, lst.copy(r.cells)) end end
+      data(j, lst.copy(r.cells),r) end end
   return j 
 end
 -------------------------------------------------------------
-local function xdominates(i)
-  local cache={}
-  for j,r in pairs(i.rows) do 
-    io.write(j .. '.')
-    cache[r.id] = row.dominate(r,i) end
-  return cache end
---  table.sort(i.rows,function (r1,r2) 
---                      return cache[r1.id] > cache[r2.id]  end) end
+local function discretizeCells(i,cells) 
+  out=lst.copy(cells)
+  for _,head in pairs(i.x.cols) do
+     out[head.pos] = sym.discretize(head,cells[head.pos]) end
+  return out
+end
 -------------------------------------------------------------
+local function goallast(t,n) 
+  return function(r) 
+           return lst.last(r.cells )  end  end
+
 local function goaln(t,n) 
   return function(r) 
            return r.cells [ t.y.nums[n].pos ] end  end
+
 local function goal1(t) 
   return goaln(t,1) end 
--------------------------------------------------------------
+
 local function dom(t)
   local b4={}
   return function (r)   
            if not b4[r.id] then 
-             b4[r.id]=row.dominate(r,t) end
+             io.write('.');b4[r.id]=row.dominate(r,t) end
            return b4[r.id] end end
-local funs={goaln=goaln, goal1=goal1,dom=dom}
+
+local funs={goaln=goaln, goal1=goal1,dom=dom,goallast=goallast}
 -------------------------------------------------------------
 local function discretizeHeaders(spec)
   return lst.collect(spec, 
            function(txt) 
              return string.gsub(txt,"%$","") end) end
 -------------------------------------------------------------
-local function discretize(i, y)
+local function discretizeRows(i, y)
   -- 'j' is a table where all the numerics and symbols
   local j = header(create(), 
              discretizeHeaders(i.spec))
@@ -110,14 +116,14 @@ local function discretize(i, y)
     cooked.bins = super(i.rows,x, yfun) 
   end
   -- each row in 'i' gets transformed, according to 'bins'
-  for _,row in pairs(i.rows) do
-    local tmp=lst.copy(row.cells)
+  for _,r in pairs(i.rows) do
+    local tmp=lst.copy(r.cells)
     for _,head in pairs(i.x.nums) do
       local cooked    = j.all.cols[head.pos]
       local old       = tmp[cooked.pos]
       local new       = sym.discretize(cooked, old)
       tmp[cooked.pos] = new  end
-    data(j,tmp) end 
+    data(j,tmp,r) end 
   return j end
 -------------------------------------------------------------
 local function fromCsv(f)
@@ -126,5 +132,5 @@ local function fromCsv(f)
   return out end
 -------------------------------------------------------------
 return {copy=copy, header=header,update=update,
-        create=fromCsv,goal1=goal1,dom=dom,goaln=goaln,
-        discretize=discretize}
+        create=fromCsv,goal1=goal1,dom=dom,goaln=goaln,goallast=goallast,
+        discretize=discretizeRows,discretize1=discretizeCells}
