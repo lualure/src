@@ -15,8 +15,8 @@ local function member(x,t)
 
 
 -- Return First item in a table
-local function first(x) return x[1]  end
--- Return last item in a table
+local function first(x)  return x[#x] end
+  -- Return last item in a table
 local function last(x)  return x[#x] end
 -- Push to end 
 local function push(t,x)
@@ -40,6 +40,9 @@ local function sort(t,f)
   return t end
 ----------------
 local function firsts(x,y)
+  print("")
+  print{x=x}
+  print{y=y}
   return first(x) < first(y) end
 local function lasts(x,y)
   return last(x) < last(y) end

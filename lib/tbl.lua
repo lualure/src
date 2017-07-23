@@ -12,7 +12,7 @@ local function create() return {
   rows={}, 
   spec={}, 
   goals={} , less={}, more={}, 
-  index={},
+  name={},
   -- goals={less={}, more={}, cols={}}
   all={nums={}, syms={}, cols={}}, -- all columns
   x  ={nums={}, syms={}, cols={}}, -- all independent columns
@@ -39,9 +39,10 @@ local function header(i,cells)
     one.txt   = cell
     one.what  = what
     one.weight= weight
-    i.index[one.txt] = one
+    i.name[one.txt] = one
     for _,where in pairs(wheres) do
-      where[ #where + 1 ] = one end end end
+      where[ #where + 1 ] = one end end 
+  return i end
 -------------------------------------------------------------
 local function data(i,cells)
   local new = row.update(row.create(),cells,i)
@@ -68,7 +69,7 @@ local function copy(i, from)
   return j 
 end
 -------------------------------------------------------------
-local function dominates(i)
+local function xdominates(i)
   local cache={}
   for j,r in pairs(i.rows) do 
     io.write(j .. '.')
@@ -77,50 +78,46 @@ local function dominates(i)
 --  table.sort(i.rows,function (r1,r2) 
 --                      return cache[r1.id] > cache[r2.id]  end) end
 -------------------------------------------------------------
-local function lookup(x,breaks,    r)
-  if x==the.ignore then return x end
-  for _,b in pairs(breaks) do
-    r = b.label
-    if x<=b.most then break end end
-  return r end
+local function goaln(t,n) 
+  return function(r) 
+           return r.cells [ t.y.nums[n].pos ] end  end
+local function goal1(t) 
+  return goaln(t,1) end 
 -------------------------------------------------------------
-local function firstNumericGoal(i,r)
-  return r.cells [ i.y.nums[1].pos ] end 
+local function dom(t)
+  local b4={}
+  return function (r)   
+           if not b4[r.id] then 
+             b4[r.id]=row.dominate(r,t) end
+           return b4[r.id] end end
+local funs={goaln=goaln, goal1=goal1,dom=dom}
 -------------------------------------------------------------
-local function discretize(i, y,   ys)
-  y = y or firstNumericGoal -- y has 2 args: table and row
-  ---- local convenience functions
-  local function discretizeHeader(z)  
-    return string.gsub(z , "%$","") end
-  --
-  local function allYvalues(ys)
-    for _,r in pairs(i.rows) do 
-      ys[r.id] = y(i,r) end 
-    return ys end
-  ----- main sequence
-  local j= create()
-  header(j, lst.collect(i.spec, discretizeHeader))
-  -- keep list of columns we are changing
-  local todo = lst.collect(i.x.nums, function (_) return _.pos end )
-  -- cache all the y values (important for slow inference)
-  local ys = ys or allYvalues({}) --XXX get rid of this an go for rawy
-  -- find all the bins we need
-  for _,k in pairs(todo) do
-    local cooked = j.all.cols[k]
-    cooked.bins = super(i.rows, 
-           function (_) return _.cells[cooked.pos] end,
-           function (_) return ys[_.id]  end) end
-  -- apply that bin knowledge to the data
-  for k,row in pairs(i.rows) do
+local function discretizeHeaders(spec)
+  return lst.collect(spec, 
+           function(txt) 
+             return string.gsub(txt,"%$","") end) end
+-------------------------------------------------------------
+local function discretize(i, y)
+  -- 'j' is a table where all the numerics and symbols
+  local j = header(create(), 
+             discretizeHeaders(i.spec))
+  -- each header in 'j' gets 'bins': a list saying how to
+  -- change num into a sym
+  local yfun = funs[y](i)
+  for _,head in pairs(i.x.nums) do
+    local cooked = j.all.cols[head.pos]
+    local function x(r) return r.cells[cooked.pos] end
+    cooked.bins = super(i.rows,x, yfun) 
+  end
+  -- each row in 'i' gets transformed, according to 'bins'
+  for _,row in pairs(i.rows) do
     local tmp=lst.copy(row.cells)
-    -- print(tmp)
-    for _,k in pairs(todo) do
-      local cooked    = j.all.cols[k]
-      local new       = sym.discretize(cooked, tmp[cooked.pos])  
-      tmp[cooked.pos] = new end
-    data(j,tmp) 
-  end 
-  -- all done
+    for _,head in pairs(i.x.nums) do
+      local cooked    = j.all.cols[head.pos]
+      local old       = tmp[cooked.pos]
+      local new       = sym.discretize(cooked, old)
+      tmp[cooked.pos] = new  end
+    data(j,tmp) end 
   return j end
 -------------------------------------------------------------
 local function fromCsv(f)
@@ -128,6 +125,6 @@ local function fromCsv(f)
   csv(f, function (cells) update(out,cells) end)
   return out end
 -------------------------------------------------------------
-return {copy=copy, dominates=dominates,header=header,update=update,
-        create=fromCsv,  dominates=dominates,
-        discretize=discretize,lookup=lookup}
+return {copy=copy, header=header,update=update,
+        create=fromCsv,goal1=goal1,dom=dom,goaln=goaln,
+        discretize=discretize}

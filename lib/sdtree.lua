@@ -10,43 +10,40 @@ local row=require "row"
 local tbl=require "tbl"
 local str=require "str"
 ------------------------------------------------
-local function firstNumericGoal(t,r)
-  return r.cells [ t.y.nums[1].pos ] end 
-------------------------------------------------
 local function create(t,y,pos,attr,val)  
-  y = y or firstNumericGoal
+  local yfun = tbl[y](t)
   return { _t=t, 
           _kids={},
+          yfun = yfun,
           pos=pos, -- split data at this pos
           attr= attr, val= val, 
-          stats= num.updates(t.row,  y)}
+          stats= num.updates(t.rows,  yfun)}
 end
-------------------------------------------------
-local function splits(t,y,z,     cols) 
-  y = y or firstNumericGoal
-  z = z or function (_) return _.sd end
-  -----------------------------------------------
+-----------------------------------------------
+local function splits(t,y)
   local function xpect(col)
-    if not col._score then
-      col._score=0
-      for _,num in pairs(col.nums) do
-        col._score = col._score+ z(num)* num.n / col.n end end
-    return col._score end
+    local tmp = 0
+    for _,x in pairs(col.nums) do
+      tmp = tmp +  x.sd * x.n / col.n end 
+    return tmp end
   -----------------------------------------------
-  local function whatif(head)
+  local function whatif(head,y)
     local col = {pos=head.pos, what=head.txt, nums={},n=0} 
     for _,row in pairs(t.rows) do
        local x = row.cells[col.pos]
        if x ~= the.ignore then
          col.n = col.n + 1
          col.nums[x] = num.update(col.nums[x] or num.create(), 
-                                  y(t,row))  end end
-    return col end
+                                  y(row))  end end
+    return {key=xpect(col), val=col} end
   -------------------  
-  return lst.sort( lst.collect(t.x.cols, whatif),
-                   function(a,b) 
-                     return xpect(a) < xpect(b) end)
-end
+  local out = {}
+  for _,h in pairs(t.x.cols) do 
+    out[#out+1] = whatif(h,y) end
+  table.sort(out, function (x,y) 
+                      return x.key < y.key end)
+  return lst.collect(out, function (x) 
+                              return x.val end) end
 ------------------------------------------------
 local function grow1(above,y,rows,lvl,b4,pos,attr,val)
   local function pad()       return str.fmt("%-20s",string.rep('| ',lvl)) end
@@ -56,21 +53,24 @@ local function grow1(above,y,rows,lvl,b4,pos,attr,val)
     if lvl <= the.tree.maxDepth then 
       local here = lvl == 0 and above or create(likeAbove(), y,pos,attr,val) 
       if here.stats.sd < b4 then 
-        if lvl > 0 then above._kids[ #above._kids+1 ] = here end
-        local cuts= splits(here._t) -- where to split?
+        if lvl > 0 then 
+          above._kids[ #above._kids+1 ] = here 
+        end
+        print(lvl)
+        local cuts= splits(here._t, here.yfun) -- where to split?
         local cut= cuts[1] -- where to split?
         -- divide the rows on the values in that split
         local kids= {}
         for _,r in pairs(rows) do
           local val = r.cells[cut.pos]
           if val ~= the.ignore then  -- remember to skip the ignores
-            local with    = kids[val] or {}
-            with[#with+1] = r  -- push row 
+            local rows1    = kids[val] or {}
+            rows1[#rows1+1] = r  -- push row 
             kids[val]     = with end end
         -- return a node
-        for val,with in pairs(kids) do
-          if #with <  #rows then
-            grow1(here,with,lvl+1,here.stats.sd,cut.pos,cut.what,val) end end end end end end
+        for val,rows1 in pairs(kids) do
+          if #rows1 <  #rows then
+            grow1(here,y,rows1,lvl+1,here.stats.sd,cut.pos,cut.what,val) end end end end end end
 ------------------------------------------------
 local function grow(t, y)
   local root = create(t,y)
