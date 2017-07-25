@@ -19,10 +19,10 @@ local function update(i,x)
 -----------------------------
 local function tiles(i,p)
   local p = p or 0.1
-  table.sort(i._all)
-  local q, out, max = 1, {},  #i._all
+  table.sort(i)
+  local q, out, max = 1, {},  #i
   while max*q*p < max do
-    out[q] = i._all[ math.floor( max*q*p ) ]
+    out[q] = i[ math.floor( max*q*p ) ]
     q      = q + 1 end
   return out end
 
@@ -43,8 +43,54 @@ local function cliffsDelta(i,j)
   --print(lt,gt,#lst1,#lst2)
   return math.abs(gt - lt) / (#lst1 * #lst2) > the.sample.cliffsDelta end
 
+function bootstrap(y0,z0)
+  -- The bootstrap hypothesis test from
+  -- 220 to 223 of Efron's book 'An
+  -- introduction to the boostrap'.
+  local function sampleWithReplacement(lst)
+    local function n()   return math.floor(r.r() * #lst) + 1 end
+    local function one() return lst[one()] end
+    local out={}
+    for i=1,#lst do out[i] = one() end
+    return out end
+  ----------------------------------------- 
+  local function testStatistic(y,z)
+    return (y.mu - z.mu) / (10^-64 + (y.sd/y.n + z.sd/z.n)^0.5) end
+  ----------------------------------------- 
+  local function updates(i,lst)
+    for j=1,#lst do
+      local x    = lst[j]
+      i.n  = i.n + 1
+      local delta = x - i.mu
+      i.mu = i.mu + delta / i.n
+      i.m2 = i.m2 + delta * (x - i.mu)
+      if i.n > 1 then
+        i.sd = (i.m2 / (i.n - 1))^0.5 end end
+    return i end
+  ----------------------------------------- 
+  local function create(lst)
+    return updates({sum=0, n=0,mu=0, all={},m2=0,sd=0}, lst) end
+  ----------------------------------------- 
+  local function add(i,j)
+    return updates( create(i), j) end
+  ----------------------------------------- 
+  local y, z = create(y0), create(z0)
+  local x    = add(y,z)
+  local tobs = testStatistic(y,z)
+  local yhat, zhat = {}, {}
+  for i=1,#y.all do yhat[i] = y.all[i] - y.mu + x.mu end
+  for i=1,#z.all do zhat[i] = z.all[i] - z.mu + x.mu end
+  local bigger = 0
+  for _ = 1,the.sample.b do
+    if testStatistic(create(sampleWithReplacement(yhat)),
+                     create(sampleWithReplacement(zhat))) > tobs then
+      bigger = bigger + 1 end end
+  return bigger / the.sample.b < the.num.conf/100 end
+
+-----------------------------
 
 local function same(i,j) 
   return not (cliffsDelta(i,j) and bootstrap(i,j)) end
 -----------------------------
-return {create=create, update=update,cliffsDelta=cliffsDelta,tiles=tiles}
+return {create=create, update=update,cliffsDelta=cliffsDelta,
+        bootstrap=bootstrap,tiles=tiles}

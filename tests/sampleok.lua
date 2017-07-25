@@ -29,6 +29,25 @@ local function _cliffs()
     end
     str.say("%5.3f\t%5s\t%20s\t%20s\n",
             n1,s.cliffsDelta(i,j), 
+            tostring(s.tiles(i._all,0.25)), 
+            tostring(s.tiles(j._all,0.25)))
+    n1 = n1 *1.01
+  end end 
+
+local function _bootstrap()
+  local n1=1
+  local fmt = "%5s\t%5s\t%20s %20s\n"
+  str.say(fmt, "n","same?","one","two")
+  str.say(fmt, "-----","-----","-----","-----")
+  while n1 < 1.5 do
+    local i,j = {}, {}
+    for _=1,100 do
+      local val = r.r()^0.5
+      i[#i+1] = val
+      j[#j+1] = val*n1 
+    end
+    str.say("%5.3f\t%5s\t%20s\t%20s\n",
+            n1,s.bootstrap(i,j), 
             tostring(s.tiles(i,0.25)), 
             tostring(s.tiles(j,0.25)))
     n1 = n1 *1.01
@@ -37,3 +56,4 @@ local function _cliffs()
 r.seed(1)
 _test1()
 _cliffs()
+_bootstrap()
