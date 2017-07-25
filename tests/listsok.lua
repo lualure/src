@@ -39,5 +39,11 @@ local function _copy()
   assert(t3[4][3] == 8)
 end
 
+local function _bsearch()
+  local a={}
+  for i=1,100 do
+    a[i]=i^0.5 end
+  print(lst.bsearch(a,5)) end
+
 r.seed()
-o.k{_test1,_mapping,_copy}
+o.k{_test1,_mapping,_copy,_bsearch}

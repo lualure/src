@@ -53,6 +53,18 @@ local function without(t,n)
       push(out,x) end end
   return out
 end
+
+local function bsearch(t,val,f) 
+  f = f or function (t,x) return t[x] end
+  local lo,hi=1,#t
+  while lo <= hi do
+    local mid = (lo+hi)/2
+    mid = math.floor(mid)
+    if f(t,mid) >= val then
+      hi = mid - 1
+    else
+      lo = mid + 1 end end
+  return math.min(lo,#t)  end
 -----------------------------------
 -- ### Mapping
 
@@ -98,5 +110,5 @@ local function copy(t)  --recursive
 
 return { maprint=maprint,sort=sort,
          without=without, firsts=firsts,lasts=lasts,first=first, last=last,same=same,copy=copy,
-         shallowCopy=shallowCopy, member=member,map=map, 
+         shallowCopy=shallowCopy, member=member,map=map, bsearch=bsearch,
          push=push,map2=map2, collect=collect,shuffle=shuffle}

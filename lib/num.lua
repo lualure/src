@@ -53,18 +53,18 @@ local function norm(i,x)
   return (x - i.lo) / (i.hi - i.lo + 1e-32) end
 ----------------------------------------------------
 local function ttest1(df,first,last,crit) 
-  print{c3=crit[3],first=first, last=last}
-  if df < first  then
-    return crit[first] end
-  local n1 = first
-  while n1 < last do
-    local n2=n1*2
-    if df >= n1 and df <= n2 then
-      local old,new = crit[n1],crit[n2]
-      print(">>",df,n1,n2,old,new)
-      return old + (new-old) * (df-n1)/(n2-n1) end 
-    n1=n2 end
-  return crit[last] end
+  if df <= first  then
+    return crit[first] 
+  elseif  df >= last then 
+    return crit[last]
+  else
+    local n1 = first
+    while n1 < last do
+      local n2=n1*2
+      if df >= n1 and df <= n2 then
+        local old,new = crit[n1],crit[n2]
+        return old + (new-old) * (df-n1)/(n2-n1) end 
+      n1=n1*2 end end end
 ----------------------------------------------------
 local  function ttest(i,j) 
   -- debugged using https://goo.gl/CRl1Bz
@@ -77,7 +77,6 @@ local  function ttest(i,j)
                     the.num.first,
                     the.num.last,
                     the.num.criticals[the.num.conf])
-  print("tc> ",t,c)
   return math.abs(t) > c end
 ----------------------------------------------------
 local function hedges(i,j)

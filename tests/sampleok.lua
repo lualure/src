@@ -1,49 +1,10 @@
 -- # sampleok : unit tests for sample
--- 
--- DARE, Copyright (c) 2017, Tim Menzies
--- All rights reserved, BSD 3-Clause License
--- 
--- Redistribution and use in source and binary forms, with
--- or without modification, are permitted provided that
--- the following conditions are met:
--- 
--- * Redistributions of source code must retain the above
---   copyright notice, this list of conditions and the 
---   following disclaimer.
--- 
--- * Redistributions in binary form must reproduce the
---   above copyright notice, this list of conditions and the 
---   following disclaimer in the documentation and/or other 
---   materials provided with the distribution.
--- 
--- * Neither the name of the copyright holder nor the names 
---   of its contributors may be used to endorse or promote 
---   products derived from this software without specific 
---   prior written permission.
--- 
--- THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
--- CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
--- WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
--- WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
--- PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
--- THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY
--- DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
--- CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
--- PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
--- USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
--- HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
--- IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
--- NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
--- USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
--- POSSIBILITY OF SUCH DAMAGE.
 
 require "show"
-	
 local o=require "tests"	
 local r=require "random"
 local s=require "sample"
-
-print(r.r())
+local str=require "str"
 
 local function _test1()
   local some=s.create(64)
@@ -54,5 +15,25 @@ local function _test1()
   print(some._all) 
 end
 
+local function _cliffs()
+  local n1=1
+  local fmt = "%5s\t%5s\t%20s %20s\n"
+  str.say(fmt, "n","same?","one","two")
+  str.say(fmt, "-----","-----","-----","-----")
+  while n1 < 1.5 do
+    local i,j = s.create(), s.create()
+    for _=1,100 do
+      local val = r.r()^0.5
+      s.update(i, val)
+      s.update(j, val*n1) 
+    end
+    str.say("%5.3f\t%5s\t%20s\t%20s\n",
+            n1,s.cliffsDelta(i,j), 
+            tostring(s.tiles(i,0.25)), 
+            tostring(s.tiles(j,0.25)))
+    n1 = n1 *1.01
+  end end 
+
 r.seed(1)
-o.k{_test1}
+_test1()
+_cliffs()
