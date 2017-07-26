@@ -27,9 +27,7 @@ local function tiles(i,p)
   return out end
 
 -----------------------------
-local function cliffsDelta(i,j)
-  lst1=i._all
-  lst2=j._all
+local function cliffsDelta(lst1,lst2)
   table.sort(lst2)
   local lt,gt,max=0,0,#lst2
   for _,one in pairs(lst1) do
@@ -49,17 +47,19 @@ function bootstrap(y0,z0)
   -- introduction to the boostrap'.
   local function sampleWithReplacement(lst)
     local function n()   return math.floor(r.r() * #lst) + 1 end
-    local function one() return lst[one()] end
+    local function one() return lst[n()] end
     local out={}
     for i=1,#lst do out[i] = one() end
+   -- print(out)
     return out end
   ----------------------------------------- 
-  local function testStatistic(y,z)
+  local function delta(y,z)
     return (y.mu - z.mu) / (10^-64 + (y.sd/y.n + z.sd/z.n)^0.5) end
   ----------------------------------------- 
   local function updates(i,lst)
     for j=1,#lst do
-      local x    = lst[j]
+      local x = lst[j]
+      i.all[#i.all + 1] = x
       i.n  = i.n + 1
       local delta = x - i.mu
       i.mu = i.mu + delta / i.n
@@ -72,25 +72,23 @@ function bootstrap(y0,z0)
     return updates({sum=0, n=0,mu=0, all={},m2=0,sd=0}, lst) end
   ----------------------------------------- 
   local function add(i,j)
-    return updates( create(i), j) end
+    return updates( lst.copy(i), j) end
   ----------------------------------------- 
   local y, z = create(y0), create(z0)
   local x    = add(y,z)
-  local tobs = testStatistic(y,z)
+  local tobs = delta(y,z)
   local yhat, zhat = {}, {}
   for i=1,#y.all do yhat[i] = y.all[i] - y.mu + x.mu end
   for i=1,#z.all do zhat[i] = z.all[i] - z.mu + x.mu end
   local bigger = 0
   for _ = 1,the.sample.b do
-    if testStatistic(create(sampleWithReplacement(yhat)),
-                     create(sampleWithReplacement(zhat))) > tobs then
+    if delta(create(sampleWithReplacement(yhat)),
+             create(sampleWithReplacement(zhat))) > tobs then
       bigger = bigger + 1 end end
-  return bigger / the.sample.b < the.num.conf/100 end
-
------------------------------
-
+  return bigger / the.sample.b > the.num.conf/100 end
+-----------------------------------------------------------
 local function same(i,j) 
-  return not (cliffsDelta(i,j) and bootstrap(i,j)) end
------------------------------
-return {create=create, update=update,cliffsDelta=cliffsDelta,
+  return not(cliffsDelta(i,j) and bootstrap(i,j)) end
+-----------------------------------------------------------
+return {create=create, same=same, update=update,cliffsDelta=cliffsDelta,
         bootstrap=bootstrap,tiles=tiles}

@@ -44,7 +44,6 @@ local function discretize(i,x)
     r = b.label
     if x<=b.most then break end end
   return r end
-
 ----------------------------------------------------
 local function spread(i) return i.sd end
 ----------------------------------------------------

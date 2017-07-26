@@ -42,18 +42,19 @@ local function _bootstrap()
   while n1 < 1.5 do
     local i,j = {}, {}
     for _=1,100 do
-      local val = r.r()^0.5
+      local x = r.r()
+      local val = x^0.5
       i[#i+1] = val
       j[#j+1] = val*n1 
     end
     str.say("%5.3f\t%5s\t%20s\t%20s\n",
-            n1,s.bootstrap(i,j), 
-            tostring(s.tiles(i,0.25)), 
-            tostring(s.tiles(j,0.25)))
+            n1,s.same(i,j), 
+            tostring(str.fmts("%5.3f",s.tiles(i,0.10))), 
+            tostring(str.fmts("%5.3f",s.tiles(j,0.10))))
     n1 = n1 *1.01
   end end 
 
 r.seed(1)
-_test1()
-_cliffs()
+--_test1()
+--_cliffs()
 _bootstrap()
