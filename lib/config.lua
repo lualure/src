@@ -7,6 +7,7 @@ function defaults() return {
   here=   os.getenv("Lure"),
   sample= { b=200,
             most=512,
+            epsilon=1.01,
             cliffsDelta=0.147 -- small
             --cliffsDelta=0.33 -- small
             --cliffsDelta=0.474 -- small

@@ -15,7 +15,7 @@ snips() { ## ## show snippets file ## editor
 load() { ## ## reload environment ## shell
  . $Lure/etc/bashrc
 }
-install() { ## ## install LURE (need only be run once) ## :install
+init() { ## ## install LURE (need only be run once) ## :init
   cd $Lure
   if [ "$(uname)" == "Darwin" ]; then
       /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
@@ -128,7 +128,7 @@ gitting() {
 	git config credential.helper 'cache --timeout=3600'
 	git config --global push.default simple
 }
-timm() { ## ## Private: sets up this repo for timm ## :install
+timm() { ## ## Private: sets up this repo for timm ## git
 	git config --global user.name "Tim Menzies"
 	git config --global user.email tim.menzies@gmail.com
 }
@@ -149,9 +149,9 @@ help() { ## ## show help ## misc
           /BEGIN/ { next    }
           { for(i=1;i<=NF;i++)
                $i=trim($i)
-            pad="         "
+            pad="       "
             gsub(/:/,"",$NF)
-            pre=  $NF==last ? pad : toupper($NF)":\n" pad
+            pre=  $NF==last ? pad : "\n" toupper($NF)":\n" pad
             last=$NF 
             gsub(/[(){]/,"",$1)
             opts= NF==4 ? $2 : ""
