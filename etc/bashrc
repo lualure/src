@@ -7,10 +7,10 @@ newdle() { ## ## update vim bundles ## editor
    cd $Lure
 }
 sniped() { ## ## edit snippets file ## editor
-    vi /Users/timm/.vim/bundle/vim-snippets/snippets/lua.snippets
+    vi $HOME/.vim/bundle/vim-snippets/snippets/lua.snippets
 }
 snips() { ## ## show snippets file ## editor
-    cat  /Users/timm/.vim/bundle/vim-snippets/snippets/lua.snippets
+    cat  $HOME/.vim/bundle/vim-snippets/snippets/lua.snippets
 }
 load() { ## ## reload environment ## shell
  . $Lure/etc/bashrc
@@ -74,7 +74,8 @@ EOF
     git clone https://github.com/rgieseke/locco etc/locco
   fi
   gitting
-  timm
+  echo "you should run commands like the following..."
+  type timm
 }
 doco() { ## ## generate html doco files ## shell
    if [ ! -d "$Lure/../info" ]; then
@@ -116,12 +117,12 @@ show() { ## FUN ## display definition of FUN ## shell
   type $1
 }
 oks() { ## ## run all the Xok.lua files ## lua
-  ls ${Lure}/tests/*ok.lua | 
+  ls ${Lure}/lib/*ok.lua | 
   grep -v _allok |
   gawk '{sub(/.lua/,"",$0) 
          sub(/^.*\//,"",$0)
-         printf(" require \"%s\";\n",$0)}' > ${Lure}/tests/_allok.lua
-  cd ${Lure}/tests
+         printf(" require \"%s\";\n",$0)}' > ${Lure}/lib/_allok.lua
+  cd ${Lure}/lib
   l _allok.lua
   rm  _allok.lua
   cd $Lure
@@ -210,10 +211,10 @@ twins() { ## STEM ## makes STEM.lua and unit test file STEMok.lua ## lua
   if [ ! -f "$Lure/lib/${f}.lua" ]; then 
 	   _twins1 $f utilities  > $Lure/lib/${f}.lua
   fi
-  if [ ! -f "$Lure/tests/${f}ok.lua" ]; then
-	   _twins1 ${f}ok "unit tests for $f" > $Lure/tests/${f}ok.lua
-	   git add $Lure/tests/${f}ok.lua
-	   cat <<-EOF >> $Lure/tests/${f}ok.lua
+  if [ ! -f "$Lure/lib/${f}ok.lua" ]; then
+	   _twins1 ${f}ok "unit tests for $f" > $Lure/lib/${f}ok.lua
+	   git add $Lure/lib/${f}ok.lua
+	   cat <<-EOF >> $Lure/lib/${f}ok.lua
 	local o=require "tests"	
 	local r=require "random"
 	local x=require "$f"
@@ -227,8 +228,8 @@ twins() { ## STEM ## makes STEM.lua and unit test file STEMok.lua ## lua
 	EOF
   fi
   git add $Lure/lib/${f}.lua
-  git add $Lure/tests/${f}ok.lua
-  wc $Lure/lib/${f}.lua $Lure/tests/${f}ok.lua
+  git add $Lure/lib/${f}ok.lua
+  wc $Lure/lib/${f}.lua $Lure/lib/${f}ok.lua
 }
 norman() { ## ## about Norman Vaughan ## misc
   cat<<-EOF | fmt -60
@@ -274,16 +275,13 @@ norman() { ## ## about Norman Vaughan ## misc
 }
 here() { cd $1; basename "$PWD"; }
 
-l() { ## FILE ## call "lua FILE" in this environment (.lua extension optional) ## lua
+l() { ## FILE ## call "luajit FILE" in this environment (.lua optional) ## lua
   f=$(basename $1 .lua).lua
   shift
-  for d in lib tests; do
-    if [ -f "$Lure/$d/$f" ]; then
-      LUA_PATH="$Lure/lib/?.lua;$Lure/tests/?.lua;;" \
-        $(which luajit) $Lure/$d/$f "$*"
+  if [ -f "$Lure/lib/$f" ]; then
+      LUA_PATH="$Lure/lib/?.lua;;" $(which luajit) $Lure/lib/$f "$*"
       return 0
-    fi
-  done
+  fi
   echo "not found $f"
 }
 setup() {
