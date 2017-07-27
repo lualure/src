@@ -16,17 +16,8 @@ local function update(i,x)
       i._all [ math.floor(1 + r.r()*#i._all) ] = x
     end end
   return x end
------------------------------
-local function tiles(i,p)
-  local p = p or 0.1
-  table.sort(i)
-  local q, out, max = 1, {},  #i
-  while max*q*p < max do
-    out[q] = i[ math.floor( max*q*p ) ]
-    q      = q + 1 end
-  return out end
 
------------------------------
+-------------------------------------------------------------------
 local function cliffsDelta(lst1,lst2)
   table.sort(lst2)
   local lt,gt,max=0,0,#lst2

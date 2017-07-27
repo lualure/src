@@ -5,6 +5,7 @@ local o=require "tests"
 local r=require "random"
 local s=require "sample"
 local str=require "str"
+local tiles=require "tiles"
 
 local function _test1()
   local some=s.create(64)
@@ -29,8 +30,8 @@ local function _cliffs()
     end
     str.say("%5.3f\t%5s\t%20s\t%20s\n",
             n1,s.cliffsDelta(i,j), 
-            tostring(s.tiles(i._all,0.25)), 
-            tostring(s.tiles(j._all,0.25)))
+            tostring(tiles.tiles(i._all,0.25)), 
+            tostring(tiles.tiles(j._all,0.25)))
     n1 = n1 *1.01
   end end 
 
@@ -41,16 +42,17 @@ local function _bootstrap()
   str.say(fmt, "-----","-----","-----","-----")
   while n1 < 1.5 do
     local i,j = {}, {}
-    for _=1,100 do
+    for _=1,128 do
       local x = r.r()
-      local val = x^0.5
+      local val = x^1
       i[#i+1] = val
       j[#j+1] = val*n1 
     end
     str.say("%5.3f\t%5s\t%20s\t%20s\n",
             n1,s.same(i,j), 
-            tostring(str.fmts("%5.3f",s.tiles(i,0.10))), 
-            tostring(str.fmts("%5.3f",s.tiles(j,0.10))))
+            tostring(str.fmts("%5.3f",tiles.tiles(i,10,2))), 
+            tostring(str.fmts("%5.3f",tiles.tiles(j,10,2))))
+    if true then return true end
     n1 = n1 *1.01
   end end 
 

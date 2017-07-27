@@ -1,10 +1,21 @@
 #!/bin/bash
 # -*- sh -*-
 
+newdle() { ## ## update vim bundles ## editor
+   cd $HOME/.vim/bundle
+   for i in *; do (echo ""; echo $i; cd $i; git pull); done
+   cd $Lure
+}
+sniped() { ## ## edit snippets file ## editor
+    vi /Users/timm/.vim/bundle/vim-snippets/snippets/lua.snippets
+}
+snips() { ## ## show snippets file ## editor
+    cat  /Users/timm/.vim/bundle/vim-snippets/snippets/lua.snippets
+}
 load() { ## ## reload environment ## shell
  . $Lure/etc/bashrc
 }
-install() { ## ## install LURE (need only be run once) ## install
+install() { ## ## install LURE (need only be run once) ## :install
   cd $Lure
   if [ "$(uname)" == "Darwin" ]; then
       /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
@@ -94,17 +105,17 @@ doco() { ## ## generate html doco files ## shell
      cd $Lure
    fi 
 }
-vi() { ## FILE ## edit files using the LURE config stuff ## shell
+vi() { ## FILE ## edit files using the LURE config stuff ## editor
     vim -u "$Lure/etc/vimrc" $*
     echo "Done!"
 }
-ok() { ## STEM ## shorthand for lua STEMok.lua ## shell
+ok() { ## STEM ## shorthand for lua STEMok.lua ## lua
   l ${1}ok.lua
 }
 show() { ## FUN ## display definition of FUN ## shell
   type $1
 }
-oks() { ## ## run all the Xok.lua files ## shell
+oks() { ## ## run all the Xok.lua files ## lua
   ls ${Lure}/tests/*ok.lua | 
   grep -v _allok |
   gawk '{sub(/.lua/,"",$0) 
@@ -130,7 +141,7 @@ gitting() {
 	git config credential.helper 'cache --timeout=3600'
 	git config --global push.default simple
 }
-timm() { ## ## Private: sets up this repo for timm ## install
+timm() { ## ## Private: sets up this repo for timm ## :install
 	git config --global user.name "Tim Menzies"
 	git config --global user.email tim.menzies@gmail.com
 }
@@ -139,7 +150,6 @@ legal() { ## ## show copyright notice ## misc
 }
 help() { ## ## show help ## misc
   echo "${blue}"
-  echo "Options:"
   grep '##' $Lure/etc/bashrc | 
   sort -t\# -k 7  | 
   grep -v 'grep' |
@@ -153,6 +163,7 @@ help() { ## ## show help ## misc
           { for(i=1;i<=NF;i++)
                $i=trim($i)
             pad="         "
+            gsub(/:/,"",$NF)
             pre=  $NF==last ? pad : toupper($NF)":\n" pad
             last=$NF 
             gsub(/[(){]/,"",$1)
@@ -194,7 +205,7 @@ local the=require "config"
 	
 EOF
 }
-twins() { ## STEM ## makes STEM.lua and unit test file STEMok.lua ## shell
+twins() { ## STEM ## makes STEM.lua and unit test file STEMok.lua ## lua
   f=$(basename $1 ".lua")
   if [ ! -f "$Lure/lib/${f}.lua" ]; then 
 	   _twins1 $f utilities  > $Lure/lib/${f}.lua
@@ -263,7 +274,7 @@ norman() { ## ## about Norman Vaughan ## misc
 }
 here() { cd $1; basename "$PWD"; }
 
-l() { ## FILE ## call "lua FILE" in this environment (.lua extension optional) ## shell
+l() { ## FILE ## call "lua FILE" in this environment (.lua extension optional) ## lua
   f=$(basename $1 .lua).lua
   shift
   for d in lib tests; do
