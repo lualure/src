@@ -20,20 +20,6 @@ install() { ## ## install LURE (need only be run once) ## :install
   if [ "$(uname)" == "Darwin" ]; then
       /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
   fi
-  if [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
-     cat <<-EOF
-    
-  Have you run the choco install commands? See https://github.com/chocolatey/choco/wiki/Installation
-
-  EOF
-  fi
-  if [ "$(expr substr $(uname -s) 1 10)" == "MINGW64_NT" ]; then
-     cat <<-EOF
-    
-  Have you run the choco install commands? See https://github.com/chocolatey/choco/wiki/Installation
-
-  EOF
-  fi
   sudo easy_install Pygments
   for f in lua luajit vim git make ctags gawk mc htop ranger asciiquarium cmatrix ; do
     if which $f; then true; else 
@@ -77,7 +63,7 @@ EOF
   echo "you should run commands like the following..."
   type timm
 }
-doco() { ## ## generate html doco files ## shell
+doco() { ## ## generate html from lua code ## lua
    if [ ! -d "$Lure/../info" ]; then
      echo "Missing target repo: [info]"
      echo "I suggest you:"
