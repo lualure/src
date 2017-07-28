@@ -12,6 +12,7 @@
 require "show"
 local the=require "config"
 local tiles=require "tiles"
+local lst=require "lists"
 
 ---------------------------------
 -- Simple utils
@@ -26,6 +27,7 @@ local function create() return {
 
 -- Here how to update a counter with one value `x`.
 local function update(i,x) 
+  print(i)
   i._all[#i._all+1]=x
   i.sum = i.sum + x
   i.n   = i.n + 1 

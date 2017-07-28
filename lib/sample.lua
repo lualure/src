@@ -3,6 +3,7 @@ local r=require "random"
 local lst=require "lists"
 local num=require "num"
 local tiles=require "tiles"
+local lst=require "lists"
 local sk=require "sk"
 
 local function create(  most) return {
@@ -104,7 +105,7 @@ local function same(i,j)
 -- adjacent samples that are statisticall the same will
 -- get the same rank. Rank out a report of its conclusions.
 function rank(samples,epsilon,ranker) 
-  local function mid(t)  return t[ math.floor( #t._all*0.5 ) ] end
+  local function mid(t)  return t._all[ math.floor( #t._all*0.5 ) ] end
   fmt = fmt or string.format("%s %s %s %s",
                              the.sample.fmtstr,
                              the.sample.fmtnum,
@@ -118,7 +119,7 @@ function rank(samples,epsilon,ranker)
       hi = math.max(hi, v) end
     table.sort(sample._all)
   end 
-  print(samples[1]._all)
+  print("! ",samples[1],samples[1]._all,samples[1]._all[math.floor(#samples[1]._all*0.5)])
   print(">",mid(samples[1]))
   table.sort(samples, function(a,b) return 
              mid(a) < mid(b) end )
