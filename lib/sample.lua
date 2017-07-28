@@ -3,6 +3,7 @@ local r=require "random"
 local lst=require "lists"
 local num=require "num"
 local tiles=require "tiles"
+local sk=require "sk"
 
 local function create(  most) return {
   _all={},
@@ -18,15 +19,22 @@ local function update(i,x)
       i._all [ math.floor(1 + r.r()*#i._all) ] = x
     end end
   return x end
+----------------------------
+local function updates(t,f,i)
+  i = i or create()
+  f = f or function (z) return z end
+  for _,one in pairs(t) do
+    update(i, f(one)) end 
+  return i end
+
 ------------------------------
-local functions adds(samples)
+local function adds(samples)
   out=create()
   for _,sample in pairs(samples) do
     for _,v in pairs(sample._all) do
       update(out,v)
-    end
-  return v
-  end
+    end end
+  return v end
 -------------------------------------------------------------------
 local function cliffsDelta(lst1,lst2)
   table.sort(lst2)
@@ -42,7 +50,7 @@ local function cliffsDelta(lst1,lst2)
   --print(lt,gt,#lst1,#lst2)
   return math.abs(gt - lt) / (#lst1 * #lst2) > the.sample.cliffsDelta end
 
-function bootstrap(y0,z0)
+local function bootstrap(y0,z0)
   -- The bootstrap hypothesis test from
   -- 220 to 223 of Efron's book 'An
   -- introduction to the boostrap'.
@@ -91,78 +99,33 @@ function bootstrap(y0,z0)
 local function same(i,j) 
   return not(cliffsDelta(i,j) and bootstrap(i,j)) end
 -----------------------------------------------------------
-local function sk1(samples,epsilon)
-  epsilon = epsilon + the.sample.epsilon
-  --------------------------------------------
-  local function mid(t) return t._all[ math.floor(#t._all/2) ] end
-  --------------------------------------------
-  local function create() return {
-    _all={}, sum=0,n=0} end
-  local function update(i,x) 
-    i._all[#i._all+1]=x
-    i.sum = i.sum + x
-    i.n   = i.n + 1 
-    i.mu  = i.sum/i.n end
-  local function updates(i, b4)
-    b4 = b4 or create()
-    for j=1,#t do update(b4,t[j]) end end
-  local function memo(here,stop,_memo,    b4,inc)
-    if stop > here then inc=1 else inc=-1 end
-    if here ~= stop then 
-       b4=  lst.copy( memo(here+inc, stop, _memo)) end
-    _memo[here] = updates(samples[here]._all,  b4)
-    return _memo[here] end
-  --------------------------------------------
-  local function combine(lo,hi,all,bin,lvl)   
-    local best = 0
-    local lmemo,rmemo = {},{}
-    memo(hi,lo, lmemo) -- summarize i+1 using i
-    memo(lo,hi, rmemo) -- summarize i using i+1
-    local cut, lbest, rbest
-    for j=lo,hi-1 do
-      local l = lmemo[j]
-      local r = rmemo[j+1]
-      if mid(l)*epsilon   < mid(r) then
-        if not same(l,r) then
-          local tmp= l.n/all.n*(l.mu - all.mu)^2 + 
-                     r.n/all.n*(r.mu - all.mu^2)
-          if tmp > best then
-            cut   = j
-            best  = tmp
-            lbest = lst.copy(l)
-            rbest = lst.copy(r) end end end end
-    if cut then
-      bin = combine(lo,   cut, lbest, bin, lvl+1) + 1
-      bin = combine(cut+1, hi, rbest, bin, lvl+1)
-    else
-      for j=lo,hi do
-        samples[j].rank = bin end end
-    return bin end 
-  --------------------------------------------
-  table.sort(samples, function (x,y) return mid(x) < mid(y) end)
-  combine(1,#samples, memo(1,#samples,{}),1,0)  
-  return samples end
-
-function sk(samples,epsilon) 
-  local function nth(t,n) return t._all[ math.floor(#t._all*n) ] end
-  local function mid(t)   return nth(t,0.5) end
-  local function iqr(t)   return nth(t,0.75) - nth(t,0.25) end
+-- `Rank` sorts a list of _n_ `samples` on their median value
+-- then assigns some number 1 &lt; _n_ to each. Note that any
+-- adjacent samples that are statisticall the same will
+-- get the same rank. Rank out a report of its conclusions.
+function rank(samples,epsilon,ranker) 
+  local function mid(t) return t[ math.floor( #t*0.5) ] end
+  fmt = fmt or string.format("%%2s %s  %s %s %i%s",
+                             how.name,how.num,hom.num)
+  print(fmt)
   local lo,hi= 10^64, -10^64
   for _,sample in pairs(samples) do
     for _,v in pairs(sample._all) do
       lo = math.min(lo, v)
       hi = math.max(hi, v) end
     table.sort(sample._all)
-    end 
+  end 
   table.sort(samples, function(a,b) return 
-                  mid(a) < mid(n) end )
-  sk1(samples,epsilon)
+             mid(a) < mid(b) end )
+  sk(samples,epsilon, ranker or same)
   for _,sample in pairs(samples) do
-    local how=tiles.how(sample._all)
-    how.lo = lo
-    how.hi = hi
-    print(one.rank, mid(one), iqr(one),
-          tile.show(sample._all,how)) end  end
+    local thow=tiles.how(sample._all)
+    thow.lo = lo
+    thow.hi = hi
+    thow.fmt = how.numfmt
+    io.write(fmt .. "\n", 
+            one.rank, one.txt or "", mid(one), iqr(one),
+            tile.show(sample._all,thow)) end  end
 
-return {create=create, same=same, update=update,cliffsDelta=cliffsDelta,
-        bootstrap=bootstrap,tiles=tiles}
+return {create=create, same=same, update=update,updates=updates,cliffsDelta=cliffsDelta,
+        bootstrap=bootstrap,rank=rank}

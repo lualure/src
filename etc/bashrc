@@ -63,7 +63,7 @@ EOF
   echo "you should run commands like the following..."
   type timm
 }
-doco() { ## ## generate html from lua code ## lua
+doco() { ## ## generate html from lua code ## doc
    if [ ! -d "$Lure/../info" ]; then
      echo "Missing target repo: [info]"
      echo "I suggest you:"
@@ -82,15 +82,21 @@ doco() { ## ## generate html from lua code ## lua
      done
      echo "") > $Lure/lib/index.lua
      for i in ../../lib/*.lua; do
-       ./locco.lua $i
+       stem=$(basename $i '.lua')
+       if [ "$i" -nt "$Lure/docs/$stem.html" ];then
+         ./locco.lua $i
+       fi
      done
+     rm $Lure/lib/index.lua
      cd $Lure
-     cd $Lure/../info/docs
-     cp $Lure/lib/docs/* .
-     git add *
-     make
-     cd $Lure
-   fi 
+  fi
+}
+publish() { ## ## pubish generated html on web ## doc
+  cd $Lure/../info/docs
+  cp $Lure/lib/docs/* .
+  git add *
+  make
+  cd $Lure
 }
 vi() { ## FILE ## edit files using the LURE config stuff ## editor
     vim -u "$Lure/etc/vimrc" $*
@@ -320,10 +326,10 @@ banner() {
   .-';'       (( `  \0/  `\       #      |  occasions of hope." 
  /__;          ((_  ,_     |      #      |  -- Jack Nicklaus
  .-;                  \_   /  #  _#,     |
-/  ;    .-' /  _.--""-.\`~`   `#(('\\    | "There are always new places to go 
-;-';   /   / .'                  )) \\   |  fishing. For any fisherman (sic), 
-    ; /.--'.'                   ((   ))  |  there's always a new place, always
-     \     |        ~            \\ ((   | a new horizon." 
+/  ;    .-' /  _.--""-.\`~`   `#(('\\    | "There are always new places to 
+;-';   /   / .'                  )) \\   |  go fishing. For those who fish,
+    ; /.--'.'                   ((   ))  |  there's always a new place, 
+     \     |        ~            \\ ((   |  always a new horizon." 
       \    |                      )) `   |  -- John Buchan
 ~      \   |                      `      |
         \  |                             | "Gone fishin', for a new idea." 

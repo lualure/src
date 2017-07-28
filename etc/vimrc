@@ -93,5 +93,4 @@ set path=.,../etc,../src,../tests
 
 map <F1> :find 
 "nmap <F8> :TagbarToggle<CR>
-nnoremap <leader>ev :split $MYVIMRC<CR>  
 nnoremap <leader>sv :source $MYVIMRC<CR>     

@@ -16,6 +16,37 @@ local function _test1()
   print(some._all) 
 end
 
+local function _silly() 
+  n=8
+  while n< 2500 do
+    print("")
+    n = n*2
+    local one,two,three,four = {},{},s.create(n),s.create(n)
+    for i=1,10000 do
+      v1,v2 = r.r(), r.r()
+      one[#one+1] = v1
+      two[#two+1] = v2 
+      s.update(three,v1)
+      s.update(four,v2)
+    end
+    local t1 = tiles.tiles(one,10,2)
+    local t2 = tiles.tiles(two,10,2)
+    local t3 = tiles.tiles(three._all,10,2)
+    t4 = tiles.tiles(four._all,10,2)
+    local err1,err2=0,0
+    local sum1,sum2=0,0
+    for i=1,#t2 do
+      err1=100*(t1[i] - t2[i])
+      err2=100*(t3[i] - t4[i]) 
+      sum1 = sum1+ err1
+      sum2 = sum2+ err2
+      io.write(string.format("%4s %2s %6.3f %6.3f\n",n,i, err1,err2))
+    end
+    io.write(string.format("mean %2s %6.3f %6.3f\n"," ", sum1/#t2,sum2/#t2))
+
+  end
+end
+
 local function _cliffs()
   local n1=1
   local fmt = "%5s\t%5s\t%20s %20s\n"
@@ -52,11 +83,11 @@ local function _bootstrap()
             n1,s.same(i,j), 
             tostring(str.fmts("%5.3f",tiles.tiles(i,10,2))), 
             tostring(str.fmts("%5.3f",tiles.tiles(j,10,2))))
-    if true then return true end
     n1 = n1 *1.01
   end end 
 
 r.seed(1)
---_test1()
---_cliffs()
+_test1()
+_cliffs()
 _bootstrap()
+_silly()

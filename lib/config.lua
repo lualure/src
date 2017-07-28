@@ -8,6 +8,8 @@ function defaults() return {
   sample= { b=200,
             most=512,
             epsilon=1.01,
+            fmtstr="%20s",
+            fmtnum="%5.3s",
             cliffsDelta=0.147 -- small
             --cliffsDelta=0.33 -- small
             --cliffsDelta=0.474 -- small
