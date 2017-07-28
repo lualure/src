@@ -3,7 +3,7 @@
 
 newdle() { ## ## update vim bundles ## editor
    cd $HOME/.vim/bundle
-   for i in *; do (echo ""; echo $i; cd $i; git pull); done
+   for i in *; do (echo -en "$i\t\t "; cd $i; git pull); done
    cd $Lure
 }
 sniped() { ## ## edit snippets file ## editor
@@ -71,19 +71,20 @@ doco() { ## ## generate html from lua code ## doc
      echo "   git clone http://github.com/lualure/info"
    else  
      cd $Lure/etc/locco
+     files=$(ls ${Lure}/lib/*lua | grep -v 'ok\.lua')
      (echo "-- # Index"
      echo ""
      echo "(Auto-generated. Do not edit.)"
      echo ""
-     for i in ${Lure}/lib/*.lua; do
+     for i in $files ; do
        f=$(basename $i '.lua')
        l="$(basename $i '.lua').html"
        echo "-- - [$f]($l) "
      done
      echo "") > $Lure/lib/index.lua
-     for i in ../../lib/*.lua; do
+     for i in $files; do
        stem=$(basename $i '.lua')
-       if [ "$i" -nt "$Lure/docs/$stem.html" ];then
+       if [ "$i" -nt "$Lure/lib/docs/$stem.html" ];then
          ./locco.lua $i
        fi
      done

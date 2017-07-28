@@ -104,9 +104,12 @@ local function same(i,j)
 -- adjacent samples that are statisticall the same will
 -- get the same rank. Rank out a report of its conclusions.
 function rank(samples,epsilon,ranker) 
-  local function mid(t) return t[ math.floor( #t*0.5) ] end
-  fmt = fmt or string.format("%%2s %s  %s %s %i%s",
-                             how.name,how.num,hom.num)
+  local function mid(t)  return t[ math.floor( #t._all*0.5 ) ] end
+  fmt = fmt or string.format("%s %s %s %s",
+                             the.sample.fmtstr,
+                             the.sample.fmtnum,
+                             the.sample.fmtnum,
+                             the.sample.fmtnum)
   print(fmt)
   local lo,hi= 10^64, -10^64
   for _,sample in pairs(samples) do
@@ -115,6 +118,8 @@ function rank(samples,epsilon,ranker)
       hi = math.max(hi, v) end
     table.sort(sample._all)
   end 
+  print(samples[1]._all)
+  print(">",mid(samples[1]))
   table.sort(samples, function(a,b) return 
              mid(a) < mid(b) end )
   sk(samples,epsilon, ranker or same)

@@ -42,7 +42,7 @@ local function updates(t, counter)
 -- "peeks".
 local function memo(samples,here,stop,_memo,    b4,inc)
   if stop > here then inc=1 else inc=-1 end
-  if here ~= stop then 
+  if here ~= stop then  
      b4=  lst.copy( memo(samples,here+inc, stop, _memo)) end
   _memo[here] = updates(samples[here]._all,  b4)
   return _memo[here] end
@@ -59,8 +59,7 @@ return function (samples,epsilon,same)
     memo(samples,hi,lo, lmemo) -- summarize i+1 using i
     memo(samples,lo,hi, rmemo) -- summarize i using i+1
     local cut, lbest, rbest
-    -- step1: look for the best cut
-    for j=lo,hi-1 do
+    for j=lo,hi-1 do -- step1: look for the best cut
       local l = lmemo[j]
       local r = rmemo[j+1]
       if mid(l)*epsilon   < mid(r) then
@@ -72,12 +71,10 @@ return function (samples,epsilon,same)
             best  = tmp
             lbest = lst.copy(l)
             rbest = lst.copy(r) end end end end
-    -- step2a: use the cut (if you found it)
-    if cut then
+    if cut then -- step2a: use the cut (if you found it)
       rank = split(lo,   cut, lbest, rank, lvl+1) + 1
       rank = split(cut+1, hi, rbest, rank, lvl+1)
-    else
-    -- step2b: otherwise, all samples get same rank
+    else -- step2b: otherwise, all samples get same rank
       for j=lo,hi do
         samples[j].rank = rank end end
     return rank 
