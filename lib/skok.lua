@@ -68,7 +68,7 @@ local function _sk6()
 
 local function _sk7()
   local x1,x2,x3={},{},{}
-  for i=1,256 do
+  for i=1,10^4 do
     x1[#x1+1] = R.r()^0.5
     x2[#x2+1] = R.r()^2
     x3[#x3+1] = R.r() end
