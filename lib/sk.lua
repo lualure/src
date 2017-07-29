@@ -46,7 +46,7 @@ local function memo(samples,here,stop,_memo,    b4,inc)
   if stop > here then inc=1 else inc=-1 end
   if here ~= stop then  
      b4=  lst.copy( memo(samples,here+inc, stop, _memo)) end
-  _memo[here] = updates(samples[here]._all,  b4)
+  _memo[here] = updates(samples[here],  b4)
   return _memo[here] end
 ---------------------------------------------
 -- Seek a split that maximizes the expected value
