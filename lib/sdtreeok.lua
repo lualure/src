@@ -1,9 +1,9 @@
 -- # sdtreeok : unit tests for sdtree
 
 require "show"
-local the=require "config"
+local THE=require "config"
 	
-local o=require "tests"	
+local O=require "tests"	
 local r=require "random"
 local tbl=require "tbl"
 local tree=require "sdtree"
@@ -12,11 +12,11 @@ local row=require "row"
  
 local function _test0(f,y)
   defaults()
-  the.tree.min=10
+  THE.tree.min=10
   y = y or "goal1"
   f = f or "/data/auto.csv"
   print(f,y)
-  local t1=  tbl.create( the.here .. f)
+  local t1=  tbl.create( THE.here .. f)
   print(f, #t1.rows)
   --end
   local t2 = tbl.discretize(t1,y)
@@ -44,4 +44,4 @@ local function _test3() _test0("/data/POM3A_short.csv","dom") end
 r.seed(1)
 _test2()
 _test1()
-_test3()
+O.k{_test3}

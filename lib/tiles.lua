@@ -32,7 +32,7 @@ local function show(t, how)
   how = how or hows(t)
   local function fl(x)    return 1+ math.floor(x) end
   local function pos(p)   return t[ fl(p * #t) ] end
-  local function place(x) return fl( how.width*(x- how.lo)/(how.hi - how.lo) ) end
+  local function place(x) return fl( how.width*(x- how.lo)/(how.hi - how.lo+10^-32) ) end
   local function whats(chops)
           return  LST.collect(chops, function (_) return 
                               pos(_[1]) end ) end
@@ -55,7 +55,7 @@ local function show(t, how)
   out[place(pos(0.5))]    = how.star
   local suffix = LST.collect(what,  function (_) return
                      string.format(how.show,_) end) 
-  return "(" .. table.concat(out,"") .. ")" .. 
+  return "(" .. table.concat(out,"") .. ") " .. 
                 table.concat(suffix,", ") end
 ------------------------------------------------
 local function shows(ts) 

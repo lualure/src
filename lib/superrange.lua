@@ -6,7 +6,8 @@ local num=require "num"
 local sym=require "sym"
 local range=require "range"
 local lst= require "lists"
-local replace=(require "str").replace_char
+local STR=require "str"
+replace = STR.replace_char
 --------------------------------------------
 local function labels(nums)
   local out={}

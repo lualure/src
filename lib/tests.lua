@@ -30,7 +30,10 @@ local function tests(t)
   for s,x in pairs(t) do  
     print("# test:", s) 
     pass = pass + 1
+    local t1= os.clock()
     local passed,err = pcall(x) 
+    local t2= os.clock()
+    print((t2-t1) .. " secs")
     if not passed then   
        fail = fail + 1
        print("Failure: ".. err) end end end

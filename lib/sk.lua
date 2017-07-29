@@ -67,7 +67,7 @@ return function (samples,epsilon,same)
       if mid(l)*the.sample.epsilon < mid(r) then
         if not same(l,r) then
           local tmp= l.n/all.n*(l.mu - all.mu)^2 + 
-                     r.n/all.n*(r.mu - all.mu^2)
+                     r.n/all.n*(r.mu - all.mu)^2
           if tmp > best then
             cut   = j
             best  = tmp

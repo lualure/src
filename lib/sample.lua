@@ -103,7 +103,10 @@ local function same(i,j)
 -- adjacent samples that are statisticall the same will
 -- get the same rank. Rank out a report of its conclusions.
 local function rank(samples,epsilon,ranker) 
-  local function nth(t,n) return t._all[  math.floor(#t._all*n) ] end
+  local function nth(t,n) 
+    if n<1       then n=1       end
+    if n>#t._all then n=#t._all end
+    return t._all[  math.floor(#t._all*n) ] end
   local function mid(t)   return nth(t,0.5) end
   local function iqr(t)   return nth(t,0.75) - nth(t,0.25) end
   local fmt =  string.format("%%2s %s %s %s %%s\n",

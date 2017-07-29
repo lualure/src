@@ -21,7 +21,7 @@ init() { ## ## install LURE (need only be run once) ## :init
       /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
   fi
   sudo easy_install Pygments
-  for f in lua luajit vim git make ctags gawk mc htop ranger asciiquarium cmatrix ; do
+  for f in lua luajit vim git graphviz make ctags gawk mc htop ranger asciiquarium cmatrix ; do
     if which $f; then true; else 
      if [ "$(uname)" == "Darwin" ]; then
         brew install $f
@@ -223,6 +223,19 @@ twins() { ## STEM ## makes STEM.lua and unit test file STEMok.lua ## lua
   git add $Lure/lib/${f}.lua
   git add $Lure/lib/${f}ok.lua
   wc $Lure/lib/${f}.lua $Lure/lib/${f}ok.lua
+}
+depends() { ## ## show dependancy graph ## lua
+  local here=$PWD
+  (echo 'digraph G {'
+  cd $Lure/lib
+  grep require *.lua | 
+  gawk '/ok.lua/ {next} /--/ {next} /,/ {next} {print $1,$NF}' | 
+  sed -e 's/[:" ]//g' -e 's/require/ /g' -e 's/.lua//' -e 's/local/ /g' |
+  gawk '{print "\t" $1 " -> " $2 ";"}' 
+  echo '}' ) > $Lure/lib/docs/depends.dot
+  cd $here
+  dot -o $Lure/lib/docs/depends.jpg -Tjpg $Lure/lib/docs/depends.dot
+  open $Lure/lib/docs/depends.jpg
 }
 norman() { ## ## about Norman Vaughan ## misc
   cat<<-EOF | fmt -60
