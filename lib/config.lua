@@ -9,7 +9,7 @@ function defaults() return {
             most=512,
             epsilon=1.01,
             fmtstr="%20s",
-            fmtnum="%5.3s",
+            fmtnum="%5.3f",
             cliffsDelta=0.147 -- small
             --cliffsDelta=0.33 -- small
             --cliffsDelta=0.474 -- small
@@ -34,4 +34,5 @@ function defaults() return {
                       [24]=2.797,[48]=2.682,[96]=2.625}}}
           } end
 
-return defaults()
+the= defaults()
+return the

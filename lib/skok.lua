@@ -67,34 +67,23 @@ local function _sk6()
   SAM.rank({x1,x2,x3},1.01) end
 
 local function _sk7()
-  local x1,x2,x3={},{},{}
-  for i=1,10^4 do
+  local x1,x2,x3,x4,x5,x6={},{},{},{},{},{}
+  for i=1,10^6 do
     x1[#x1+1] = R.r()^0.5
     x2[#x2+1] = R.r()^2
-    x3[#x3+1] = R.r() end
+    x3[#x3+1] = R.r()
+    x4[#x4+1] = R.r()^0.4
+    x5[#x5+1] = R.r()^2.2
+    x6[#x6+1] = R.r()
+  end
   x1 = SAM.updates(x1); x1.txt="x1"
   x2 = SAM.updates(x2); x2.txt="x2"
   x3 = SAM.updates(x3); x3.txt="x3"
-  SAM.rank({x1,x2,x3},1.01) end
+  x4 = SAM.updates(x4); x4.txt="x4"
+  x5 = SAM.updates(x5); x5.txt="x5"
+  x6 = SAM.updates(x6); x6.txt="x6"
+  SAM.rank({x1,x2,x3,x4,x5,x6},1.01) end
 
---[=====[ 
-## Lesson Seven
-All the above scales to succinct summaries of hundreds, thousands, millions of numbers
-
-
-def rdiv7():
-  rdivDemo([
-    ["x1"] +  [rand()**0.5 for _ in range(256)],
-    ["x2"] +  [rand()**2   for _ in range(256)],
-    ["x3"] +  [rand()      for _ in range(256)]
-  ])
-
-
-rank ,         name ,    med   ,  iqr
-----------------------------------------------------
-   1 ,           x2 ,      25  ,    50 (--     *      -|---------     ), 0.01,  0.09,  0.25,  0.47,  0.86
-   2 ,           x3 ,      49  ,    47 (  ------      *|   -------    ), 0.08,  0.29,  0.49,  0.66,  0.89
-   3 ,           x1 ,      73  ,    37 (         ------|-    *   ---  ), 0.32,  0.57,  0.73,  0.86,  0.95
-
---]=====]
+defaults()
+the.sample.fmtnum="%6.2f"
 O.k{_sk1,_sk2,_sk3,_sk4,_sk5,_sk6,_sk7}
