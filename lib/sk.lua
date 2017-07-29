@@ -16,7 +16,7 @@ local lst=require "lists"
 
 ---------------------------------
 -- Simple utils
-local function nth(t,n) return t._all[ math.floor(#t._all*n) ] end
+local function nth(t,n) return t._all[  math.floor(#t._all*n) ] end
 local function mid(t)   return nth(t,0.5) end
 local function iqr(t)   return nth(t,0.75) - nth(t,0.25) end
 ---------------------------------
@@ -27,7 +27,6 @@ local function create() return {
 
 -- Here how to update a counter with one value `x`.
 local function update(i,x) 
-  print(i)
   i._all[#i._all+1]=x
   i.sum = i.sum + x
   i.n   = i.n + 1 
@@ -37,7 +36,8 @@ local function update(i,x)
 local function updates(t, counter)
   counter = counter or create()
   for j=1,#t do 
-    update(counter,t[j]) end end
+    update(counter,t[j]) end 
+  return counter end
 ---------------------------------------------
 -- This code is always counting left and right within
 -- the list of samples. To save time, memo all those 
@@ -46,7 +46,7 @@ local function memo(samples,here,stop,_memo,    b4,inc)
   if stop > here then inc=1 else inc=-1 end
   if here ~= stop then  
      b4=  lst.copy( memo(samples,here+inc, stop, _memo)) end
-  _memo[here] = updates(samples[here],  b4)
+  _memo[here] = updates(samples[here]._all,  b4)
   return _memo[here] end
 ---------------------------------------------
 -- Seek a split that maximizes the expected value
@@ -55,6 +55,7 @@ local function memo(samples,here,stop,_memo,    b4,inc)
 -- splits are not statistically the same, then
 -- recurse into each part of the split.
 return function (samples,epsilon,same)
+  lst.maprint(samples)
   epsilon = epsilon or the.sample.epsilon
   local function split(lo,hi,all,rank,lvl)   
     local best,lmemo,rmemo = 0,{},{}
@@ -64,7 +65,7 @@ return function (samples,epsilon,same)
     for j=lo,hi-1 do -- step1: look for the best cut
       local l = lmemo[j]
       local r = rmemo[j+1]
-      if mid(l)*epsilon   < mid(r) then
+      if mid(l)*the.sample.epsilon < mid(r) then
         if not same(l,r) then
           local tmp= l.n/all.n*(l.mu - all.mu)^2 + 
                      r.n/all.n*(r.mu - all.mu^2)

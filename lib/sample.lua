@@ -27,9 +27,8 @@ local function updates(t,f,i)
   for _,one in pairs(t) do
     update(i, f(one)) end 
   return i end
-
 ------------------------------
-local function adds(samples)
+local function xadds(samples)
   out=create()
   for _,sample in pairs(samples) do
     for _,v in pairs(sample._all) do
@@ -48,7 +47,6 @@ local function cliffsDelta(lst1,lst2)
     local pos = pos0
     while pos > 1   and lst2[pos] == lst2[pos-1] do pos = pos - 1 end
     lt = lt + pos end
-  --print(lt,gt,#lst1,#lst2)
   return math.abs(gt - lt) / (#lst1 * #lst2) > the.sample.cliffsDelta end
 
 local function bootstrap(y0,z0)
@@ -105,13 +103,14 @@ local function same(i,j)
 -- adjacent samples that are statisticall the same will
 -- get the same rank. Rank out a report of its conclusions.
 function rank(samples,epsilon,ranker) 
-  local function mid(t)  return t._all[ math.floor( #t._all*0.5 ) ] end
-  fmt = fmt or string.format("%s %s %s %s",
+  local function nth(t,n) return t._all[  math.floor(#t._all*n) ] end
+  local function mid(t)   return nth(t,0.5) end
+  local function iqr(t)   return nth(t,0.75) - nth(t,0.25) end
+  fmt = fmt or string.format("%s %s %s %s\n",
                              the.sample.fmtstr,
                              the.sample.fmtnum,
                              the.sample.fmtnum,
                              the.sample.fmtnum)
-  print(fmt)
   local lo,hi= 10^64, -10^64
   for _,sample in pairs(samples) do
     for _,v in pairs(sample._all) do
@@ -119,19 +118,19 @@ function rank(samples,epsilon,ranker)
       hi = math.max(hi, v) end
     table.sort(sample._all)
   end 
-  print("! ",samples[1],samples[1]._all,samples[1]._all[math.floor(#samples[1]._all*0.5)])
-  print(">",mid(samples[1]))
   table.sort(samples, function(a,b) return 
              mid(a) < mid(b) end )
-  sk(samples,epsilon, ranker or same)
+  sk(samples,epsilon, 
+     ranker or function(i,j) return 
+               same(i._all,j._all) end)
   for _,sample in pairs(samples) do
-    local thow=tiles.how(sample._all)
-    thow.lo = lo
-    thow.hi = hi
-    thow.fmt = how.numfmt
-    io.write(fmt .. "\n", 
-            one.rank, one.txt or "", mid(one), iqr(one),
-            tile.show(sample._all,thow)) end  end
+    local how=tiles.how(sample._all)
+    how.lo = lo
+    how.hi = hi
+    how.fmt = the.sample.fmtnum
+    --io.write(fmt,
+    print( sample.rank, sample.txt or "", mid(sample), iqr(sample),
+           tiles.show(sample._all,how)) end  end
 
 return {create=create, same=same, update=update,updates=updates,cliffsDelta=cliffsDelta,
         bootstrap=bootstrap,rank=rank}
