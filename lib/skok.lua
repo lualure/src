@@ -3,99 +3,82 @@
 -- # testing sk
 
 require "show"
+local O=require "tests"
 local R=require "random"
 local SK=require "sk"
 local SAM=require "sample"
 
 local function _sk1()
-  x1=SAM.updates{0.34, 0.49, 0.51, 0.6}
-  x2=SAM.updates{6,  7,  8,  9}
+  local x1=SAM.updates{0.34, 0.49, 0.51, 0.6}
+  local x2=SAM.updates{6,  7,  8,  9}
   x1.txt="x1"
   x2.txt="x2"
   SAM.rank({x1,x2},1.01) end
 
+local function _sk2()
+  local x1=SAM.updates{0.1, 0.2, 0.3, 0.4}
+  local x2=SAM.updates{0.1, 0.2, 0.3, 0.4}
+  local x3=SAM.updates{6,  7,  8,  9}
+  x1.txt="x1"
+  x2.txt="x2"
+  x3.txt="x3"
+  SAM.rank({x1,x2,x3},1.01) end
+
+local function _sk3()
+  local x1=SAM.updates{0.34, 0.49, 0.51, 0.6}
+  local x2=SAM.updates{0.6, 0.7, 0.8, 0.9}
+  local x3=SAM.updates{0.15,  0.25,  0.4,  0.35}
+  local x4=SAM.updates{0.6,  0.7,  0.8,  0.9}
+  local x5=SAM.updates{0.1,  0.2,  0.3,  0.4}
+  x1.txt="x1"
+  x2.txt="x2"
+  x3.txt="x3"
+  x4.txt="x4"
+  x5.txt="x5"
+  SAM.rank({x1,x2,x3,x4,x5},1.01) end
+
+local function _sk4()
+  local x1=SAM.updates{101,100,99,  101,99.5}
+  local x2=SAM.updates{101,100,99,  101,100}
+  local x3=SAM.updates{101,100,99.5,101,99}
+  local x4=SAM.updates{101,100,99,  101,100}
+  x1.txt="x1"
+  x2.txt="x2"
+  x3.txt="x3"
+  x4.txt="x4"
+  SAM.rank({x1,x2,x3,x4},1.01) end
+
+local function _sk5()
+  local x1=SAM.updates{11,11,11}
+  local x2=SAM.updates{11,11,11}
+  local x3=SAM.updates{11,11,11}
+  x1.txt="x1"
+  x2.txt="x2"
+  x3.txt="x3"
+  SAM.rank({x1,x2,x3},1.01) end
+
+local function _sk6()
+  local x1=SAM.updates{11,11,11}
+  local x2=SAM.updates{11,11,11}
+  local x3=SAM.updates{32,33,34,35}
+  x1.txt="x1"
+  x2.txt="x2"
+  x3.txt="x3"
+  SAM.rank({x1,x2,x3},1.01) end
+
+local function _sk7()
+  local x1,x2,x3={},{},{}
+  for i=1,256 do
+    x1[#x1+1] = R.r()^0.5
+    x2[#x2+1] = R.r()^2
+    x3[#x3+1] = R.r() end
+  x1 = SAM.updates(x1); x1.txt="x1"
+  x2 = SAM.updates(x2); x2.txt="x2"
+  x3 = SAM.updates(x3); x3.txt="x3"
+  SAM.rank({x1,x2,x3},1.01) end
+
 --[=====[ 
-ef rdiv1():
-  rdivDemo([
-        ["x1",0.1,  0.2,  0.3,  0.4],
-        ["x2",0.1,  0.2,  0.3,  0.4],
-        ["x3",6,  7,  8,  9] ])
-"""
-rank ,         name ,    med   ,  iqr
-----------------------------------------------------
-   1 ,           x1 ,      30  ,    20 (*              |              ), 0.10,  0.20,  0.30,  0.30,  0.40
-   1 ,           x2 ,      30  ,    20 (*              |              ), 0.10,  0.20,  0.30,  0.30,  0.40
-   2 ,           x3 ,     800  ,   200 (               |   ----   *-- ), 6.00,  7.00,  8.00,  8.00,  9.00
-### Lesson Two
-Many results often clump into less-than-many ranks.
-"""
-
-def rdiv2():
-  rdivDemo([
-        ["x1",0.34, 0.49, 0.51, 0.6],
-        ["x2",0.6,  0.7,  0.8,  0.9],
-        ["x3",0.15, 0.25, 0.4,  0.35],
-        ["x4",0.6,  0.7,  0.8,  0.9],
-        ["x5",0.1,  0.2,  0.3,  0.4] ])
-
-"""
-rank ,         name ,    med   ,  iqr
-----------------------------------------------------
-   1 ,           x5 ,      30  ,    20 (---    *---    |              ), 0.10,  0.20,  0.30,  0.30,  0.40
-   1 ,           x3 ,      35  ,    15 ( ----    *-    |              ), 0.15,  0.25,  0.35,  0.35,  0.40
-   2 ,           x1 ,      51  ,    11 (        ------ *--            ), 0.34,  0.49,  0.51,  0.51,  0.60
-   3 ,           x2 ,      80  ,    20 (               |  ----    *-- ), 0.60,  0.70,  0.80,  0.80,  0.90
-   3 ,           x4 ,      80  ,    20 (               |  ----    *-- ), 0.60,  0.70,  0.80,  0.80,  0.90
-### Lesson Three
-Some results even clump into one rank (the great null result).
-"""
-
-def rdiv3():
-  rdivDemo([
-      ["x1",101, 100, 99,   101,  99.5],
-      ["x2",101, 100, 99,   101, 100],
-      ["x3",101, 100, 99.5, 101,  99],
-      ["x4",101, 100, 99,   101, 100] ])
-
-"""
-rank ,         name ,    med   ,  iqr
-----------------------------------------------------
-   1 ,           x1 ,    10000  ,   150 (-------       *|              ),99.00, 99.50, 100.00, 101.00, 101.00
-   1 ,           x2 ,    10000  ,   100 (--------------*|              ),99.00, 100.00, 100.00, 101.00, 101.00
-   1 ,           x3 ,    10000  ,   150 (-------       *|              ),99.00, 99.50, 100.00, 101.00, 101.00
-   1 ,           x4 ,    10000  ,   100 (--------------*|              ),99.00, 100.00, 100.00, 101.00, 101.00
-#### Lesson Four
-Heh? Where's  lesson four?
-### Lesson Five
-Some things had better clump to one thing (sanity check for the ranker).
-"""
-
-def rdiv5():
-  rdivDemo([
-      [x1,11,11,11],
-      [x2,11,11,11],
-      [x3,11,11,11]]
-
-rank ,         name ,    med   ,  iqr
-----------------------------------------------------
-   1 ,           x1 ,    1100  ,     0 (*              |              ),11.00, 11.00, 11.00, 11.00, 11.00
-   1 ,           x2 ,    1100  ,     0 (*              |              ),11.00, 11.00, 11.00, 11.00, 11.00
-   1 ,           x3 ,    1100  ,     0 (*              |              ),11.00, 11.00, 11.00, 11.00, 11.00
-### Lesson Six
-Some things had better clump to one thing (sanity check for the ranker).
-
-def rdiv6():
-  rdivDemo([
-      ["x1",11,11,11],
-      ["x2",11,11,11],
-      ["x4",32,33,34,35]])
-
-rank ,         name ,    med   ,  iqr
-----------------------------------------------------
-   1 ,           x1 ,    1100  ,     0 (*              |              ),11.00, 11.00, 11.00, 11.00, 11.00
-   1 ,           x2 ,    1100  ,     0 (*              |              ),11.00, 11.00, 11.00, 11.00, 11.00
-   2 ,           x4 ,    3400  ,   200 (               |          - * ),32.00, 33.00, 34.00, 34.00, 35.00
-### Lesson Seven
+## Lesson Seven
 All the above scales to succinct summaries of hundreds, thousands, millions of numbers
 
 
@@ -114,4 +97,4 @@ rank ,         name ,    med   ,  iqr
    3 ,           x1 ,      73  ,    37 (         ------|-    *   ---  ), 0.32,  0.57,  0.73,  0.86,  0.95
 
 --]=====]
-_sk1()
+O.k{_sk1,_sk2,_sk3,_sk4,_sk5,_sk6,_sk7}

@@ -102,13 +102,12 @@ local function same(i,j)
 -- then assigns some number 1 &lt; _n_ to each. Note that any
 -- adjacent samples that are statisticall the same will
 -- get the same rank. Rank out a report of its conclusions.
-function rank(samples,epsilon,ranker) 
+local function rank(samples,epsilon,ranker) 
   local function nth(t,n) return t._all[  math.floor(#t._all*n) ] end
   local function mid(t)   return nth(t,0.5) end
   local function iqr(t)   return nth(t,0.75) - nth(t,0.25) end
-  fmt = fmt or string.format("%s %s %s %s\n",
+  local fmt =  string.format("%%2s %s %s %s %%s\n",
                              the.sample.fmtstr,
-                             the.sample.fmtnum,
                              the.sample.fmtnum,
                              the.sample.fmtnum)
   local lo,hi= 10^64, -10^64
@@ -129,8 +128,8 @@ function rank(samples,epsilon,ranker)
     how.hi = hi
     how.fmt = the.sample.fmtnum
     --io.write(fmt,
-    print( sample.rank, sample.txt or "", mid(sample), iqr(sample),
-           tiles.show(sample._all,how)) end  end
+    io.write(string.format(fmt, sample.rank, sample.txt or "", mid(sample), iqr(sample),
+           tiles.show(sample._all,how))) end  end
 
 return {create=create, same=same, update=update,updates=updates,cliffsDelta=cliffsDelta,
         bootstrap=bootstrap,rank=rank}

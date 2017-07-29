@@ -55,7 +55,6 @@ local function memo(samples,here,stop,_memo,    b4,inc)
 -- splits are not statistically the same, then
 -- recurse into each part of the split.
 return function (samples,epsilon,same)
-  lst.maprint(samples)
   epsilon = epsilon or the.sample.epsilon
   local function split(lo,hi,all,rank,lvl)   
     local best,lmemo,rmemo = 0,{},{}

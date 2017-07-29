@@ -1,6 +1,6 @@
 require "show"
-
-local lst= require "lists"
+local THE = require "config"
+local LST= require "lists"
 -----------------------------
 local function tiles(i,p, jump)
   local p    = p or 10
@@ -13,7 +13,7 @@ local function tiles(i,p, jump)
     q = q + jump*inc end
   return out end
 -------------------------------------
-function hows(t) 
+local function hows(t) 
   table.sort(t)
   return {
   width=50,
@@ -26,7 +26,7 @@ function hows(t)
          {0.9," "}},
   bar="|",
   star="*",
-  show=" %5.3f"} end
+  show= THE.sample.fmtnum or "%5.3f"} end
 -------------------------------------------------
 local function show(t, how)
   how = how or hows(t)
@@ -34,17 +34,17 @@ local function show(t, how)
   local function pos(p)   return t[ fl(p * #t) ] end
   local function place(x) return fl( how.width*(x- how.lo)/(how.hi - how.lo) ) end
   local function whats(chops)
-          return  lst.collect(chops, function (_) return 
+          return  LST.collect(chops, function (_) return 
                               pos(_[1]) end ) end
   local function wheres(what) 
-          return lst.collect(what, function (_) return 
+          return LST.collect(what, function (_) return 
                              place(_)  end ) end
   how.lo = math.min(how.lo, t[1])
   how.hi = math.max(how.hi, t[#t])
-  what   = whats(how.chops)
-  where  = wheres(what)
+  local what   = whats(how.chops)
+  local where  = wheres(what)
   local out={}
-  for i=1,how.width do out[i] = " " end
+  for i=1,how.width + 1 do out[i] = " " end
   local b4=1
   for k,now in pairs(where) do
     if k> 1 then
@@ -53,7 +53,7 @@ local function show(t, how)
     b4= now  end
   out[math.floor(how.width/2)] = how.bar
   out[place(pos(0.5))]    = how.star
-  local suffix = lst.collect(what,  function (_) return
+  local suffix = LST.collect(what,  function (_) return
                      string.format(how.show,_) end) 
   return "(" .. table.concat(out,"") .. ")" .. 
                 table.concat(suffix,", ") end
@@ -68,7 +68,7 @@ local function shows(ts)
     out[#out+1] = t  end
   table.sort(out, function(a,b) return 
                   a[math.floor(#a/2)] < b[math.floor(#b/2)] end )
-  return lst.collect(out, function (t) 
+  return LST.collect(out, function (t) 
                           local how = hows(t)
                           how.lo = lo
                           how.hi = hi
