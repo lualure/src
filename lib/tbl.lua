@@ -93,7 +93,7 @@ local function dom(t)
   local b4={}
   return function (r)   
            if not b4[r.id] then 
-             io.write('.');b4[r.id]=row.dominate(r,t) end
+             b4[r.id]=row.dominate(r,t) end
            return b4[r.id] end end
 
 local funs={goaln=goaln, goal1=goal1,dom=dom,goallast=goallast}

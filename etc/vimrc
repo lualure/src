@@ -60,7 +60,7 @@ Plugin 'bling/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'croaker/mustang-vim'
 Plugin 'ap/vim-buftabline'
-Plugin 'enricobacis/vim-airline-clock'
+"Plugin 'enricobacis/vim-airline-clock'
 Plugin 'majutsushi/tagbar'
 
 Plugin 'MarcWeber/vim-addon-mw-utils'
@@ -69,7 +69,7 @@ Plugin 'garbas/vim-snipmate'
 Plugin 'honza/vim-snippets'
 
 
-let g:airline#extensions#clock#format = 'TIME= %H:%M'
+"let g:airline#extensions#clock#format = 'TIME= %H:%M'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required

@@ -44,4 +44,4 @@ local function _test3() _test0("/data/POM3A_short.csv","dom") end
 r.seed(1)
 _test2()
 _test1()
-O.k{_test3}
+_test3()

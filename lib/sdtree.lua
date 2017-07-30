@@ -74,7 +74,6 @@ local function grow1(above,yfun,rows,lvl,b4,pos,attr,val)
 local function grow(t, y)
   local yfun = tbl[y](t)
   local root = create(t,yfun)
-  print("----------")
   grow1(root, yfun, t.rows,0,10^32) 
   return root end
 ------------------------------------------------
