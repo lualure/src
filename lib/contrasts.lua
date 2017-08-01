@@ -40,7 +40,10 @@ local function plans(branches, better)
         local num2=LST.last(branch2)[3]
         if better(num2.mu, num1.mu)  then
           if not NUM.same(num1,num2) then
-            print(i,j,(num2.mu - num1.mu)/num1.mu, holds(branch1),holds(branch2)) end end end end end end
+            print(i,j,(num2.mu - num1.mu)/num1.mu, 
+                  holds(branch1),
+                  holds(branch2)) 
+                return 1 end end end end end end
 
 
 
