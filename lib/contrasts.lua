@@ -17,42 +17,62 @@ local function monitors(branches)
   return plans(branches, function(x,y)
                return x < y end) end
 
-local function hold(t,attr,val)
-   local old = t[attr] or {}
-   if old[val] 
-     then old[val] = old[val] + 1 
-     else old[val] = 1 end
-   return t end
-
 local function holds(branch)
   local out = {}
-  for _,step in pairs(branch) do
+  for i=1,#branch do
+    step = branch[i]
     --print(step)
-    out = hold(out,step[1],step[2]) end
+    out[#out+1] = {step[1], step[2]} end 
   return out end
 
 local function plans(branches, better)
   better = better or function(x,y) return x > y end
   for i,branch1 in pairs(branches) do
+    local out={}
+    local h1= holds(branch1)
+    local num1=LST.last(branch1)[3]
     for j,branch2 in pairs(branches) do
       if i ~= j then
-        local num1=LST.last(branch1)[3]
         local num2=LST.last(branch2)[3]
         if better(num2.mu, num1.mu)  then
           if not NUM.same(num1,num2) then
-            print(i,j,(num2.mu - num1.mu)/num1.mu, 
-                  holds(branch1),
-                  holds(branch2)) 
-                return 1 end end end end end end
+            local h2= holds(branch2)
+            local inc = delta(h2,h1)
+            if #inc > 1 then
+              out[#out+1] = {ninc=#inc,muinc=num2.mu - num1.mu,inc=inc,
+                             branch1=h1,mu1=num1.mu, branch1=h2,mu2=num2.mu}
+               end end end end end 
+    table.sort(out, function (x,y) return x.muinc > y.muninc end)
+    print("mu ",out[1])
+    table.sort(out, function (x,y) return x.ninc < y.ninc end)
+    print("deltq ",out[1])
 
+    end end
+
+               
+
+local function member2(twin0,twins) 
+  for _,twin1 in pairs(twins) do
+    if twin0[1] == twin1[1] and
+       twin0[2] == twin1[2] then
+       return true end end
+  return false end
+
+
+function delta(held1, held2) 
+  local out={}
+  for _,twin in pairs(held1) do
+    if not member2(twin,held2) then
+      out[#out+1] = {twin[1], twin[2]} end end
+  return out end
 
 
 defaults()
 the.tree.min=4
-x=TREES.xomo()
+x=TREES.auto()
 b=branches(x,{},{})
 --LST.maprint(b)
 
---TREE.show(x)
+TREE.show(x)
 
 plans(b)
