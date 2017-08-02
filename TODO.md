@@ -46,6 +46,7 @@ Add documents to enable `locco` documentation:
 - Your `.gitignore` should ignore `docs` folder.
 - Separate functions with lines:
 
+
      function love()
        asds()
        if asdas() then
@@ -71,25 +72,24 @@ Global configuration options stored in `config` and reset to defaults using `def
 (which are stored in the global `the`). So
 a standard experiment starts with
 
-     require "show"
-     local R=require "random"
-     local O=require "tests"
-     local XX=require "moduleURtesting"
+    require "show"
+    local R=require "random"
+    local O=require "tests"
+    local XX=require "moduleURtesting"
 
-     local function _test1()
-       defaults() -- set the defaults
-       the.this.that = 10 -- override a default
-       do something with XX
-       assert(something)
-     end 
+    local function _test1()
+      defaults() -- set the defaults
+      the.this.that = 10 -- override a default
+      do something with XX
+      assert(something)
+    end 
 
-     local function _anotherTest()
-       defaults() -- set the defaults
-       the.this.that = 4321 -- override a default
-       do something else with XXX
-       assert(something)
-     end 
+    local function _anotherTest()
+      defaults() -- set the defaults
+      the.this.that = 4321 -- override a default
+      do something else with XXX
+      assert(something)
+    end 
 
-     R.seed(1) -- set the random seed
-     O.k{_test1,_anotherTest} -- counts assertion failures, continue even if 1 crashes
-
+    R.seed(1) -- set the random seed
+    O.k{_test1,_anotherTest} -- counts assertion failures, continue even if 1 crashes
