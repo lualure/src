@@ -44,8 +44,8 @@ Add documents to enable `locco` documentation:
 - No file called `index.lua` (messes up my documentation system)
 - Html written to lib/docs
 - Your `.gitignore` should ignore `docs` folder.
-- Separate functions with lines:
 
+Separate functions with lines:
 
      function love()
        asds()
