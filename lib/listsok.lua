@@ -42,7 +42,7 @@ local function _bsearch()
   local a={}
   for i=1,100 do
     a[i]=i^0.5 end
-  print(LST.bsearch(a,5)) end
+  assert(LST.bsearch(a,5)==25) end
 
 R.seed()
 O.k{_test1,_mapping,_copy,_bsearch}

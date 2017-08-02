@@ -37,7 +37,11 @@ All data in "/data" underneath some path name mentioned on `os.getenv("Lure")`.`
 All files use `require "show"` which changes the default version of `print` and `tostring`. Note
 that to hide a field from being printed (e.g. since it is too long), make its first letter an underscore.
 
-Join all lines that are only  `end`.
+Join all lines that are only  `end`. For example:
+
+    local function map(t,f)
+      if t then
+        for i,v in pairs(t) do f(v) end end end
 
 Add documents to enable `locco` documentation:
 
@@ -48,13 +52,13 @@ Add documents to enable `locco` documentation:
 Separate functions with lines:
 
      function love()
-       asds()
-       if asdas() then
-         return 1 end end
+       talk()
+       if laugh() then
+         return smile() end end
      --------------------------
-     function fred()
-       asds()
-       asdas()
+     function hate()
+       fight()
+       steal()
        return 1 end
 
 Module-based polytheism
