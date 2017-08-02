@@ -47,6 +47,8 @@ init() { ## ## install LURE (need only be run once) ## :init
 Session.vim
 netrwhist
 *~
+# sed stuff
+*.bak
 # doc stuff
 docs
 locco

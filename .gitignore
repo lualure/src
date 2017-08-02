@@ -5,6 +5,8 @@
 Session.vim
 .netrwhist
 *~
+# sed stuff
+*.bak
 # doc stuff
 locco
 docs
