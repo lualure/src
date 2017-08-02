@@ -1,17 +1,16 @@
 -- # listsok : unit tests for lists
 
 require "show"
-local the=require "config"
-	
-local o=require "tests"	
-local r=require "random"
-local lst=require "lists"
+local THE=require "config"
+local O=require "tests"	
+local R=require "random"
+local LST=require "lists"
  
 local function _test1()
- assert(lst.shuffle{1,2,3,4,5} ~= 3)
- assert(lst.member(10,{10,20,30}))
- assert(lst.first{10,20,30} == 10)
- assert(lst.last{10,20,30} == 30)
+ assert(LST.shuffle{1,2,3,4,5} ~= 3)
+ assert(LST.member(10,{10,20,30}))
+ assert(LST.first{10,20,30} == 10)
+ assert(LST.last{10,20,30} == 30)
 end
 
 local function _mapping()
@@ -19,7 +18,7 @@ local function _mapping()
   local function visit(w,x) 
             w.sum = w.sum + x
             w.n = w.n+1 end
-  local w= lst.map2({10,20,30},
+  local w= LST.map2({10,20,30},
                     {sum=0,n=0},
                     visit)
  assert(w.sum== 60)
@@ -28,12 +27,12 @@ end
 
 local function _copy()
   local t1={1,2,3,{4,5,6}}
-  local t2=lst.copy(t1)
-  assert(lst.last(lst.last(t1)) == lst.last(lst.last(t2)))
+  local t2=LST.copy(t1)
+  assert(LST.last(LST.last(t1)) == LST.last(LST.last(t2)))
   t1[4][3]=7
   assert(t1[4][3] == 7)
   assert(t2[4][3] ~= 7)
-  local t3=lst.shallowCopy(t1)
+  local t3=LST.shallowCopy(t1)
   t1[4][3]=8
   assert(t1[4][3] == 8)
   assert(t3[4][3] == 8)
@@ -43,7 +42,7 @@ local function _bsearch()
   local a={}
   for i=1,100 do
     a[i]=i^0.5 end
-  print(lst.bsearch(a,5)) end
+  print(LST.bsearch(a,5)) end
 
-r.seed()
-o.k{_test1,_mapping,_copy,_bsearch}
+R.seed()
+O.k{_test1,_mapping,_copy,_bsearch}

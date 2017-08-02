@@ -8,14 +8,15 @@ local LST=require "lists"
 
 function _con()
   defaults()
-  the.tree.min=4
+  the.tree.min=8
   local x=TREES.auto()
-  b=CON.branches(x)
-  LST.maprint(b)
   TREE.show(x)
-  print("\n====================What to do: ")
+  b=CON.branches(x)
+  print("\n==================== Show branches \n\n")
+  LST.maprint(b)
+  print("\n==================== What to do: (plans= here to better) ")
   CON.plans(b)
-  print("\n====================What to fear: ")
+  print("\n==================== What to fear: (monitors = here to worse) ")
   CON.monitors(b)
 end
 

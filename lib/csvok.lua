@@ -29,9 +29,11 @@ rainy,71,
 91, TRUE ,no]]
 
 local function _test1()
+   print("First read from string...")
    csv(xx,print)
    print("")
-   csv("../data/weather.csv",print)
+   print("Second, read from file.")
+   csv(os.getenv("Lure") .. "/data/weather.csv",print)
 end
 
 o.k{_test1}

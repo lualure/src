@@ -72,7 +72,10 @@ doco() { ## ## generate html from lua code ## doc
    else  
      cd $Lure/etc/locco
      files=$(ls ${Lure}/lib/*lua | grep -v 'ok\.lua')
-     (echo "-- # Index"
+     (echo ""
+    # echo "-- <img width=150 align=right src=\"$Img\">"
+     echo ""
+     #echo "-- # Index"
      echo ""
      echo "(Auto-generated. Do not edit.)"
      echo ""
@@ -86,6 +89,10 @@ doco() { ## ## generate html from lua code ## doc
        stem=$(basename $i '.lua')
        if [ "$i" -nt "$Lure/lib/docs/$stem.html" ];then
          ./locco.lua $i
+         sed -i'.bak'  's/<title>.*/<title>'$stem'<\/title>/1'  $Lure/lib/docs/$stem.html 
+         sed -i'.bak'  's?'$Lure/lib/$stem'.lua?<a href=\"'$Url/$stem.lua'\">LURE: '$stem'</a>?1'  $Lure/lib/docs/$stem.html 
+         sed -i'.bak' 's?<h1>?<img width=150 align=right src=\"'$Img'\"><h1>?1' $Lure/lib/docs/$stem.html
+         sed -i'.bak' 's?</h1>?</h1><p><a href=\"index.html\">[Index]</a></p>?1' $Lure/lib/docs/$stem.html
        fi
      done
      rm $Lure/lib/index.lua
@@ -114,7 +121,14 @@ oks() { ## ## run all the Xok.lua files ## lua
   grep -v _allok |
   gawk '{sub(/.lua/,"",$0) 
          sub(/^.*\//,"",$0)
-         printf(" require \"%s\";\n",$0)}' > ${Lure}/lib/_allok.lua
+         print " print(); print() " 
+         print "local THiss=\""$0"\"" 
+         print "local BAr=\"-----------------------------------\"" 
+         print " print(BAr .. BAr .. BAr)" 
+         print " print(\"-- \" .. THiss) " 
+         print " print(BAr .. BAr .. BAr)"  
+         print " print(); print(); " 
+         print " require \"" $0 "\""}' > ${Lure}/lib/_allok.lua
   cd ${Lure}/lib
   l _allok.lua
   rm  _allok.lua
@@ -295,6 +309,8 @@ setup() {
   export LESS='-R'
   export LESSOPEN='|$Lure/etc/lessfilter %s'
   Tag="LURE"
+  Url="https://github.com/lualure/src/blob/master/lib"
+  Img="https://goo.gl/QabuWK"
   _c1="\[\033[01;32m\]"
   _c2="\[\033[01;34m\]"
   _c3="\[\033[31m\]"

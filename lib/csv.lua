@@ -1,4 +1,9 @@
--- ## csv : utilities
+-- ##  Utilities for reading CSV files
+
+-- _tim@menzies.us_
+-- _August'17_
+
+
 
 -- Map a function mapped over comma-seperated data. 
 -- pruning comments away and dead space.  For example,
@@ -10,6 +15,12 @@
 -- Data is assumed to start with an initial row list column
 -- names. If a column name includes "?", then don't read it.
 -- If a row ends with a comma, join it to the next line.
+--
+-- TODO: the following passes each found row to a function `fn`.
+-- A cooler approach would be remove the need for pass round `fn`
+-- and make all this an iterator. BUT, iterators in Lua and
+-- nuanced more complex than other languages (like Python). So
+-- here, we take the easy path (i.e. pass the function).
 --
 local the      = require "config"
 local notsep   = "([^" .. the.sep .. "]+)" -- not cell seperator
