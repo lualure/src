@@ -4,6 +4,7 @@
 -- _August'18_   
 --
 
+-- add example usages
 
 local the=require "config"
 ----------------------------------------------------

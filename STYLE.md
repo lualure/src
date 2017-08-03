@@ -30,6 +30,11 @@ Join all lines that are only  `end`. For example:
       if t then
         for i,v in pairs(t) do f(v) end end end
 
+Module names should be upper case (that's my goal, and that convention is 
+sweeping out through my code).  E.g.
+
+    local CSV = require "csv"
+
 #### Test suites
 
 The file `X.lua` may have demo code in `Xok.lua`.

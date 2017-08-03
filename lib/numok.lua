@@ -4,6 +4,7 @@ local r=require "random"
 local num=require "num"
 local str=require "str"
 
+-- XXX add asserts here
 local function _test1()
   local n1=1
   local fmt = "%5s\t%5s\t%5s %5s %5s %5s\n"
