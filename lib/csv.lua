@@ -37,14 +37,14 @@ local comments = "#.*"           -- comments
 -- ### Control functions
 
 -- If we are reading from a string that ends in any of
--- these extensions, assume the string is a file name.
+-- these extensions, then we will assume the string is a file name.
 local files    = {txt=true, csv=true}
 
 -- If lines end with a comma, join it to the next line.
 local function incomplete(txt) -- must join line to next
   return string.sub(txt,-1) == the.sep  end
 
--- If a column name includes "?", skip that column.
+-- If a column name includes "?", then we will need to skip that column.
 local function ignored(txt) -- ignore this column
   return string.find(txt,the.ignore) == nil end
 -------------------------------------------------------
@@ -99,7 +99,6 @@ local function withEachLine(src,wme)
 --  cell values).
 return function (src,fn)
   withEachLine(src, {fn=fn, first=true, use={}}) end
-
 
 --------------------------------------------------------
 --

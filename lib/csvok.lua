@@ -1,8 +1,8 @@
 ## csvok : unit tests for csv
 
 require "show"
-local o    = require "tests"	
-local csv  = require "csv"
+local O    = require "tests"	
+local CSV  = require "csv"
 
 local xx=[[outlook,
 $temp,
@@ -30,10 +30,10 @@ rainy,71,
 
 local function _test1()
    print("First read from string...")
-   csv(xx,print)
+   CSV(xx,print)
    print("")
    print("Second, read from file.")
-   csv(os.getenv("Lure") .. "/data/weather.csv",print)
+   CSV(os.getenv("Lure") .. "/data/weather.csv",print)
 end
 
-o.k{_test1}
+O.k{_test1}

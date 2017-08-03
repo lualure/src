@@ -1,28 +1,48 @@
-# My Coding standards (for Lua)
+## My Coding standards (for Lua)
 
 tim@menzies.us  
 August'17
 
 ---------------------------------------------------------
+### Learning Lua
+
+Some great on-line resources:
+
+- http://tylerneylon.com/a/learn-lua/
+
+----------------------------------------------------------
+### Timm's Lua Coding style
+
+#### Formatting
 
 Indents = 2 spaces (no tabs).
-
-The file `X.lua` has demo code in `Xok.lua`.
-- Use `random.lua` not the built-in random number generator since mine ins platform independent
-  (same numbers, different platforms-- better for writing unit tests).
-
-All files in the same directory.
-
-All data in "/data" underneath some path name mentioned on `os.getenv("Lure")`.`
-
-All files use `require "show"` which changes the default version of `print` and `tostring`. Note
-that to hide a field from being printed (e.g. since it is too long), make its first letter an underscore.
 
 Join all lines that are only  `end`. For example:
 
     local function map(t,f)
       if t then
         for i,v in pairs(t) do f(v) end end end
+
+#### Test suites
+
+The file `X.lua` has demo code in `Xok.lua`.
+
+- Use `random.lua` not the built-in random number generator since mine ins platform independent
+  (same numbers, different platforms-- better for writing unit tests).
+
+#### Directories
+
+All files in the same directory.
+
+All data in "/data" underneath some path name mentioned on `os.getenv("Lure")`.`
+
+#### Printing
+
+All files use `require "show"` which changes the default version of `print` and `tostring`. Note
+that to hide a field from being printed (e.g. since it is too long), make its first letter an underscore.
+
+
+#### Documentation
 
 Add documents to enable `locco` documentation:
 
@@ -42,6 +62,8 @@ Separate functions with lines:
        steal()
        return 1 end
 
+#### Encapsulation
+
 Module-based polytheism
 
 - Modules usually have `create` `update` `updates`
@@ -49,9 +71,13 @@ Module-based polytheism
 - Most functions and variables are local
 - Modules end by returning a table of functions
 
+#### Temptations (to avoid)
+
 No use of meta tables (that way, madness lies).
 
 No OO tricks (so many ways to do it... I found that I never stop experimenting).
+
+#### Configuration
 
 Global configuration options stored in `config` and reset to defaults using `defaults()`
 (which are stored in the global `the`). So
