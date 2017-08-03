@@ -1,6 +1,6 @@
 -- ##  Utilities for reading CSV files
 
--- _tim@menzies.us_
+-- _tim@menzies.us_   
 -- _August'17_
 
 -- Map a function mapped over comma-seperated data. 
@@ -59,6 +59,7 @@ local function cellsWeAreNotIgnoring(txt,wme)
     if wme.first    then 
       wme.use[col] = ignored(word) end
     if wme.use[col] then 
+      -- Convery strings to numbers (if needed)
       out[#out+1]  = tonumber(word) or word end end
   return out end
 -------------------------------------------------------

@@ -14,10 +14,6 @@ function defaults() return {
             --cliffsDelta=0.33 -- small
             --cliffsDelta=0.474 -- small
             },
-  bpo=    { pop0=20,
-            score=64,
-            max=1,
-            min=1},
   tree=   { ish=1.00,
             min=2, 
             maxDepth=10},
