@@ -8,10 +8,15 @@ August'17
 
 Some great on-line resources:
 
-- http://tylerneylon.com/a/learn-lua/
+- Quick start http://tylerneylon.com/a/learn-lua/
+- [Read the book](https://www.lua.org/pil/).
+    - The 4th edition in [on Amazon](https://www.amazon.com/Programming-Lua-Fourth-Roberto-Ierusalimschy/dp/8590379868/ref=pd_lpo_sbs_14_t_0?_encoding=UTF8&psc=1&refRID=MFJR3QK7P99NY833BJYN).
+    - The 2nd edition (which is still pretty good) is available [on-line](http://index-of.es/Programming/Lua/Programming%20in%20Lua.pdf).
 
 ----------------------------------------------------------
 ### Timm's Lua Coding style
+
+If you are rading my code, it will save you time to know how I write my Lua.
 
 #### Formatting
 
@@ -25,26 +30,18 @@ Join all lines that are only  `end`. For example:
 
 #### Test suites
 
-The file `X.lua` has demo code in `Xok.lua`.
+The file `X.lua` may have demo code in `Xok.lua`.
 
 - Use `random.lua` not the built-in random number generator since mine ins platform independent
   (same numbers, different platforms-- better for writing unit tests).
 
-#### Directories
-
-All files in the same directory.
-
-All data in "/data" underneath some path name mentioned on `os.getenv("Lure")`.`
-
-#### Printing
-
-All files use `require "show"` which changes the default version of `print` and `tostring`. Note
-that to hide a field from being printed (e.g. since it is too long), make its first letter an underscore.
-
-
 #### Documentation
 
-Add documents to enable `locco` documentation:
+Add documents to enable `locco`-style documentation
+
+     ./locco.lua yourCode.lua -- generates docs/yourCode.html
+
+Some rules:
 
 - No file called `index.lua` (messes up my documentation system)
 - Html written to lib/docs
@@ -61,6 +58,18 @@ Separate functions with lines:
        fight()
        steal()
        return 1 end
+
+#### Directories
+
+All files in the same directory.
+
+All data in "/data" underneath some path name mentioned on `os.getenv("Lure")`.`
+
+#### Printing
+
+All files use `require "show"` which changes the default version of `print` and `tostring`. Note
+that to hide a field from being printed (e.g. since it is too long), make its first letter an underscore.
+
 
 #### Encapsulation
 
