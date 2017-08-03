@@ -22,6 +22,8 @@ If you are rading my code, it will save you time to know how I write my Lua.
 
 Indents = 2 spaces (no tabs).
 
+Short variable names; e.g. not `self` but `i`.
+
 Join all lines that are only  `end`. For example:
 
     local function map(t,f)
