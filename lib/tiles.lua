@@ -74,4 +74,8 @@ local function shows(ts)
                           how.hi = hi
                           return show(t,how) end) end
 
-return {tiles=tiles, show=show, shows=shows,how=hows}
+local function showAndPrint(ts) 
+  for _,one in pairs(shows(ts)) do
+    print(one) end end
+
+return {tiles=tiles, show=show, print=showAndPrint,shows=shows,how=hows}

@@ -65,6 +65,9 @@ EOF
   echo "you should run commands like the following..."
   type timm
 }
+odoc() { ## STEM ## opens a browser on lib/docs/STEM.html ## doc
+  open $Lure/lib/docs/$1.html
+}
 doco() { ## ## generate html from lua code ## doc
    if [ ! -d "$Lure/../info" ]; then
      echo "Missing target repo: [info]"
