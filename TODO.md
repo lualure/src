@@ -4,6 +4,12 @@ Make all my module names upper case.
 
 Run all my *ok.lua* files, find dead code.
 
+# evaluation
+
+need abcd.py ported to LUA
+
+need popt added
+
 # Learners
 
 ### Clustering
