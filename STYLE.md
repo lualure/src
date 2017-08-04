@@ -91,7 +91,12 @@ Module-based polytheism
 
 No use of meta tables (that way, madness lies).
 
-No OO tricks (so many ways to do it... I found that I never stop experimenting).
+No OO tricks:
+
+- So many ways to do it in Lua... I found that I never stop experimenting.
+- And people hate my OO code: so many
+  levels of redirection. So I took the hint.
+  Keep in simple. [Or risk consuing people](http://sunnyday.mit.edu/16.355/hatton-les.pdf).
 
 #### Configuration
 

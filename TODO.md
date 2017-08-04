@@ -18,6 +18,10 @@ KNN, NB from [here](https://github.com/txt/ase16/blob/master/src/ase.py#L917,L95
 
 TO test KNN, for each leaf instances, find its nearest neighbor. It should come back to itself.
 
+WHICH
+
+DE to tune KNN, NB
+
 ## Interfaces
 
 Contrast set browser. Notes decides plans and monitors. Incrementally watches data.
