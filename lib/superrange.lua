@@ -1,5 +1,34 @@
 -- # superranges : utilities
-
+--
+-- _tim@menzies.us_    
+-- _August, 2018_
+-- 
+-- R
+-- Use this code to find "natural ranges"
+-- in a list of numbers `t`. Such ranges
+-- can be visualized of as a small number of
+-- straight lines approximating a cumulative
+-- distribution function.  
+--
+-- For example, 
+-- consider a random number function 
+-- `R` and 100 numbers drawn from `square(R)`.
+-- The following code would propose breaks in that range at
+-- (0,0), (36,0.14), (55,0.3), (67,0.47), (80,0.6),  (100,1) which looks like this:
+--
+-- ![](https://raw.githubusercontent.com/lualure/info/master/img/unsuper.png)
+--
+-- Note that a line drawn through our breaks is a good approximation
+-- of the original curve. There are two benefits in using this approximation:
+--
+-- - We no longer need to use, or report, the entire curve. Instead, we
+--   can just break up the reasoning into a few bins.
+-- - Any subsequent supervised discritization need not reason about the
+--   whole curve. Instead, that supervised discretizer needs only to
+--   decide which of the breaks found by the unsupervised discretizer
+--   need to be combined together.
+--
+-
 require "show"
 local the=require "config"
 local num=require "num"

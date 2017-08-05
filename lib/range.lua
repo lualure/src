@@ -15,7 +15,7 @@
 -- The following code would propose breaks in that range at
 -- (0,0), (36,0.14), (55,0.3), (67,0.47), (80,0.6),  (100,1) which looks like this:
 --
--- ![](img/unsuper.png)
+-- ![](https://raw.githubusercontent.com/lualure/info/master/img/unsuper.png)
 --
 -- Note that a line drawn through our breaks is a good approximation
 -- of the original curve. There are two benefits in using this approximation:
