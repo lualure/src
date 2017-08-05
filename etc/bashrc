@@ -68,6 +68,25 @@ EOF
 odoc() { ## STEM ## opens a browser on lib/docs/STEM.html ## doc
   open $Lure/lib/docs/$1.html
 }
+_docheader() { cat<<EOF
+ <a href="https://github.com/lualure/src"><img 
+style="position: absolute; top: 0; right: 0; border: 0;" 
+src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" 
+alt="Fork me on GitHub" 
+data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
+<img width=150 align=right src="https://goo.gl/QabuWK">
+<p>
+<a href="index.html">home</a> |
+<a href="https://twitter.com/lua_lured">news</a> |
+<a href="https://groups.google.com/forum/#!forum/lualure">discuss</a> |
+<a href="https://github.com/lualure/src/issues">issues</a> |
+<a href="https://github.com/lualure/src/blob/master/lib/$1.lua">browse</a> 
+</p>
+<h1> 
+LURE: $1
+</h1>
+EOF
+}
 doco() { ## ## generate html from lua code ## doc
    if [ ! -d "$Lure/../info" ]; then
      echo "Missing target repo: [info]"
@@ -80,8 +99,6 @@ doco() { ## ## generate html from lua code ## doc
      (echo ""
     # echo "-- <img width=150 align=right src=\"$Img\">"
      echo ""
-     #echo "-- # Index"
-     echo ""
      echo "(Auto-generated. Do not edit.)"
      echo ""
      for i in $files ; do
@@ -90,14 +107,17 @@ doco() { ## ## generate html from lua code ## doc
        echo "-- - [$f]($l) "
      done
      echo "") > $Lure/lib/index.lua
-     for i in $files; do
+     for i in $Lure/lib/index.lua $files; do
        stem=$(basename $i '.lua')
        if [ "$i" -nt "$Lure/lib/docs/$stem.html" ];then
          ./locco.lua $i
+         str=$(_docheader $stem)
          sed -i'.bak'  's/<title>.*/<title>'$stem'<\/title>/1'  $Lure/lib/docs/$stem.html 
-         sed -i'.bak'  's?'$Lure/lib/$stem'.lua?<a href=\"'$Url/$stem.lua'\">LURE: '$stem'</a>?1'  $Lure/lib/docs/$stem.html 
-         sed -i'.bak' 's?<h1>?<img width=150 align=right src=\"'$Img'\"><h1>?1' $Lure/lib/docs/$stem.html
-         sed -i'.bak' 's?</h1>?</h1><p><a href=\"index.html\">[Index]</a></p>?1' $Lure/lib/docs/$stem.html
+         sed -i'.bak'  's?'$Lure/lib/$stem'.lua??1'  $Lure/lib/docs/$stem.html 
+         cat $Lure/lib/docs/$stem.html |
+         gawk '/<h1>/ {print str; next} /<.h1>/ {next} {print}' str="$str"  > /tmp/$$
+         mv /tmp/$$  $Lure/lib/docs/$stem.html
+         #sed -i'.bak' 's?</h1>?</h1><p><a href=\"index.html\">[Index]</a></p>?1' $Lure/lib/docs/$stem.html
        fi
      done
      rm $Lure/lib/index.lua
