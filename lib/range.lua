@@ -7,15 +7,39 @@
 -- in a list of numbers `t`. Such ranges
 -- can be visualized of as a small number of
 -- straight lines approximating a cumulative
--- distribution function. 
+-- distribution function.  
 --
--- Optionally, the program accepts a function that can 
--- extract a number out of each item in `t`.
--- This is very useful for generating ranges from, say,
--- the ages of a list of employess.
+-- For example, 
+-- consider a random number function 
+-- `R` and 100 numbers drawn from `square(R)`.
+-- The following code would propose breaks in that range at
+-- (0,0), (36,0.14), (55,0.3), (67,0.47), (80,0.6),  (100,1) which looks like this:
+--
+-- ![](img/unsuper.png)
+--
+-- Note that a line drawn through our breaks is a good approximation
+-- of the original curve. There are two benefits in using this approximation:
+--
+-- - We no longer need to use, or report, the entire curve. Instead, we
+--   can just break up the reasoning into a few bins.
+-- - Any subsequent supervised discritization need not reason about the
+--   whole curve. Instead, that supervised discretizer needs only to
+--   decide which of the breaks found by the unsupervised discretizer
+--   need to be combined together.
+--
+-- ### Input
+--
+-- - `t` (mandatory) is a list of items.
+-- - `f` (optinal) is a function that can extract numbes out of items in `t` (defaults
+--   to returning the whole item).
+--   This is very useful for generating ranges from, say,
+--   the ages of a list of employess.
 -- 
--- This function returns a list of `range`s, which is a structure
+-- ### Output
+--
+-- Returns a list of `range`s, which is a structure
 -- containing
+--
 -- - `.n` : the number of items form `t` that fall into this range;
 -- - `._all` : a sample of the numbers in this range;
 -- - `.hi`: the highest number in this range;
@@ -30,7 +54,7 @@
 -- - the `span` of the range (`hi - lo`) is greater than
 --   some `enough` valie (controlled by `the.chop.cohen`).
 -- 
--- Example usage:
+-- ### Example usage
 --
 --     RANGE=require "range"
 --     R=require "random"
@@ -41,7 +65,7 @@
 --     for i,r in pairs(RANGE(tmp)) do
 --       print(i, r.n, r.lo, r.hi) end 
 --
--- Configuration
+-- ### Configuration
 --
 -- - the.chop.cohen: `epsilon` = sdOfnums*cohen. If set larger, 
 --   then the number of ranges
@@ -101,9 +125,9 @@ local function rangeManager(t, x)
   nextRange(_)
   _.num = NUM.updates(t, _.x)
   _.hi  = _.num.hi
-  -- Breaks holding under _enough_ are ignored.
+  -- Any range holding less than _enough_ items is ignored.
   _.enough = _.size^_.m
-  -- Breaks smaller than _epsilon_ are ignored.
+  -- Any range whose span is  less than _epsilon_ is ignored.
   _.epsilon= _.num.sd * _.cohen
   return _ end
 ----------------------------------
@@ -132,6 +156,7 @@ return function (t, x,       last)
          x1 > last and
          i.now.n       > i.enough  and
          i.now.span    > i.epsilon and
+         -- these last two tests stop the final range being too small
          i.num.n - j   > i.enough  and
          i.num.hi - x1 > i.epsilon 
       then nextRange(i) end 
