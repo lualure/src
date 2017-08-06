@@ -41,35 +41,17 @@ The goal of this code is to offer _baseline_ implementations of the following op
 
 |Operator | What| Why|
 |------:|:--------|:--------|
-|_Comprehensible_ :|  Something we can read, argue with | Essential for communities critiquing ideas. If the only
-person reading a model is a carbureter, then we can expect little push back. But if your models are about policies
-that humans have to implement, then I take it as axiomatic that humans will want to read and critique the models.|
-|_Fast_ :|  Not a CPU hog | Reproducing  and improving an old ideas means that you can reproduce that old result. Also, certifying that new ideas often means multiple runs overy many sub-samples of the data. Such  reproducability and
-certification is impractical when such repreduction is impractically slow|
-|_Light_ :| Small memory footprint |Again, reproducing an old data mining experiment or certifying a new result
-means that the resources required
-for reproduction are not exobertant. |
-|_Goal-aware_ :| Different goals means different models. AND multiple goals = no problem!|This is important since
-most data miners build models that optimizer for a single goal (e.g. minimize error or least-square error) yet business
-users often wnat their data miners to achieve many goals. |
-|_Humble_ :|  Can publish succinct certification envelope (so we know when not to trust)| Delivered data mined models
-should be able to recognize when new data is out-of-scope of anything they've seen before. This means, at runtime,
-having access to the data used to build that model. Note that phrase _succinct_ here: certification
-envelopes cannot include all the data relating to a model, otherwise
-every hard drive in the world will soon fill up.  |
+|_Comprehensible_ :|  Something we can read, argue with | Essential for communities critiquing ideas. If the only person reading a model is a carbureter, then we can expect little push back. But if your models are about policies that humans have to implement, then I take it as axiomatic that humans will want to read and critique the models.|
+|_Fast_ :|  Not a CPU hog | Reproducing  and improving an old ideas means that you can reproduce that old result. Also, certifying that new ideas often means multiple runs overy many sub-samples of the data. Such  reproducability and certification is impractical when such repreduction is impractically slow|
+|_Light_ :| Small memory footprint |Again, reproducing an old data mining experiment or certifying a new result means that the resources required for reproduction are not exobertant. |
+|_Goal-aware_ :| Different goals means different models. AND multiple goals = no problem!|This is important since most data miners build models that optimizer for a single goal (e.g. minimize error or least-square error) yet business users often wnat their data miners to achieve many goals. |
+|_Humble_ :|  Can publish succinct certification envelope (so we know when not to trust)| Delivered data mined models should be able to recognize when new data is out-of-scope of anything they've seen before. This means, at runtime, having access to the data used to build that model. Note that phrase _succinct_ here: certification envelopes cannot include all the data relating to a model, otherwise every hard drive in the world will soon fill up.  |
 |_Privacy-aware_ :|  Can hide an individual's data|This is essential when sharing a certification envelope | 
-|_Shareable_ :|  Knows how to transfer models, data, between contexts. | Such transfer usually
-requires some transformation of the soruce data to the target data.|
-|_Context-aware_ :|  Knows that local parts of data generate different models. | While general principles
-are good, so too is how to handle particular contexts. For example, in general, exercise is good for maintaining
-healthy. However, in the particular context of  patients who have jsut had cardiac surgery, then that general principle
-has to be carefully tailored to particular patients. |
-ideas need to be updated. |
-|_Self-tuning_ :|  And can do it quickly| Many experiments show that we can't just use data miners off-the-shelf.
-Rather, if their control parameters are tuned, then we can get much better data mining results.|
+|_Shareable_ :|  Knows how to transfer models, data, between contexts. | Such transfer usually requires some transformation of the soruce data to the target data.|
+|_Context-aware_ :|  Knows that local parts of data generate different models. | While general principles are good, so too is how to handle particular contexts. For example, in general, exercise is good for maintaining healthy. However, in the particular context of  patients who have jsut had cardiac surgery, then that general principle has to be carefully tailored to particular patients. | ideas need to be updated. |
+|_Self-tuning_ :|  And can do it quickly| Many experiments show that we can't just use data miners off-the-shelf.  Rather, if their control parameters are tuned, then we can get much better data mining results.|
 |_Anomaly-aware_ :|  Can detect when new inputs differ from old training data| This is the trigger for when old
-|_Incremental_ :|  Can update old models with new data| Anomaly detectors tell us something has to change. 
-Incremental learners tell us what to change.| 
+|_Incremental_ :|  Can update old models with new data| Anomaly detectors tell us something has to change.  Incremental learners tell us what to change.| 
 
 Note that I describe these as _baselines_.  LURE currently implements
 some of the above (and more each week)-- but you should be critical of the technical
