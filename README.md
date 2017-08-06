@@ -39,6 +39,17 @@ built and about one-tenth tested. But its good to have dreams since
 
 The goal of this code is to offer _baseline_ implementations of the following operators. 
 
+- Note that I describe these as _baselines_.  LURE currently implements
+some of the above (and more each week)
+- But you should be critical of the technical
+choices I made in that implmenetation. What simplifications did I
+make? What better technologies should I use? What did I overlook?
+- And (here's the trap) if you think you can handle the above in (e.g.)
+[TensorFlow](https://www.tensorflow.org/)
+  or [Torch](http://torch.ch/) or using 100 other methods,  I would
+lean forward and say "yes? really? show me how".
+
+
 |Operator | What| Why|
 |------:|:--------|:--------|
 |_Comprehensible_:|  Something we can read, argue with | Essential for communities critiquing ideas. If the only person reading a model is a carbureter, then we can expect little push back. But if your models are about policies that humans have to implement, then I take it as axiomatic that humans will want to read and critique the models.|
@@ -52,15 +63,6 @@ The goal of this code is to offer _baseline_ implementations of the following op
 |_Self-tuning_:|  And can do it quickly| Many experiments show that we can't just use data miners off-the-shelf.  Rather, if their control parameters are tuned, then we can get much better data mining results.|
 |_Anomaly-aware_:|  Can detect when new inputs differ from old training data| This is the trigger for when old
 |_Incremental_:|  Can update old models with new data| Anomaly detectors tell us something has to change.  Incremental learners tell us what to change.| 
-
-Note that I describe these as _baselines_.  LURE currently implements
-some of the above (and more each week)-- but you should be critical of the technical
-choices I made in that implmenetation. What simplifications did I
-make? What better technologies should I use? What did I overlook?
-If you think you can handle the above in (e.g.)
-[TensorFlow](https://www.tensorflow.org/)
-  or [Torch](http://torch.ch/), I would
-lean forward and say "yes? really? show me how".
 
 ## Install
 
