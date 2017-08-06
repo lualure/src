@@ -3,16 +3,6 @@
 tim@menzies.us  
 August'17
 
----------------------------------------------------------
-### Learning Lua
-
-Some great on-line resources:
-
-- Quick start http://tylerneylon.com/a/learn-lua/
-- [Read the book](https://www.lua.org/pil/).
-    - The 4th edition in [on Amazon](https://www.amazon.com/Programming-Lua-Fourth-Roberto-Ierusalimschy/dp/8590379868/ref=pd_lpo_sbs_14_t_0?_encoding=UTF8&psc=1&refRID=MFJR3QK7P99NY833BJYN).
-    - The 2nd edition (which is still pretty good) is available [on-line](http://index-of.es/Programming/Lua/Programming%20in%20Lua.pdf).
-
 ----------------------------------------------------------
 ### Timm's Lua Coding style
 

@@ -99,13 +99,17 @@ doco() { ## ## generate html from lua code ## doc
      (echo ""
     # echo "-- <img width=150 align=right src=\"$Img\">"
      echo ""
-     echo "(Auto-generated. Do not edit.)"
+     echo "-- (Auto-generated. Do not edit.)"
      echo ""
      for i in $files ; do
        f=$(basename $i '.lua')
        l="$(basename $i '.lua').html"
        echo "-- - [$f]($l) "
      done
+     echo ""
+     if [ -f $Lure/txt/index.md ]; then
+       cat $Lure/txt/index.md | sed 's/^/-- /'
+     fi
      echo "") > $Lure/lib/index.lua
      for i in $Lure/lib/index.lua $files; do
        stem=$(basename $i '.lua')
@@ -117,7 +121,6 @@ doco() { ## ## generate html from lua code ## doc
          cat $Lure/lib/docs/$stem.html |
          gawk '/<h1>/ {print str; next} /<.h1>/ {next} {print}' str="$str"  > /tmp/$$
          mv /tmp/$$  $Lure/lib/docs/$stem.html
-         #sed -i'.bak' 's?</h1>?</h1><p><a href=\"index.html\">[Index]</a></p>?1' $Lure/lib/docs/$stem.html
        fi
      done
      rm $Lure/lib/index.lua
@@ -136,7 +139,7 @@ vi() { ## FILE ## edit files using the LURE config stuff ## editor
     echo "Done!"
 }
 ok() { ## STEM ## shorthand for lua STEMok.lua ## lua
-  l ${1}ok.lua
+  lure ${1}ok.lua
 }
 show() { ## FUN ## display definition of FUN ## shell
   type $1
@@ -155,7 +158,7 @@ oks() { ## ## run all the Xok.lua files ## lua
          print " print(); print(); " 
          print " require \"" $0 "\""}' > ${Lure}/lib/_allok.lua
   cd ${Lure}/lib
-  l _allok.lua
+  lure _allok.lua
   rm  _allok.lua
   cd $Lure
 }
@@ -320,7 +323,7 @@ norman() { ## ## about Norman Vaughan ## misc
 }
 here() { cd $1; basename "$PWD"; }
 
-l() { ## FILE ## call "luajit FILE" in this environment (.lua optional) ## lua
+lure() { ## FILE ## call "luajit FILE" in this environment (.lua optional) ## lua
   f=$(basename $1 .lua).lua
   shift
   if [ -f "$Lure/lib/$f" ]; then
