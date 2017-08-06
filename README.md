@@ -1,13 +1,15 @@
 # LURE: SE for  Data Mining
 
 <img align=right src="https://avatars6.githubusercontent.com/u/30064709?v=4&s=200">
-## What is LURE?
 
-Don't think of LURE as a conclusion, as a finished work.
-Instead think of it is as bait-- a temptation to make you
-reflecting on what (and how) services should be added to data mining software.
+## LURE: What
 
-## Why LURE?
+This code is bait:
+
+- A gauntlet that I throw down asking you "do better!". 
+- A temptation to make you reflect on what (and how) services should be added to data mining software.
+
+## LURE: Why?
 
 There has ben much recent work applying data miners to software engineering. But what about the
 other way around? What software engineering principles should be apply to data miners? After decades
