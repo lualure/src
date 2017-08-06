@@ -2,49 +2,56 @@
 
 <img align=right src="https://avatars6.githubusercontent.com/u/30064709?v=4&s=200">
 
-LURE is a set of minimal data mining tools designed with the goal of letting their students "roll their sleeves up"
-to much around inside data miners. The idea here is that data miners are just another kind of software. So just
-as we do test-driven software development, we should also build our data miners such that
-person2 might be able to critique and improve the models build by person1.
+There has ben much recent work applying data miners to software engineering. But what about the
+other way around? What software engineering principles should be apply to data miners? After decades
+of use of data miners, what services should we demand from our data miners, and how do we build those services?
 
-(Note: in terms of deliverting on the following grandiose promises, LURE  is about one-third
+LURE is a workbench for  exploring SE for data mining.
+The premise of LURE is that data miners are _not_ black boxes that we should buy, then uncritically use "as-is",
+without modification.
+Rather,
+data miners are just software and software contains 100s of design choices that effects what is learned:
+
+- Some of those choices may not be appropriate for your specific needs. 
+- Also, some of those choices
+might actually be sub-optimum for your domain.
+- Further, if you actually understand the internals of a data miner, you can mix and match what data miners
+do in order to provide useful and innovative solutions to your data mining tasks.
+
+So LURE is a set of minimal data mining tools designed with the goal of letting their students "roll their sleeves up"
+to muck around inside data miners. The code is written in LUA since that makes it very protale, small footprint,
+succinct, and hence easily modifable (and for students who not know how to write LUA code,
+I can use LURE as a kind of assignment specification; e.g. write this code in your favorite language).
+
+## Status
+
+LURE is about 
+about one-third
 built and about one-tenth tested. But its good to have dreams since 
 ["a man's (sic) reach should exceed his grasp, Or what's a heaven for?"](https://www.poetryfoundation.org/poems/43745/andrea-del-sarto).
 
-## Trust issues (with software)
+The goal of this code is to offer _baseline_ implementations of the following operators. 
 
-<img src="http://www.publicdomainpictures.net/pictures/80000/t2/silhouette-boy-with-hands-up.jpg" align=left width=300>
-Put your hand up if you are worried about the
-increasing use of of
-software (and especially data mining software) to control, well, everything; e.g.
-
-- Nobel-prize winning chemists use software  [to make their discoveries](http://goo.gl/Lwensc); 
-- Engineers use software to [designs many thing]( http://goo.gl/qBMyIZ)
-  including optical tweezers, radiation therapy, remote sensing,  chip design;  
-- Web analysts use software  to analyze clickstreams to [improve sales and marketing strategies](http://goo.gl/b26CfY);
-- Stock traders write software to [simulate trading strategies](http://www.quantopian.com);
-- Analysts write software  to mine   labor statistics data to [review proposed gov policies](http://goo.gl/X4kgnc);
-- Journalists use software   to analyze economic data, make visualizations [of their news stories](http://fivethirtyeight.com);
-- In London or New York,  ambulances wait for your call at a location [determined by a software model](http://goo.gl/8SMd1p).
-- Etc etc etc  
-
-
-In this century, much of what we can see and what we can do is selected and mediated and
-controlled  and restricted by software.  This is a worry since
-humans screw things up, [all the
-time](https://en.wikipedia.org/wiki/List_of_cognitive_biases),
-particualrly when [designing or building or using
-software](http://seclists.org/risks/).
-So how can we  trust  all that software?
-How can
-we tune it to our specific needs? How can we recognize when we should not use it?
-
-
-## Trusting what we learn from data miners
-
-In the general case of all softwware, I have little to say since "all software" is a very wide range of stuff.
-But in the specific case of data mining software, there are very specific (and simple and general) things
-we can do to increase the odds that person2 can critique and improve the models build my person1.
+|Operator | What| Why|
+|------:|:--------|:--------|
+|_Comprehensible_ :|  Something we can read, argue with : Essential for communities critiquing ideas.|
+|_Fast_ :|  Not a CPU hog | Reproducing  and improving an old ideas means that you can reproduce that old result. Also, certifying that new ideas often means multiple runs overy many sub-samples of the data. Such  reproducability and
+certification is impractical when such repreduction is impractically slow|
+|_Light_ :| Small memory footprint |Again, reproducing an old data mining experiment or certifying a new result
+means that the resources required
+for reproduction are not exobertant. |
+|_Goal-aware_ :| Different goals means different models. AND multiple goals = no problem!|This is important since
+most data miners build models that optimizer for a single goal (e.g. minimize error or least-square error) yet business
+users often wnat their data miners to achieve many goals. |
+|_Humble_ :|  Can publish succinct certification envelope (so we know when not to trust)| Delivered data mined models
+should be able to recognize when new data is out-of-scope of anything they've seen before. This means, at runtime,
+having access to the data used to build that model. |
+|_Privacy-aware_ :|  Can hide an individual's data|This is essential when XXX | 
+|_Shareable_ :|  Knows how to transfer models, data, between contexts|
+|_Context-aware_ :|  Knows that local parts of data ⇒ different models. Knows how to find different contexts|
+|_Anomaly-aware_ :|  Can detect when new inputs differ from old training data|
+|_Self-tuning_ :|  And can do it quickly|
+|_Incremental_ :|  Can update old models with new data|
 
 
 Recently my graduate students starting using  Bayesian Parameter Optimization where instead of using Gaussian
