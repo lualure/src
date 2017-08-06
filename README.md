@@ -5,7 +5,7 @@
 
 Don't think of LURE as a conclusion, as a finished work.
 Instead think of it is as bait-- a temptation to make you
-reflecting on what (and how) certain services should be added to data mining software.
+reflecting on what (and how) services should be added to data mining software.
 
 ## Why LURE?
 
@@ -60,10 +60,14 @@ having access to the data used to build that model. |
 |_Self-tuning_ :|  And can do it quickly|
 |_Incremental_ :|  Can update old models with new data|
 
-LURE currently implements much of the above-- but you should be critical of the technical choices I made in 
-that implmenetation. What simplifications did I make? What better technologies should I use? What did I overlook?
-If you think
-you can handle the above in (e.g.) TensorFlow, I would lean formward say "yes? really? show me how".
+Note that I describe these as _baselines_.  LURE currently implements
+some of the above (and more each week)-- but you should be critical of the technical
+choices I made in that implmenetation. What simplifications did I
+make? What better technologies should I use? What did I overlook?
+If you think you can handle the above in (e.g.)
+[TensorFlow](https://www.tensorflow.org/)
+  or [Torch](http://torch.ch/), I would
+lean forward and say "yes? really? show me how".
 
 ## Install
 
