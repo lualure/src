@@ -59,9 +59,10 @@ Plugin 'kien/ctrlp.vim'
 Plugin 'bling/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'croaker/mustang-vim'
-Plugin 'ap/vim-buftabline'
+"Plugin 'ap/vim-buftabline'
 "Plugin 'enricobacis/vim-airline-clock'
 Plugin 'majutsushi/tagbar'
+
 
 Plugin 'MarcWeber/vim-addon-mw-utils'
 Plugin 'tomtom/tlib_vim'
