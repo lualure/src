@@ -1,8 +1,22 @@
--- ## Reading this Code
--- 
+--  
 -- _tim@menzies.us_   
 -- _August'18_   
 --
+-- --------
+--
+-- [Why](WHY) |[Install](INSTALL) | [What](WHAT) | Guide | [Style](STYLE) 
+--
+-- ------
+--
+-- ### Learning Lua
+-- 
+-- Some great on-line resources:
+-- 
+-- - Quick start http://tylerneylon.com/a/learn-lua/
+-- - [Read the book](https://www.lua.org/pil/).
+--     - The 4th edition in [on Amazon](https://goo.gl/D4dwGi).
+--     - The 2nd edition (which is still pretty good) is available [on-line](https://goo.gl/jgwXVZ).
+-- 
 -- ### Before Reading This...
 --
 -- Read notes  on the LURE [LUA coding style](STYLE). Note, in particular, that some of the
@@ -32,8 +46,8 @@
 --
 -- Simple stand alone utilities.
 --
--- - [random.lua](random): random number generation that is stable across different platforms
---      - Nice place to see how a basic LUA module is formed.
+-- - [random.lua](random): random number generation that is stable across different platforms.
+--   This is a nice place to see how a basic LUA module is formed.
 -- - [str.lua](str): basic string routines: print lists of item, replace characters, etc
 -- - [lists.lua](lists): basic lists utilities
 -- - [csv.lua](csv): reads comma seperates values from strings or files. Pass each found row to a function.

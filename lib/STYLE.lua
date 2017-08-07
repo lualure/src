@@ -1,22 +1,24 @@
--- ## My Coding standards (for Lua)
 -- 
 -- tim@menzies.us  
 -- August'17
--- 
+--
+-- ------
+--
+-- [Why](WHY) | [Install](INSTALL) | [What](WHAT) | [Guide](Guide) | Style 
+--
 -- ----------------------------------------------------------
--- ### Timm's Lua Coding style
--- 
+--
 -- If you are rading my code, it will save you time to know how I write my Lua.
 -- 
 -- #### Execution
 -- 
--- Always use `luajit` (its faster). 
+-- Always use `luajit` (it is faster). 
 -- 
--- Always have `Lure` set to the LURE directory:
+-- In the shell environment, always have `$Lure` set to the LURE directory:
 -- 
 --       Lure=PathtoLureDir
 -- 
--- Always have date files in `$Lure/data'.
+-- Always have data files in `$Lure/data'.
 -- 
 -- Always have `LUA_PATH`  set to include the LURE directory. For example, your run command might be:
 -- 
