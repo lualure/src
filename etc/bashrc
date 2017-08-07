@@ -63,6 +63,9 @@ EOF
   fi
   if [ ! -d "$Lure/etc/locco" ]; then
     git clone https://github.com/rgieseke/locco etc/locco
+    sed -i'.bak' 's/line-height: 22px;/line-height: 18px;/' $Lure/etc/locco/template.lua
+    sed -i'.bak' 's/padding: 10px 25px 1px 50px;/padding: 10px 5px 1px 15px;/' $Lure/etc/locco/template.lua
+    sed -i'.bak' 's/font-size: 12px; line-height: 18px;/font-size: 12px; line-height: 15px;/' $Lure/etc/locco/template.lua
   fi
   gitting
   echo "you should run commands like the following..."

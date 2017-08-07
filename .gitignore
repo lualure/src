@@ -8,7 +8,7 @@ Session.vim
 # sed stuff
 *.bak
 # doc stuff
-#locco
+locco
 docs
 # mac stuff
 .DS_Store
