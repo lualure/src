@@ -22,18 +22,35 @@
 --
 -- - We no longer need to use, or report, the entire curve. Instead, we
 --   can just break up the reasoning into a few bins.
--- - Any subsequent supervised discritization need not reason about the
+-- - Any subsequent supervised discretisation need not reason about the
 --   whole curve. Instead, that supervised discretizer needs only to
 --   decide which of the breaks found by the unsupervised discretizer
 --   need to be combined together.
 --
--- ### Input
+-- In the literature, finding such ranges ins called discretisation. A common
+-- division of discretisation methods is
+--
+-- - Supervised: using changes in the dependent variable to decide where to declare a break in some independent variable;
+--       - For supervised discretisation, see `super.lua`.
+-- - Unsupervised: just reflect on each independent variable in isolation. Two common unsupervised methods are
+--       - EWD: Equal width discretisation; i.e. `(max-min)/b` to generate, say, `b=10` bins
+--       - EFD: Equal frequency discretisation i.e. divide the numbers according to percentiles says (e.g.) lower, middle, upper third of the numbers
+--
+-- This code is EFD, with some extras to avoid common problems. For example, consider a 33% split on the following numbers. Note that the first
+-- and second bin would contain the same numbers-- which is odd since you'd expect different bins to be, well, different.
+--
+--       1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,3,4,5,6,7,8,9
+--
+-- This code builds ranges that at least the size of the equal frequency division. But it fuses one range to the next
+-- if they do not have different values.
+--
+-- -- ### Input
 --
 -- - `t` (mandatory) is a list of items.
--- - `f` (optinal) is a function that can extract numbes out of items in `t` (defaults
+-- - `f` (optional) is a function that can extract numbers out of items in `t` (defaults
 --   to returning the whole item).
 --   This is very useful for generating ranges from, say,
---   the ages of a list of employess.
+--   the ages of a list of employees.
 -- 
 -- ### Output
 --
@@ -48,11 +65,11 @@
 --
 -- The numbers in the input list `t` are broken  such that
 --
--- - no range contaons too few numbers (controlled by `the.chop.m`)
+-- - no range contains too few numbers (controlled by `the.chop.m`)
 -- - each range is different to the next one by some `epsilon`
 --   value (controlled by `the.chop.cohen`).
 -- - the `span` of the range (`hi - lo`) is greater than
---   some `enough` valie (controlled by `the.chop.cohen`).
+--   some `enough` value (controlled by `the.chop.cohen`).
 -- 
 -- ### Example usage
 --
@@ -89,8 +106,8 @@ local function create() return {
   span = 2^64} end
 ----------------------------------
 -- Update range  _i_  with
--- some numuerc _x_ found from within
--- _one_. Note that, for effeciency sake, we only keep `SOME` numbers
+-- some numeric _x_ found from within
+-- _one_. Note that, for efficiency sake, we only keep `SOME` numbers
 -- (not all of them). 
 
 local function update(i,one, x)

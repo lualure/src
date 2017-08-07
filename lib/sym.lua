@@ -16,9 +16,9 @@
 --
 -- For those who like less typing:
 --
---     local i,add = SYM.watch()
+--     local i,addi = SYM.watch()
 --     for word in string.gmatch(words,"([^ ]+)" ) do
---       add(word) end
+--       addi(word) end
 --     print(SYM.ent(i)) end
  
 local the=require "config"

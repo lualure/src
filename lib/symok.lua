@@ -52,9 +52,9 @@ local function _ent1()
   print(SYM.ent(i)) end
 
 local function _ent2()
-  local i,add = SYM.watch()
+  local i,addi = SYM.watch()
   for word in string.gmatch(words,"([^ ]+)" ) do
-    add(word) end
+    addi(word) end
   print(SYM.ent(i)) end
 
 O.k{_ent1,_ent2}

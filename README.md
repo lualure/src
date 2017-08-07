@@ -1,17 +1,17 @@
-# LURE: SE for  Data Mining
+---
+
 
 <img align=right src="https://avatars6.githubusercontent.com/u/30064709?v=4&s=200">
 
-## LURE: What
 
 This code is bait:
 
 - A gauntlet that I throw down asking you "do better!". 
 - A temptation to make you reflect on what (and how) services should be added to data mining software.
 
-## LURE: Why?
+### Motivation
 
-There has ben much recent work applying data miners to software engineering. But what about the
+There has been [much recent work applying data miners to software engineering](https://goo.gl/NAs3Nu). But what about the
 other way around? What software engineering principles should be apply to data miners? After decades
 of use of data miners, what services should we demand from our data miners, and how do we build those services?
 
@@ -28,11 +28,11 @@ might actually be sub-optimum for your domain.
 do in order to provide useful and innovative solutions to your data mining tasks.
 
 So LURE is a set of minimal data mining tools designed with the goal of letting their students "roll their sleeves up"
-to muck around inside data miners. The code is written in LUA since that makes it very protale, small footprint,
-succinct, and hence easily modifable (and for students who not know how to write LUA code,
+to muck around inside data miners. The code is written in LUA since that makes it very portable, small footprint,
+succinct, and hence easily modifiable (and for students who not know how to write LUA code,
 I can use LURE as a kind of assignment specification; e.g. write this code in your favorite language).
 
-## Status
+### Status
 
 LURE is about 
 about one-third
@@ -44,38 +44,83 @@ The goal of this code is to offer _baseline_ implementations of the following op
 - Note that I describe these as _baselines_.  LURE currently implements
 some of the above (and more each week)
 - But you should be critical of the technical
-choices I made in that implmenetation. What simplifications did I
+choices I made in that implementation. What simplifications did I
 make? What better technologies should I use? What did I overlook?
 - And (here's the trap) if you think you can handle the above in (e.g.)
 [TensorFlow](https://www.tensorflow.org/)
   or [Torch](http://torch.ch/) or using 100 other methods,  I would
 lean forward and say "yes? really? show me how".
 
+### Operators
 
-|Operator | What| Why|
-|------:|:--------|:--------|
-|_Comprehensible_:|  Something we can read, argue with | Essential for communities critiquing ideas. If the only person reading a model is a carbureter, then we can expect little push back. But if your models are about policies that humans have to implement, then I take it as axiomatic that humans will want to read and critique the models.|
-|_Fast_:|  Not a CPU hog | Reproducing  and improving an old ideas means that you can reproduce that old result. Also, certifying that new ideas often means multiple runs overy many sub-samples of the data. Such  reproducability and certification is impractical when such repreduction is impractically slow|
-|_Light_:| Small memory footprint |Again, reproducing an old data mining experiment or certifying a new result means that the resources required for reproduction are not exobertant. |
-|_Goal-aware_:| Different goals means different models. AND multiple goals = no problem!|This is important since most data miners build models that optimizer for a single goal (e.g. minimize error or least-square error) yet business users often wnat their data miners to achieve many goals. |
-|_Humble_ :|  Can publish succinct certification envelope (so we know when not to trust)| Delivered data mined models should be able to recognize when new data is out-of-scope of anything they've seen before. This means, at runtime, having access to the data used to build that model. Note that phrase _succinct_ here: certification envelopes cannot include all the data relating to a model, otherwise every hard drive in the world will soon fill up.  |
-|_Privacy-aware_:|  Can hide an individual's data|This is essential when sharing a certification envelope | 
-|_Shareable_:|  Knows how to transfer models, data, between contexts. | Such transfer usually requires some transformation of the soruce data to the target data.|
-|_Context-aware_:|  Knows that local parts of data generate different models. | While general principles are good, so too is how to handle particular contexts. For example, in general, exercise is good for maintaining healthy. However, in the particular context of  patients who have jsut had cardiac surgery, then that general principle has to be carefully tailored to particular patients. | ideas need to be updated. |
-|_Self-tuning_:|  And can do it quickly| Many experiments show that we can't just use data miners off-the-shelf.  Rather, if their control parameters are tuned, then we can get much better data mining results.|
-|_Anomaly-aware_:|  Can detect when new inputs differ from old training data| This is the trigger for when old
-|_Incremental_:|  Can update old models with new data| Anomaly detectors tell us something has to change.  Incremental learners tell us what to change.| 
+_Comprehensible_:
 
-## Install
+- Something we can read, argue with 
+- Essential for communities critiquing ideas. If the only person reading a model is a carburetor, then we can expect little push back. But if your models are about policies that humans have to implement, then I take it as axiomatic that humans will want to read and critique the models.
 
-### Using LuaRocks
+_Fast_:
+
+-   Not a CPU hog 
+-  Reproducing  and improving an old ideas means that you can reproduce that old result. Also, certifying that new ideas often means multiple runs over many sub-samples of the data. Such  reproducibility and certification is impractical when such reproduction is impractically slow
+
+_Light_:
+
+-  Small memory footprint 
+- Again, reproducing an old data mining experiment or certifying a new result means that the resources required for reproduction are not exorbitant. 
+
+_Goal-aware_:
+
+-  Different goals means different models. AND multiple goals = no problem!
+- This is important since most data miners build models that optimizer for a single goal (e.g. minimize error or least-square error) yet business users often want their data miners to achieve many goals. 
+
+_Humble_ :
+
+-   Can publish succinct certification envelope (so we know when not to trust)
+-  Delivered data mined models should be able to recognize when new data is out-of-scope of anything they've seen before. This means, at runtime, having access to the data used to build that model. Note that phrase _succinct_ here: certification envelopes cannot include all the data relating to a model, otherwise every hard drive in the world will soon fill up.  
+
+_Privacy-aware_:
+
+-   Can hide an individual's data
+- This is essential when sharing a certification envelope 
+
+_Shareable_:
+
+-   Knows how to transfer models, data, between contexts. 
+-  Such transfer usually requires some transformation of the source data to the target data.
+
+_Context-aware_:
+
+-   Knows that local parts of data generate different models. 
+-  While general principles are good, so too is how to handle particular contexts. For example, in general, exercise is good for maintaining healthy. However, in the particular context of  patients who have just had cardiac surgery, then that general principle has to be carefully tailored to particular patients. 
+  ideas need to be updated. 
+
+_Self-tuning_:
+
+-   And can do it quickly
+-  Many experiments show that we can't just use data miners off-the-shelf.  Rather, if their control parameters are tuned, then we can get much better data mining results.
+
+_Anomaly-aware_:
+
+-   Can detect when new inputs differ from old training data
+-  This is the trigger for when old
+
+
+_Incremental_:
+
+-   Can update old models with new data
+-  Anomaly detectors tell us something has to change.  Incremental learners tell us what to change.
+
+
+### Install
+
+#### Using LuaRocks
 
 Coming soon.
 
-### Using Github
+#### Using Github
 
 Check out the repo, then create an environment
-variable `Lure` to hold the repo's localtion.
+variable `Lure` to hold the repo's location.
 
     git clone http://github.com/lualure/src src
     Lure=$PWD/src 
@@ -97,7 +142,7 @@ back in or (much faster):
 
     . ~/.bashrc
 
-## Test
+### Test
 
 Change directories to some other part of your computer (away from the source code). Then
 try to run any code from lure. e.g.
@@ -111,7 +156,7 @@ try to run any code from lure. e.g.
     3.9999999999997e-06 secs
     # test:	4
     4e-05 secs
-    :pass 4 :fail 0 :percentPass 100%
+    :pass 4 :fail 0 :percentPass 100
     -- Global: the
     -- Global: defaults
 
@@ -120,24 +165,61 @@ functions (hence `:fail 0`). It also shows that those tests run fast (in tenths 
 and that this code suffers from only two globals `the` and `defaults` (and these two are meant to
 be the only defaults known to  the system-- see the notes on coding style, below).
 
-## Coding Style
+### Coding Style
 
-If you are rading my code, it might save some time if you [know my Lua writing style](STYLE.md).
+If you are reading my code, it might save some time if you [know my Lua writing style](STYLE.md).
 
 
-## Learning Lure
+### Learning Lure
 
 - website: [https://lualure.github.io/info/](https://lualure.github.io/info/)
 - [news](https://twitter.com/lua_lured)
 - [discuss](https://groups.google.com/forum/#!forum/lualure)
 - [issues](https://github.com/lualure/src/issues) 
 
-## Learning Lua
+### Learning Lua
 
 Some great on-line resources:
 
 - Quick start http://tylerneylon.com/a/learn-lua/
 - [Read the book](https://www.lua.org/pil/).
-    - The 4th edition in [on Amazon](https://www.amazon.com/Programming-Lua-Fourth-Roberto-Ierusalimschy/dp/8590379868/ref=pd_lpo_sbs_14_t_0?_encoding=UTF8&psc=1&refRID=MFJR3QK7P99NY833BJYN).
-    - The 2nd edition (which is still pretty good) is available [on-line](http://index-of.es/Programming/Lua/Programming%20in%20Lua.pdf).
+    - The 4th edition in [on Amazon](https://goo.gl/D4dwGi).
+    - The 2nd edition (which is still pretty good) is available [on-line](https://goo.gl/jgwXVZ).
 
+
+## Legal
+
+LURE, Copyright (c) 2017, Tim Menzies
+All rights reserved, BSD 3-Clause License
+
+Redistribution and use in source and binary forms, with
+or without modification, are permitted provided that
+the following conditions are met:
+
+- Redistributions of source code must retain the above
+  copyright notice, this list of conditions and the 
+  following disclaimer.
+- Redistributions in binary form must reproduce the
+  above copyright notice, this list of conditions and the 
+  following disclaimer in the documentation and/or other 
+  materials provided with the distribution.
+- Neither the name of the copyright holder nor the names 
+  of its contributors may be used to endorse or promote 
+  products derived from this software without specific 
+  prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
+WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.

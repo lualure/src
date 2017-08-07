@@ -21,10 +21,10 @@
 --
 -- A shortcut:
 --
---     local i,add=NUM.watch()
+--     local i,addi = NUM.watch()
 --     for _,x in pairs{9,2,5,4,12,7,8,11,9,3,7,
 --                      4,12,5,4,10,9,6,9,4} do
---        add(x) end
+--        addi(x) end
 --     print(i.mu, i.sd)
 -- 
 -- Another shortcut:

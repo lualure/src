@@ -1,4 +1,4 @@
--- # show
+-- ## Recrusively printing table items
 --
 -- Matias Guijarro wrote:
 -- > I would like to change the default behaviour of Lua when
@@ -10,14 +10,15 @@
 -- So first of all I tried to set a new metatable for tables,
 -- As Shmuel pointed out, table metatables are per-table, so
 -- they don't really work for what you want to do.
---   Lua 5.1.1  Copyright (C) 1994-2006 Lua.org, PUC-Rio
---   > Tbl = setmetatable({}, {__tostring = function(t)
---   >>                                        return "Hello!"
---   >>                                      end})
---   > print(Tbl) -- Works for this table,
---   Hello!
---   > print({}) -- but doesn't work for other tables.
---   table: 0x493378
+--
+--     Lua 5.1.1  Copyright (C) 1994-2006 Lua.org, PUC-Rio
+--     > Tbl = setmetatable({}, {__tostring = function(t)
+--     >>                                        return "Hello!"
+--     >>                                      end})
+--     > print(Tbl) -- Works for this table,
+--     Hello!
+--     > print({}) -- but doesn't work for other tables.
+--     table: 0x493378
 --
 -- A way that will work is to simply replace the tostring
 -- function itself.  Replace it with a function that calls your
@@ -75,7 +76,7 @@ local function EscapeableToEscaped(Char, FollowingDigit)
 end
 
 -- Quotes a string in a Lua- and human-readable way.  (This is a
--- replacement for string.format's %q placeholder, whose result
+-- replacement for string.format's `q`  placeholder, whose result
 -- isn't always human readable.)
 local function StrToStr(Str)
   return '"' .. string.gsub(Str, "(.)(%d?)", EscapeableToEscaped) .. '"'
@@ -88,8 +89,7 @@ local function quote(_)
   local _ = fmt("%q", _)
   _ = string.gsub(_, "\\\n", "\\n")
   _ = string.gsub(_, "[%z\1-\31,\127-\255]", function (x)
-    --print("x=", x)
-    return fmt("\\%03d",string.byte(x))
+  return fmt("\\%03d",string.byte(x))
   end)
   return _
 end
@@ -116,11 +116,10 @@ local function ScalarToStr(Val)
   if Type == "string" then
     Ret = StrToStr(Val)
   elseif Type == "function" or Type == "userdata" or Type == "thread" then
-    -- Punt:
     Ret = "<" .. _tostring(Val) .. ">"
   else
     Ret = _tostring(Val)
-  end -- if
+  end 
   return Ret
 end
 
@@ -158,7 +157,6 @@ local function TblToStr(Tbl, Seen)
           .. Val
       end
     end
- --   Ret = "{\n" .. table.concat(Ret, ", ") .. "\n}"
     Ret = "{" .. table.concat(Ret, ", ") .. "}"
   else
     Ret = "<cycle to " .. _tostring(Tbl) .. ">"
@@ -186,7 +184,6 @@ local function _tostringTest()
     {Foo = "Bar"},
     {["*Foo*"] = "Bar"},
     {Fnc},
-    --{"\0\1\0011\a\b\f\n\r\t\v\"\\"},
     {[{}] = {}},
     {1, 2, 3, {4, 5}},
     Tbl,
@@ -197,7 +194,6 @@ local function _tostringTest()
     '{Foo= "Bar"}',
     '{["*Foo*"]= "Bar"}',
     '{<' .. _tostring(Fnc) .. '>}',
-    --{"\0\1\0011\a\b\f\n\r\t\v\"\\"},
     "{[{}]= {}}",
     "{1, 2, 3, {4, 5}}",
     "{[<cycle to " .. _tostring(Tbl) .. ">]= <cycle to "
@@ -210,3 +206,4 @@ local function _tostringTest()
   end
 end
 
+return {tests=_tostringTest}

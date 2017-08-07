@@ -1,6 +1,9 @@
 #!/bin/bash
 # -*- sh -*-
 
+spell() { ## FILE.md ## spell check FILE.md ## editor
+  aspell -H -c $1
+}
 newdle() { ## ## update vim bundles ## editor
    cd $HOME/.vim/bundle
    for i in *; do (echo -en "$i\t\t "; cd $i; git pull); done
@@ -21,7 +24,7 @@ init() { ## ## install LURE (need only be run once) ## :init
       /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
   fi
   sudo easy_install Pygments
-  for f in lua luajit vim git graphviz make ctags gawk mc htop ranger asciiquarium cmatrix ; do
+  for f in lua luajit vim git aspell graphviz make ctags gawk mc htop ranger asciiquarium cmatrix ; do
     if which $f; then true; else 
      if [ "$(uname)" == "Darwin" ]; then
         brew install $f
@@ -107,10 +110,11 @@ doco() { ## ## generate html from lua code ## doc
        echo "-- - [$f]($l) "
      done
      echo ""
-     if [ -f $Lure/txt/index.md ]; then
-       cat $Lure/txt/index.md | sed 's/^/-- /'
+     if [ -f $Lure/lib/_index.md ]; then
+       cat $Lure/lib/_index.md  | sed 's/^/-- /'
      fi
-     echo "") > $Lure/lib/index.lua
+     echo ""
+     ) > $Lure/lib/index.lua
      for i in $Lure/lib/index.lua $files; do
        stem=$(basename $i '.lua')
        if [ "$i" -nt "$Lure/lib/docs/$stem.html" ];then
@@ -123,7 +127,7 @@ doco() { ## ## generate html from lua code ## doc
          mv /tmp/$$  $Lure/lib/docs/$stem.html
        fi
      done
-     rm $Lure/lib/index.lua
+     #rm $Lure/lib/index.lua
      cd $Lure
   fi
 }

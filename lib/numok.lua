@@ -19,9 +19,9 @@ local function _sd1()
   assert(sd   == 3.06) end
 
 local function _sd2()
-  local  i,add=NUM.watch()
+  local  i,addi=NUM.watch()
   for _,x in pairs{9,2,5,4,12,7,8,11,9,3,7,4,12,5,4,10,9,6,9,4} do
-    add(x) end
+    addi(x) end
   local sd = math.floor(1000*i.sd)/1000
   assert(i.mu == 7)
   assert(sd   == 3.06) end

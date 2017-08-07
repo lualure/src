@@ -1,20 +1,20 @@
--- ##  Utilities for reading CSV files
+-- ##  Utilities for reading CSV  data
 
 -- _tim@menzies.us_   
 -- _August'17_
 
--- Map a function mapped over comma-seperated data. 
--- pruning comments away and dead space.  For example,
--- here's a simple `print` for each row:
+-- - Read comma seperated data from string of file.
+-- - Kill spurious white space, comments
+-- - If lines end in "`,`", concat with next line.
+-- - If on row1, the column has a "`?`" in it, skip that column.
+-- - Convert cells to numbers or strings (as appropriate).
+-- - Pass the cells from each line to a function `fn`.
+--
+-- Sample usage:
 --
 --     local csv=require "csv"
---     csv(os.getenv("DataDir") .. "/data/weather.csv",print)
---
--- Data is assumed to start with an initial row list column
--- names. If a column name includes "?", then don't read it.
--- If a row ends with a comma, join it to the next line.
---
--- This code is called using `csv(source, function)`.
+--     csv(os.getenv("DataDir") .. "/data/weather.csv",
+--        print)
 --
 -- - If `source` is a string ending with `txt` or `csv`,
 -- it assumed this string names a files from which we should
@@ -22,12 +22,7 @@
 -- - Otherwise, we assume that `source`
 -- is a string containing the data.
 --
--- TODO: the following passes each found row to a function `fn`.
--- A cooler approach would be remove the need for pass round `fn`
--- and make all this an iterator. BUT, iterators in Lua and
--- nuanced more complex than other languages (like Python). So
--- here, we take the easy path (i.e. pass the function).
---
+
 local the      = require "config"
 local notsep   = "([^" .. the.sep .. "]+)" -- not cell seperator
 local dull     = "['\"\t\n\r]*"  -- white space, quotes
