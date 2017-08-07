@@ -1,0 +1,128 @@
+-- ## Reading this Code
+-- 
+-- _tim@menzies.us_   
+-- _August'18_   
+--
+-- ### Before Reading This...
+--
+-- Read notes  on the LURE [LUA coding style](STYLE). Note, in particular, that some of the
+-- `X.lua` files have `Xok.lua` demo/test files.
+--
+-- ### File Groupings
+--
+-- The functions in LURE fall into the following  groups
+--
+-- - base code:
+-- - support code:
+-- - table code:
+-- - misc code.
+--
+-- ### Base code
+--
+-- The following code should be assumed to be global across all the rest.
+--
+-- - [show.lua](show): changes LUA's default printer such that printing a table also prints
+--                     its contents (recursively). To avoid printing very long items,
+--                     give them a keyname starting with `_`.
+-- - [config.lua](config): store global options in the global `the`.  These can be changed by the other code, then reset
+--   to the default values by `defaults()`.
+-- - [tests.lua](tests): a simple unit test framework.
+--
+-- ### Support code
+--
+-- Simple stand alone utilities.
+--
+-- - [random.lua](random): random number generation that is stable across different platforms
+--      - Nice place to see how a basic LUA module is formed.
+-- - [str.lua](str): basic string routines: print lists of item, replace characters, etc
+-- - [lists.lua](lists): basic lists utilities
+-- - [csv.lua](csv): reads comma seperates values from strings or files. Pass each found row to a function.
+-- - [tiles.lua](tiles):
+--
+-- - show.lua
+-- - config
+-- - tests.lua
+-- Support One of my core data structures is `tbl` (table). Its a place to store
+--
+-- `row`s of data. Each column in   `tbl` has a header that is a `num` or a `sym` 
+-- and that header maintains a summary of what was seen in each column.
+--
+-- `Tbl`s are very useful.
+--
+-- `Tbl`s can be read in from ascii files or strings (see `csv.lua`) or
+-- copied from other `tbl`s (plus or minus some of the `row`s of that other table.
+--
+-- `Tbl` data is read one row at a time using `update`:
+--
+-- - If this is other than  the first `row` then `Tbl` assumes it is a `row` to be stored in the table.
+--   As a side-effect of storage, all the column headers are updated.
+-- - If this is the first `row`
+--   then `Tbl` assumes it is a `header` that lists the names and types of each column.
+--        -- If the name contains `?`, then `Tbl` should ignore this column;
+--        -- If the name contains `<,>`, then the column can be categoried as a numeric goal to eb minimized or maximized;
+--        -- If the name contains `!`, then the column can be categorised as a   symbolic goal, to be used in classification;
+--        -- If the name contains `$`, then the column is categorised as a  numeric indepedent variable;
+--        -- Otherwise, the column can be categories as  a symbolic independent variable.
+--  
+-- Note that there is nothing hard-wired in this code about `?<>!$`. These can be easily changed in 
+-- the `categories` function. 
+--
+-- What `Tbl` does assume is that columns of data can be categoried as :
+-- 
+-- - `x` : the independent columns;
+-- - `y` : the dependent columns;
+-- - `all` : all columns.
+--
+-- Within `all,x,y` the columns are further categorised as:
+--
+-- - `nums`: the numeric columns;
+-- - `syms`: the symbolic columns;
+-- - `cols`: all columns.
+--
+-- Note that a column can have multiple categories (see `categories`). This is done
+-- since sometimes we have to (e.g.) process all the numerics together or  process all
+-- the independent symbolics together etc.
+
+require "1"
+
+
+--------------------------------------------------------
+--
+-- ## Legal
+--
+-- <img align=right width=150 src="https://www.xn--ppensourced-qfb.com/media/reviews/photos/original/e2/b9/b3/22-bsd-3-clause-new-or-revised-modified-license-60-1424101605.png">
+-- LURE, Copyright (c) 2017, Tim Menzies
+-- All rights reserved, BSD 3-Clause License
+--
+-- Redistribution and use in source and binary forms, with
+-- or without modification, are permitted provided that
+-- the following conditions are met:
+--
+-- - Redistributions of source code must retain the above
+--   copyright notice, this list of conditions and the
+--   following disclaimer.
+-- - Redistributions in binary form must reproduce the
+--   above copyright notice, this list of conditions and the
+--   following disclaimer in the documentation and/or other
+--   materials provided with the distribution.
+-- - Neither the name of the copyright holder nor the names
+--   of its contributors may be used to endorse or promote
+--   products derived from this software without specific
+--   prior written permission.
+--
+-- THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+-- CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
+-- WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+-- WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+-- PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+-- THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY
+-- DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+-- CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+-- PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+-- USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+-- HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+-- IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+-- NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+-- USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+-- POSSIBILITY OF SUCH DAMAGE.
+--

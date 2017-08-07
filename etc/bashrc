@@ -127,7 +127,7 @@ doco() { ## ## generate html from lua code ## doc
          mv /tmp/$$  $Lure/lib/docs/$stem.html
        fi
      done
-     #rm $Lure/lib/index.lua
+     rm $Lure/lib/index.lua
      cd $Lure
   fi
 }
