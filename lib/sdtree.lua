@@ -1,4 +1,4 @@
--- # sdtree : iterative divisions to minimize sd
+-- ## sdtree : iterative divisions to minimize sd
 
 -- Assumes discrete data
 
