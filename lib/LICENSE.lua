@@ -1,7 +1,4 @@
-
-
----------------------------------------------------------
--- 
+-- ----------------------------- 
 -- ## Legal
 -- 
 -- <img align=right width=150 src="https://www.xn--ppensourced-qfb.com/media/reviews/photos/original/e2/b9/b3/22-bsd-3-clause-new-or-revised-modified-license-60-1424101605.png">
@@ -38,5 +35,5 @@
 -- IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 -- NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
 -- USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
--- POSSIBILITY OF SUCH DAMAGE.
+-- POSSIBILITY OF SUCH DAMAGE.  
 -- 
