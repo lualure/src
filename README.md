@@ -1,4 +1,4 @@
-[Home](https://lualure.github.io/info/INDEX) |
+[Home](https://lualure.github.io/info/index) |
 [Why](https://lualure.github.io/info/WHY) |
 [What](https://lualure.github.io/info/WHAT) |
 [Guide](https://lualure.github.io/info/GUIDE) |
