@@ -25,37 +25,48 @@
 -- ### File Groupings
 --
 -- The functions in LURE fall into the following  groups
---
--- - base code:
--- - support code:
--- - table code:
--- - misc code.
+--                                    
+--      base       support    stats    table    learners
+--      ------     -------    ------   -----    -----------
+--      config     csv        num      row      contrasts
+--      show       id         range    tbl      sdtree    
+--      tests      lists      sample            superrange
+--                 random     spy               trees
+--                 str        sym
+--                            sk
+--                            tiles                     
 --
 -- ### Base code
 --
--- The following code should be assumed to be global across all the rest.
+-- The following _base_ code should be assumed to be global across all the rest.
 --
+-- - [config.lua](config): store global options in the global `the`.  These can be changed by the other code, then reset
+--   to the default values by `defaults()`.
 -- - [show.lua](show): changes LUA's default printer such that printing a table also prints
 --                     its contents (recursively). To avoid printing very long items,
 --                     give them a keyname starting with `_`.
--- - [config.lua](config): store global options in the global `the`.  These can be changed by the other code, then reset
---   to the default values by `defaults()`.
 -- - [tests.lua](tests): a simple unit test framework.
 --
 -- ### Support code
 --
 -- Simple stand alone utilities.
 --
+-- - [csv.lua](csv): reads comma seperates values from strings or files. Pass each found row to a function.
+-- - [id.lua](id): generates uniqie ids;
+-- - [lists.lua](lists): basic lists utilities
 -- - [random.lua](random): random number generation that is stable across different platforms.
 --   This is a nice place to see how a basic LUA module is formed.
 -- - [str.lua](str): basic string routines: print lists of item, replace characters, etc
--- - [lists.lua](lists): basic lists utilities
--- - [csv.lua](csv): reads comma seperates values from strings or files. Pass each found row to a function.
--- - [tiles.lua](tiles):
+--
+-- ### Stats code
+--
+-- Code for studying single distributions (and for studying multiple distributions, see _table_, below).
 --
 -- - show.lua
 -- - config
 -- - tests.lua
+-- - [tiles.lua](tiles):
+-- - [spy.lua](spy): basic lists utilities
 -- Support One of my core data structures is `tbl` (table). Its a place to store
 --
 -- `row`s of data. Each column in   `tbl` has a header that is a `num` or a `sym` 
@@ -97,7 +108,7 @@
 -- since sometimes we have to (e.g.) process all the numerics together or  process all
 -- the independent symbolics together etc.
 
-require "1"
+require "show"
 
 
 --------------------------------------------------------

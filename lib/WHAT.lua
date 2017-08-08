@@ -5,7 +5,7 @@
 -- ------
 -- 
 -- I claim data science is about science; i.e. it is about 
--- a community carefully curating and improving a collecting of idea. So, according to this claim, it is not
+-- a community carefully curating and improving a collecting of idea. So, in my view,  it is not
 -- enough to merely make conclusions. Rather, those conclusions need to be monitoried and updated (when appropriate).
 --
 -- The following operators are a set of  tools I say need to be part of any data mining toolkit that supports

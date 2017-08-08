@@ -7,26 +7,35 @@
 -- Why | [Install](INSTALL) | [What](WHAT) | [Guide](Guide) | [Style](STYLE) 
 --
 -- ------
----
--- <img align=right src="https://avatars6.githubusercontent.com/u/30064709?v=4&s=200">
 -- 
+-- LURE is a set of minimal data mining tools designed with the goal of letting their students "roll their sleeves up"
+-- to muck around inside data miners. 
+--
+-- The code is written in LUA since:
+--
+-- - That makes it very portable;
+-- - LUA programs are not resource intensive;
+-- - LUA code are very succinct and hence easily modifiable;
+-- - LUA code is quite readable so for students who not know how to write LUA code;
+--   I can use LURE as a kind of executable specification; e.g. write this code in your favorite language).
+-- - There are some interesting LUA data mining tool likes e.g. [TORCH](http://torch.ch/).
+--
 -- This  code offers  _baseline_ implementations of a set of _software science operators_ which,
 -- I say, are needed for data science.
---
--- It is  bait,  a dare, a taunt temptation, a  gauntlet that I throw down asking you "do better!". 
--- It is a taunt and a temptation to make you consider what _else_ we need in data mining software.
---
--- 
--- Note that I describe this work  as a  _baselines_.  LURE currently implements
--- some of my operators (and more each week)
 -- But you should be very critical of the technical
 -- choices I made in that implementation. What simplifications did I
 -- make? What better technologies should I use? What did I overlook?
---
 -- And (here's the trap) if you think you can handle the above in (e.g.)
 -- [TensorFlow](https://www.tensorflow.org/)
 --   or [Torch](http://torch.ch/) or using 100 other methods,  I would
 -- lean forward and say "yes? really? show me how".
+--
+-- ### Status
+-- 
+-- LURE is about 
+-- about one-third
+-- built and about one-tenth tested. But its good to have dreams since 
+-- ["a man's (sic) reach should exceed his grasp, Or what's a heaven for?"](https://www.poetryfoundation.org/poems/43745/andrea-del-sarto).
 --
 -- ### Motivation
 -- 
@@ -44,19 +53,7 @@
 -- might actually be sub-optimum for your domain.
 -- - Further, if you actually understand the internals of a data miner, you can mix and match what data miners
 -- do in order to provide useful and innovative solutions to your data mining tasks.
--- 
--- So LURE is a set of minimal data mining tools designed with the goal of letting their students "roll their sleeves up"
--- to muck around inside data miners. The code is written in LUA since that makes it very portable, small footprint,
--- succinct, and hence easily modifiable (and for students who not know how to write LUA code,
--- I can use LURE as a kind of assignment specification; e.g. write this code in your favorite language).
--- 
--- ### Status
--- 
--- LURE is about 
--- about one-third
--- built and about one-tenth tested. But its good to have dreams since 
--- ["a man's (sic) reach should exceed his grasp, Or what's a heaven for?"](https://www.poetryfoundation.org/poems/43745/andrea-del-sarto).
-
+--
 require "show"
 
 --------------------------------------------------------
