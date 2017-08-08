@@ -1,5 +1,6 @@
+<img align=right src="https://avatars6.githubusercontent.com/u/30064709?v=4&s=200">
 
-## Legal
+## LICENSE
 
 LURE, Copyright (c) 2017, Tim Menzies
 All rights reserved, BSD 3-Clause License

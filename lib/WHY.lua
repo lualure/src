@@ -8,17 +8,17 @@
 --
 -- ------
 -- 
--- LURE is a set of minimal data mining tools designed with the goal of letting their students "roll their sleeves up"
+-- LURE is a set of minimal data mining tools designed with the goal of letting students "roll their sleeves up"
 -- to muck around inside data miners. 
 --
 -- The code is written in LUA since:
 --
--- - That makes it very portable;
--- - LUA programs are not resource intensive;
--- - LUA code are very succinct and hence easily modifiable;
--- - LUA code is quite readable so for students who not know how to write LUA code;
---   I can use LURE as a kind of executable specification; e.g. write this code in your favorite language).
+-- - I can use LURE as a kind of executable specification; e.g. write this code in your favorite language).
 -- - There are some interesting LUA data mining tool likes e.g. [TORCH](http://torch.ch/).
+-- - LUA code is quite readable so for students who not know how to write LUA code;
+-- - LUA code are very succinct and hence easily modifiable;
+-- - LUA programs are not resource intensive;
+-- - That makes it very portable;
 --
 -- This  code offers  _baseline_ implementations of a set of _software science operators_ which,
 -- I say, are needed for data science.
