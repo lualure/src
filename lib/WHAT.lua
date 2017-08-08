@@ -8,7 +8,7 @@
 -- a community carefully curating and improving a collecting of idea. So, in my view,  it is not
 -- enough to merely make conclusions. Rather, those conclusions need to be monitoried and updated (when appropriate).
 --
--- The following operators are a set of  tools I say need to be part of any data mining toolkit that supports
+-- So LURE implements the following set of operators that I say need to be part of any data mining toolkit that supports
 -- science. 
 -- THere is no claim here of completeness of these tools. 
 -- You should be very critical of the technical
