@@ -18,7 +18,8 @@
 -- - LUA code is quite readable so for students who not know how to write LUA code;
 -- - LUA code are very succinct and hence easily modifiable;
 -- - LUA programs are not resource intensive;
--- - That makes it very portable;
+-- - LUA code ports very easily to other platforms.
+-- - LUA is fun!
 --
 -- This  code offers  _baseline_ implementations of a set of _software science operators_ which,
 -- I say, are needed for data science.
