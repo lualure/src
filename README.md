@@ -1,8 +1,15 @@
-[Home](INDEX) | [Why](WHY) | [What](WHAT) | [Guide](GUIDE)
-
+[Home](https://lualure.github.io/info/INDEX) |
+[Why](https://lualure.github.io/info/WHY) |
+[What](https://lualure.github.io/info/WHAT) |
+[Guide](https://lualure.github.io/info/GUIDE)
+[License](https://lualure.github.io/info/LICENSE.html)
 
 <img align=right src="https://avatars6.githubusercontent.com/u/30064709?v=4&s=200">
 
+## LUA LURE
+
+_tim@menzies.us_ 
+_August '18_ 
 
 LURE is a set of minimal data mining tools designed with the goal of letting their students "roll their sleeves up" to muck around inside data miners.
 
