@@ -6,7 +6,7 @@
 --  
 
 local the=require "config"
-local lst=require "lists"
+local LST=require "lists"
 
 ------------------------
 -- ### Priting Short cuts
@@ -27,9 +27,9 @@ local function sayln(control, ...)
 
 -- Apply a format to a list off items
 
-local function fmts(control, ...)
+local function fmts(control, t)
   return table.concat(
-          lst.collect(unpack{...},function (_)
+          LST.collect(t,function (_)
                 return string.format(control, _) end),",") end
 -----------------------------------
 -- Cull chars from a list

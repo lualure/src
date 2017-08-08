@@ -22,9 +22,10 @@
 -- Read notes  on the LURE [LUA coding style](STYLE). Note, in particular, that some of the
 -- `X.lua` files have `Xok.lua` demo/test files.
 --
+-- --------------------------------
 -- ### File Groupings
 --
--- The functions in LURE fall into the following  groups
+-- As of August 8 2017, the files of LURE divide into the following  groups
 --                                    
 --      base       support    stats    table    learners
 --      ------     -------    ------   -----    -----------
@@ -62,8 +63,36 @@
 --
 -- Code for studying single distributions (and for studying multiple distributions, see _table_, below).
 --
--- - show.lua
--- - config
+-- - [num.lua](num): watches a stream of numbers, summarized as Gaussians
+-- - [range.lua](range): divides a list of numbers into a set of breaks. Note that this uses a dumb `unsupervosed`
+--   approach. For a smaller approach, that reflects over the class variable, see [superranges.lua](superranges).
+-- - [sample.lua](sample): watches a stream of numbers, keeps a random sample, never keeps more than (say) 
+--   a few hundred values.
+-- - [spy.lua](spy): watches numbers and, every so often, prints out the current stats.
+-- - [sym.lua](sym): watches a stream of symbols
+-- - [sk.lua](sk): ranks  a list of `sample`s, using a recursive top-down bi-clustering algorithm;
+-- - [tiles.lua](tiles): divides a table of numbers into percentiles. Not very smart (for a smarter approach, see `range`).
+-- 
+-- Note also that the "watcher" modules (`num`, `sym`, `spy` and `sample`) all have a very similar protocol:
+--
+-- - `create`: make new watcher
+-- - `update`: add an item to a watcher
+-- - `updates`: add many items to a watcher, optionally filtered through some function `f`. Returns a new
+--     watcher unless an optional third argument is supplied (in which case, the item is addes to this third arg).
+-- - `watch`: returns a new watcher _and_ a convenience function for adding values to this watcher.
+--
+-- Another shared protocol is between `num` and `sym`:
+--
+-- - `distance` between two items (and if one or both are the `unknown` symbol react appropriately)
+-- - `norm` (called by `distance`) to reduce numbers to the range 0..1 min..max (and for `sym`s, this function just
+--    returns the value
+--
+-- Also, we can test is two `num` and `sample` distributions are statistically the same. 
+--
+-- - For `num`s, we use parametric Gaussian effect size and significance tests;
+-- - For `sample`s, we use non-parametric effect size and significance tests (Scott-Knot in the [sk.lua](sk) file, 
+--   bootstrap, and cliff's delta be checked 
+-- 
 -- - tests.lua
 -- - [tiles.lua](tiles):
 -- - [spy.lua](spy): basic lists utilities

@@ -101,6 +101,7 @@ local function collect(t,f)
 -- `mapprint` shows the `first` m items and
 -- the `last` n items (and the default is to
 -- show everything).
+
 local function maprint(t, first, last)
   first = first or #t
   for j=1,first do print(j,t[j]) end

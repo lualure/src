@@ -1,8 +1,23 @@
+-- ## Show percentils
+-- 
+-- _tim@menzies.us_   
+-- _August'18_   
+--
+--
+-- This is a low-level routine that just pretty
+-- prints a box plot of lists of numbers. Best
+-- described via example. Try `lua tilesok.lua`
+-- for pretty-prints of three distributions.
+
 require "show"
 local THE = require "config"
 local LST= require "lists"
 -----------------------------
-local function tiles(i,p, jump)
+-- Sort list `i`, break into `1/p' sections,
+-- print section 1, then print every `jump`
+-- section after that.
+
+local function   tiles(i,p, jump)
   local p    = p or 10
   local jump = jump or 1
   table.sort(i)
@@ -13,6 +28,8 @@ local function tiles(i,p, jump)
     q = q + jump*inc end
   return out end
 -------------------------------------
+-- Control settings for the `show` function
+
 local function hows(t) 
   table.sort(t)
   return {
@@ -28,11 +45,14 @@ local function hows(t)
   star="*",
   show= THE.sample.fmtnum or "%5.3f"} end
 -------------------------------------------------
+-- Generate a list that is a pretty print a list of numbers `t`
+
 local function show(t, how)
   how = how or hows(t)
   local function fl(x)    return 1+ math.floor(x) end
   local function pos(p)   return t[ fl(p * #t) ] end
-  local function place(x) return fl( how.width*(x- how.lo)/(how.hi - how.lo+10^-32) ) end
+  local function place(x) 
+         return fl( how.width*(x- how.lo)/(how.hi - how.lo+10^-32) ) end
   local function whats(chops)
           return  LST.collect(chops, function (_) return 
                               pos(_[1]) end ) end
@@ -58,6 +78,11 @@ local function show(t, how)
   return "(" .. table.concat(out,"") .. ") " .. 
                 table.concat(suffix,", ") end
 ------------------------------------------------
+-- Using the min/max of all the numbers anywhere in
+-- a table of tables of numbers `ts`, Generate a 
+-- pretty print of the tables of numbers `ts`,
+-- then print them
+
 local function shows(ts) 
   local lo,hi,out = 10^64, -10^64, {}
   for _,t in pairs(ts) do
@@ -74,8 +99,54 @@ local function shows(ts)
                           how.hi = hi
                           return show(t,how) end) end
 
+-- Convenience function. Generate and pring
 local function showAndPrint(ts) 
   for _,one in pairs(shows(ts)) do
     print(one) end end
 
-return {tiles=tiles, show=show, print=showAndPrint,shows=shows,how=hows}
+---------------------------------------------
+-- External interface
+--
+return {tiles=tiles, show=show, 
+        print=showAndPrint,shows=shows,how=hows}
+
+--------------------------------------------------------
+--
+-- ## Legal
+--
+-- <img align=right width=150 src="https://www.xn--ppensourced-qfb.com/media/reviews/photos/original/e2/b9/b3/22-bsd-3-clause-new-or-revised-modified-license-60-1424101605.png">
+-- LURE, Copyright (c) 2017, Tim Menzies
+-- All rights reserved, BSD 3-Clause License
+--
+-- Redistribution and use in source and binary forms, with
+-- or without modification, are permitted provided that
+-- the following conditions are met:
+--
+-- - Redistributions of source code must retain the above
+--   copyright notice, this list of conditions and the
+--   following disclaimer.
+-- - Redistributions in binary form must reproduce the
+--   above copyright notice, this list of conditions and the
+--   following disclaimer in the documentation and/or other
+--   materials provided with the distribution.
+-- - Neither the name of the copyright holder nor the names
+--   of its contributors may be used to endorse or promote
+--   products derived from this software without specific
+--   prior written permission.
+--
+-- THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+-- CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
+-- WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+-- WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+-- PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+-- THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY
+-- DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+-- CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+-- PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+-- USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+-- HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+-- IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+-- NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+-- USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+-- POSSIBILITY OF SUCH DAMAGE.
+--

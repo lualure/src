@@ -1,7 +1,5 @@
 -- -------
---
 -- [Why](WHY) | [Install](INSTALL) | What | [Guide](GUIDE) | [Style](STYLE) 
---
 -- ------
 -- 
 -- I claim data science is about science; i.e. it is about 

@@ -1,17 +1,19 @@
 -- # sampleok : unit tests for sample
 
 require "show"
-local o=require "tests"	
-local r=require "random"
-local s=require "sample"
-local str=require "str"
-local tiles=require "tiles"
+local O=require "tests"	
+local R=require "random"
+local SAMP=require "sample"
+local STR=require "str"
+local TILES=require "tiles"
+
+local say=STR.say
 
 local function _test1()
-  local some=s.create(64)
+  local some=SAMP.create(64)
   print(some.most)
   for _=1,10000 do
-    s.update(some,_) end
+    SAMP.update(some,_) end
   table.sort(some._all)
   print(some._all) 
 end
@@ -21,18 +23,18 @@ local function _silly()
   while n< 2500 do
     print("")
     n = n*2
-    local one,two,three,four = {},{},s.create(n),s.create(n)
+    local one,two,three,four = {},{},SAMP.create(n),SAMP.create(n)
     for i=1,10000 do
-      v1,v2 = r.r(), r.r()
+      v1,v2 = R.r(), R.r()
       one[#one+1] = v1
       two[#two+1] = v2 
-      s.update(three,v1)
-      s.update(four,v2)
+      SAMP.update(three,v1)
+      SAMP.update(four,v2)
     end
-    local t1 = tiles.tiles(one,10,2)
-    local t2 = tiles.tiles(two,10,2)
-    local t3 = tiles.tiles(three._all,10,2)
-    t4 = tiles.tiles(four._all,10,2)
+    local t1 = TILES.tiles(one,10,2)
+    local t2 = TILES.tiles(two,10,2)
+    local t3 = TILES.tiles(three._all,10,2)
+    t4 = TILES.tiles(four._all,10,2)
     local err1,err2=0,0
     local sum1,sum2=0,0
     for i=1,#t2 do
@@ -48,46 +50,47 @@ local function _silly()
 end
 
 local function _cliffs()
+  defaults()
+  the.sample.most=1024
   local n1=1
-  local fmt = "%5s\t%5s\t%20s %20s\n"
-  str.say(fmt, "n","same?","one","two")
-  str.say(fmt, "-----","-----","-----","-----")
+  local fmt = "%5s\t%5s\t%10s\t%10s\n"
+  say(fmt, "n","same?","one","two")
+  say(fmt, "-----","----","-----------------","-----------------")
   while n1 < 1.5 do
-    local i,j = s.create(), s.create()
+    local i,j = SAMP.create(), SAMP.create()
     for _=1,100 do
-      local val = r.r()^0.5
-      s.update(i, val)
-      s.update(j, val*n1) 
+      local val = R.r()^0.5
+      SAMP.update(i, val)
+      SAMP.update(j, val*n1) 
     end
-    str.say("%5.3f\t%5s\t%20s\t%20s\n",
-            n1,s.cliffsDelta(i,j), 
-            tostring(tiles.tiles(i._all,0.25)), 
-            tostring(tiles.tiles(j._all,0.25)))
-    n1 = n1 *1.01
+    print(math.floor(n1*1000)/1000,SAMP.cliffsDelta(i._all,j._all),
+          STR.fmts("%5.3f",TILES.tiles(i._all,4,1)),
+          STR.fmts("%5.3f",TILES.tiles(j._all,4,1)))
+    n1 = n1 *1.02
   end end 
 
 local function _bootstrap()
   local n1=1
   local fmt = "%5s\t%5s\t%20s %20s\n"
-  str.say(fmt, "n","same?","one","two")
-  str.say(fmt, "-----","-----","-----","-----")
+  say(fmt, "n","same?","one","two")
+  say(fmt, "-----","-----","-----","-----")
   while n1 < 1.5 do
     local i,j = {}, {}
     for _=1,128 do
-      local x = r.r()
+      local x = R.r()
       local val = x^1
       i[#i+1] = val
       j[#j+1] = val*n1 
     end
-    str.say("%5.3f\t%5s\t%20s\t%20s\n",
-            n1,s.same(i,j), 
-            tostring(str.fmts("%5.3f",tiles.tiles(i,10,2))), 
-            tostring(str.fmts("%5.3f",tiles.tiles(j,10,2))))
+    say("%5.3f\t%5s\t%20s\t%20s\n",
+            n1,SAMP.same(i,j), 
+            tostring(STR.fmts("%5.3f",TILES.tiles(i,10,2))), 
+            tostring(STR.fmts("%5.3f",TILES.tiles(j,10,2))))
     n1 = n1 *1.01
   end end 
 
-r.seed(1)
-_test1()
+R.seed(1)
+-- _test1()
 _cliffs()
-_bootstrap()
-_silly()
+-- _bootstrap()
+-- _silly()

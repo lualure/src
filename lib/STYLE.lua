@@ -8,7 +8,7 @@
 --
 -- ----------------------------------------------------------
 --
--- If you are rading my code, it will save you time to know how I write my Lua.
+-- If you are reading my code, it will save you time to know how I write my Lua.
 -- 
 -- #### Execution
 -- 
@@ -22,7 +22,7 @@
 -- 
 -- Always have `LUA_PATH`  set to include the LURE directory. For example, your run command might be:
 -- 
---       LUA_PATH="$Lure/lib/?.lua;;" $(which luajit) file.lua
+--       LUA_PATH="$Lure/lib/?.lua;;" $(which luajit) file.l
 -- 
 -- #### Formatting
 -- 

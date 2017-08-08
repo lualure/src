@@ -36,15 +36,16 @@
 --       - EWD: Equal width discretisation; i.e. `(max-min)/b` to generate, say, `b=10` bins
 --       - EFD: Equal frequency discretisation i.e. divide the numbers according to percentiles says (e.g.) lower, middle, upper third of the numbers
 --
--- This code is EFD, with some extras to avoid common problems. For example, consider a 33% split on the following numbers. Note that the first
--- and second bin would contain the same numbers-- which is odd since you'd expect different bins to be, well, different.
+-- This code is EFD, with some extras to avoid common problems. For example, consider a 33 percent split on the following numbers. Note that the first
+-- and second bin would contain the same numbers-- which is odd since you'd expect different bins to be, well, different.   
 --
---       1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,3,4,5,6,7,8,9
+--       1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+--       1,1,1,1,1,1,1,1,2,3,4,5,6,7,8,9
 --
 -- This code builds ranges that at least the size of the equal frequency division. But it fuses one range to the next
 -- if they do not have different values.
 --
--- -- ### Input
+-- ### Input
 --
 -- - `t` (mandatory) is a list of items.
 -- - `f` (optional) is a function that can extract numbers out of items in `t` (defaults
@@ -173,7 +174,7 @@ return function (t, x,       last)
          x1 > last and
          i.now.n       > i.enough  and
          i.now.span    > i.epsilon and
-         -- these last two tests stop the final range being too small
+         -- These last two tests are important: they stop the final range being too small
          i.num.n - j   > i.enough  and
          i.num.hi - x1 > i.epsilon 
       then nextRange(i) end 

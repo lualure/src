@@ -43,7 +43,9 @@
 --
 --     local function more(x,y) return x > y end
 --     local function less(x,y) return x < y end
+--
 --     -- the above controls what  constrast are selected
+--
 --     local function plans(branches)    
 --       return contrasts(branches, more) end
 --     local function monitors(branches) 

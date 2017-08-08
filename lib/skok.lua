@@ -37,6 +37,7 @@ local function _sk3()
   x5.txt="x5"
   SAM.rank({x1,x2,x3,x4,x5},1.01) end
 
+
 local function _sk4()
   local x1=SAM.updates{101,100,99,  101,99.5}
   local x2=SAM.updates{101,100,99,  101,100}
