@@ -13,8 +13,8 @@ require "show"
 local THE = require "config"
 local LST= require "lists"
 -----------------------------
--- Sort list `i`, break into `1/p' sections,
--- print section 1, then print every `jump`
+-- Sort list `i`, break into `1/p` sections,
+-- collect break 1, then collect every `jump`
 -- section after that.
 
 local function   tiles(i,p, jump)
