@@ -39,11 +39,11 @@ local function NUM(col)
 end 
 ------------------------------------------------
 local function SYM(col)
-  local function dist(j,k) 
-    if     j==no and k==no then return 0,0
-    elseif j==no           then return 1,1
-    elseif k==no           then return 1,1
-    elseif j==k            then return 0,1
+  local function dist(x,y) 
+    if     x==no and j==no then return 0,0
+    elseif x==no           then return 1,1
+    elseif y==no           then return 1,1
+    elseif x==y            then return 0,1
     else                        return 1,1 end 
   end ------------------------------------------
   return {
@@ -52,10 +52,10 @@ local function SYM(col)
     dist   = dist} 
 end 
 ------------------------------------------
-local function dist(heads, row1, row2) 
-  d,n=0,10^-64
-  for i,head in pairs(heads) do
-    incd, incn = head.dist(head,row1[i].cells, row2[i].cells)
+local function dist(t, row1, row2) 
+  local d,n = 0,10^-64
+  for i,head in pairs(t.heads) do
+    incd, incn = head.dist(row1[i].cells, row2[i].cells)
     d = d + incd
     n = n + incn end
   return d^0.5/n^0.5 end
