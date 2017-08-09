@@ -1,7 +1,7 @@
 -- ## Scott Knott test
 --  
 -- _tim@menzies.us_   
--- _August'18_   
+-- _August'17_   
 --
 -- Recursive bi-clustering of  set of `samples`.
 -- Before desceding into either split, pause and check

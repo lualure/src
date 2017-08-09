@@ -1,7 +1,7 @@
 -- ## Rows in a table
 -- 
 -- _tim@menzies.us_    
--- _August, 2018_
+-- _August, 2017_
 --
 -- A `row` is a slave module to  `tbl`.
 -- `Rows` are where `tbl`s store one line of data.

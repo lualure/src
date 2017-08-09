@@ -2,7 +2,7 @@
 -- ## Keeping a Sample of All
 -- 
 -- _tim@menzies.us_   
--- _August'18_   
+-- _August'17_   
 --
 
 local the=require "config"

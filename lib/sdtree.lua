@@ -1,5 +1,8 @@
 -- ## sdtree : iterative divisions to minimize sd
-
+-- 
+-- _tim@menzies.us_   
+-- _August'17_   
+--
 -- A decision tree learner. Assumes discrete independent data
 -- and a  numeric dependent variable whose standard deviation
 -- we aim to minimize.

@@ -1,7 +1,7 @@
 -- ## Show percentils
 -- 
 -- _tim@menzies.us_   
--- _August'18_   
+-- _August'17_   
 --
 --
 -- This is a low-level routine that just pretty

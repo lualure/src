@@ -1,5 +1,8 @@
 -- ## Watch over a stream, regularly reporting
-
+-- 
+-- _tim@menzies.us_   
+-- _August'17_   
+--
 require "show"
 local the=require "config"
 local NUM=require "num"

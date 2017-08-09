@@ -1,7 +1,7 @@
 -- ## Global settings
 --
 -- _tim@menzies.us_    
--- _August, 2018_  
+-- _August, 2017_  
 --
 -- Used by many files
 

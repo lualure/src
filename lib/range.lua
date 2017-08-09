@@ -1,7 +1,7 @@
 -- ## range : simple discretiation
 --
 -- _tim@menzies.us_    
--- _August, 2018_
+-- _August, 2017_
 -- 
 -- Use this code to find "natural ranges"
 -- in a list of numbers `t`. Such ranges

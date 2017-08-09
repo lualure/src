@@ -1,7 +1,7 @@
 -- ## Random number generator
 -- 
 -- _tim@menzies.us_    
--- _August, 2018_ 
+-- _August, 2017_ 
 --
 -- Lua's `math.random()` is an interface to the C rand() function
 -- provided by the OS libc. This implementation varies by platform

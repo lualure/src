@@ -1,7 +1,7 @@
 -- ## Incrementally watch a stream of numbers
 --
 -- _tim@menzies.us_   
--- _August'18_   
+-- _August'17_   
 --
 
 -- Use this code to incrementally monitor the mean and standard deviation

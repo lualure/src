@@ -1,7 +1,7 @@
 -- ## Supervised discretization
 --
 -- _tim@menzies.us_    
--- _August, 2018_
+-- _August, 2017_
 -- 
 -- This code is a supervised discretizer. Numbers in a list are sorted, then broken according to where a 
 -- dependent variable starts to change.

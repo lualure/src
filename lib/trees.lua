@@ -1,7 +1,7 @@
 -- ## Return some trees
 -- 
 -- _tim@menzies.us_   
--- _August'18_   
+-- _August'17_   
 --
 -- This code is a convenience function to return trees from data files known to ship with LUA.
 

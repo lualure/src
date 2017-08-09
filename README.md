@@ -9,7 +9,7 @@
 # LUA LURE
 
 _tim@menzies.us_    
-_August '18_ 
+_August '17_ 
 
 LURE is a set of minimal data mining tools designed with the goal of letting their students "roll their sleeves up" to muck around inside data miners.
 

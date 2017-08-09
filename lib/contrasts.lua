@@ -1,7 +1,7 @@
 -- ## Learning Contrast Sets
 -- 
 -- _tim@menzies.us_   
--- _August'18_   
+-- _August'17_   
 --
 -- This code is a post-processor to the `sdtree`
 -- decision-tree learner (and assumes that all

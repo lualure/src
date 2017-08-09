@@ -1,7 +1,7 @@
 -- ## Incrementally watch a stream of symbols
 --
 -- _tim@menzies.us_   
--- _August'18_   
+-- _August'17_   
 --
 -- Use this code to incrementally monitor the frequency
 -- counts and entropy of

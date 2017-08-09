@@ -1,7 +1,7 @@
 -- ## Handling Tables of Data
 -- 
 -- _tim@menzies.us_   
--- _August'18_   
+-- _August'17_   
 --
 -- One of my core data structures is `tbl` (table). Its a place to store
 -- `row`s of data. 
