@@ -17,7 +17,8 @@ local SYM=require "sym"
 local RANGE=require "range"
 local LST= require "lists"
 local STR=require "str"
-replace = STR.replace_char
+local replace = STR.replace_char
+
 ----------------------------
 -- ### pretty print
 local function labels(nums)

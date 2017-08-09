@@ -19,13 +19,13 @@ local function _test1()
 end
 
 local function _silly() 
-  n=8
+  local n=8
   while n< 2500 do
     print("")
     n = n*2
     local one,two,three,four = {},{},SAMP.create(n),SAMP.create(n)
     for i=1,10000 do
-      v1,v2 = R.r(), R.r()
+      local v1,v2 = R.r(), R.r()
       one[#one+1] = v1
       two[#two+1] = v2 
       SAMP.update(three,v1)
@@ -34,7 +34,7 @@ local function _silly()
     local t1 = TILES.tiles(one,10,2)
     local t2 = TILES.tiles(two,10,2)
     local t3 = TILES.tiles(three._all,10,2)
-    t4 = TILES.tiles(four._all,10,2)
+    local t4 = TILES.tiles(four._all,10,2)
     local err1,err2=0,0
     local sum1,sum2=0,0
     for i=1,#t2 do
@@ -51,7 +51,6 @@ end
 
 local function _cliffs()
   defaults()
-  the.sample.most=1024
   local n1=1
   local fmt = "%5s\t%5s\t%10s\t%10s\n"
   say(fmt, "n","same?","one","two")
@@ -86,11 +85,8 @@ local function _bootstrap()
             n1,SAMP.same(i,j), 
             tostring(STR.fmts("%5.3f",TILES.tiles(i,10,2))), 
             tostring(STR.fmts("%5.3f",TILES.tiles(j,10,2))))
-    n1 = n1 *1.01
+    n1 = n1 *1.02
   end end 
 
 R.seed(1)
--- _test1()
-_cliffs()
--- _bootstrap()
--- _silly()
+O.k{_test1, _cliffs, _bootstrap, _silly}

@@ -64,7 +64,7 @@ local NUM=require "num"
 local function has(branch)
   local out = {}
   for i=1,#branch do
-    step = branch[i]
+    local step = branch[i]
     out[#out+1] = {attr=step.attr, val=step.val} end 
   return out end
 

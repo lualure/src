@@ -4,14 +4,15 @@ local CON=require "contrasts"
 local TREES=require "trees"
 local TREE=require "sdtree"
 local LST=require "lists"
+local O=require "tests"
 
 
-function _con()
+local function _con()
   defaults()
   the.tree.min=8
   local x=TREES.auto()
   TREE.show(x)
-  b=CON.branches(x)
+  local b=CON.branches(x)
   print("\n==================== Show branches \n\n")
   LST.maprint(b)
   print("\n==================== What to do: (plans= here to better) ")
@@ -20,4 +21,4 @@ function _con()
   CON.monitors(b)
 end
 
-_con()
+O.k{_con}

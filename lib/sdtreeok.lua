@@ -4,7 +4,7 @@ require "show"
 local THE=require "config"
 	
 local O=require "tests"	
-local r=require "random"
+local R=require "random"
 local tbl=require "tbl"
 local tree=require "sdtree"
 local lst=require "lists"
@@ -41,7 +41,5 @@ local function _test1() _test0(nil,"dom") end
 local function _test2() _test0("/data/xomo_all_short.csv","goal1") end
 local function _test3() _test0("/data/POM3A_short.csv","dom") end
 
-r.seed(1)
-_test2()
-_test1()
-_test3()
+R.seed(1)
+O.k{_test2,  _test1, _test3}
