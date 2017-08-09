@@ -64,7 +64,9 @@ local function order(t,y)
 -- column to split the current data.
 -- 
 -- Terminate tree growth if there are fewer than  `the.tree.min` in the splits
--- or the tree has grown deeper than `the.tree.maxDepth`.
+-- or the tree has grown deeper than `the.tree.maxDepth` or
+-- if the new tree does not decreases the standard deviation of the parent tree.
+
 local function grow1(above,yfun,rows,lvl,b4,pos,attr,val)
   local function pad()       return str.fmt("%-20s",string.rep('| ',lvl)) end
   local function likeAbove() return tbl.copy(above._t,rows)  end
