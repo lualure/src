@@ -340,9 +340,9 @@ lure() { ## FILE ## call "luajit FILE" in this environment (.lua optional) ## lu
   echo "not found $f"
 }
 setup() {
-  echo -e "\033]6;1;bg;red;brightness;40\a"
-  echo -e "\033]6;1;bg;green;brightness;44\a"
-  echo -e "\033]6;1;bg;blue;brightness;52\a"
+#  echo -e "\033]6;1;bg;red;brightness;40\a"
+#  echo -e "\033]6;1;bg;green;brightness;44\a"
+#  echo -e "\033]6;1;bg;blue;brightness;52\a"
   alias ls='ls -G'
   export LESS='-R'
   export LESSOPEN='|$Lure/etc/lessfilter %s'

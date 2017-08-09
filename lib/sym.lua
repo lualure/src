@@ -89,13 +89,13 @@ end
 local function norm(i,x)
   return x end
 ----------------------------------------------------
--- ### Map numbers to a range.
--- `i` is a list of pairs {x.label, x.most}.
--- Find `x`'s label with this list.
+-- ### Discretizing a symnol
+-- Just returns that symbol.
+-- If this `sym` has the magic `bins` variable
+-- then use that to convert the number `x` to
+-- a symbol. Otherwise, return just return the number.
 
--- XXXX why is this even here? discrete syms should be syms???
-
-local function discretize(i,x) 
+local function discretize(i,x)
   local r
   if x==the.ignore then return x end
   if not i.bins    then return x end
@@ -103,7 +103,6 @@ local function discretize(i,x)
     r = b.label
     if x<=b.most then break end end
   return r end
-
 ------------------------------------------------------
 -- ### Entropy
 

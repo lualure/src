@@ -92,7 +92,36 @@
 -- - For `num`s, we use parametric Gaussian effect size and significance tests;
 -- - For `sample`s, we use non-parametric effect size and significance tests (Scott-Knot in the [sk.lua](sk) file, 
 --   bootstrap, and cliff's delta be checked 
+--
+-- ### Table code
+-- One of my core data structures is `tbl` (table). Its a place to store
+-- `row`s of data. 
+--
+-- - When data comes in from disk. I store it as a `tbl`;
+-- - When data in one `tbl` is divided, the divisions are `tbl`s.
+-- - When we cluster, each lucster it its own `tbl`.
+-- - When we build a denogram (a recursive division of data into sub-data, then subn-s data, then sub-sub-sub data, etc)
+--   then each node in that tree is `tbl`.
+--
+-- Each column in   `tbl` has a header that is a `num` or a `sym` 
+-- and that header maintains a summary of what was seen in each column.
+--
+
+--
+-- ### Learner code
 -- 
+-- The  discretzation and tree growing code (in [superranges.lua](superranges) and [sdtree.lua](strree)) needs to know the 
+-- dependent variable. Hence, that code accepts  a `y` function otherwise the code won't know how to split the data. Currently,
+-- two such functions are defined:
+--
+-- - "dom": divide trees on the "domination score" (how many times the objectives in one row dominate others)
+-- - "goal1" divides the data according to the first  numeric goal.
+--
+-- To define other goal functions, edit the functions in `tbl.lua`.
+--
+--
+-- that needs to bassed into 
+-- that needs to be passed in withi
 -- - tests.lua
 -- - [tiles.lua](tiles):
 -- - [spy.lua](spy): basic lists utilities
