@@ -9,6 +9,10 @@ local some=1.05
 
 local function newid() id=id+1; return id end
 
+local function zero1(x)
+  if x>1 then return 1 end
+  if x<0 then return 0 end
+end
 local function shuffle( t )
   for i= 1,#t do
     local j = i + math.floor((#t - i) * R.r() + 0.5)
@@ -108,7 +112,32 @@ local function TABLE(rows0,xcols,ycols)
           best,out=d,two end end
      return out
   end
-  local function defaultXcols(most,out)
+  local reset = nil
+  local function xy(t,row)
+    if not t.memo[row.id] then 
+      local a= distance(t,row,west)
+      local b= distance(t,row,east)
+      if b > some.c then
+        reset(t, t.west, row)
+        return xy(t,row)
+      elseif a > some.c then
+        reset(t, row, t.east)
+        return xy(t,row)
+      end
+      local x= (a^2 + c^2 - b^2) / (2*c)  
+      local y= a^2 - x^2
+      local tmp= {x= zero1(x),
+                  y= zero1(y < 0 and 0 or y^0.5)}
+      t.memo[row.id] = tmp end
+    return t.memo[row.id]
+  end
+  local function reset(t,west,east)
+    t.memo = {}
+    t.west = west or any(t.rows)
+    t.east = east or furthest(t,t.west) 
+    t.c    = distance(t,west,east) 
+  end
+local function defaultXcols(most,out)
     for i=1, most - 1 do out[#out+1]  = i end
     return out
   end ---------------------
@@ -118,18 +147,8 @@ local function TABLE(rows0,xcols,ycols)
     ycols = ycols or {#rows0[1]},
     rows  = {},
     updates= function (rows) return updates(t,rows) end  } 
-  updates( shuffle(rows0))
-  t.west = furthest(t, t.rows[1])
-  t.east = furthest(t, t.west) 
-  return tbl
+  reset(t)
+  return t
 end
 ------------------------------------------
-local function xyc(row,west,east,t,      c)
-  local a= distance(t,row,west)
-  local b= distance(t,row,east)
-  local c= c or distance(t,west,east)
-  local x= (a^2 + c^2 - b^2) / (2*c)  
-  y= a^2 - x^2
-  y= y < 0 and 0 or y^0.5
-  return x, y, c, b > some*c, a > some*c
-end
+
