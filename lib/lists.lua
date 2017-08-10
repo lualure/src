@@ -35,6 +35,22 @@ local function shuffle( t )
 local function any(t)
   return t[ math.floor((#t-1) * R.r() + 0.5) ]
 end
+
+-- Return an iterator that can return
+-- some items in a list.
+--
+-- e.g.  the following prints 20 then 30
+--
+--     for x in some({10,20,30,40,50,60},{2,3}) do
+--        print(x) end
+
+local function some(t,cols)
+  local i = 0
+  return function ()
+    if i < #cols then
+      i= i+1
+      return t[cols[i]] end end end
+
 -----------------------------
 -- ### Sorting. 
 -- Unlike `table.sort`, this `sort` function
