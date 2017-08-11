@@ -4,9 +4,14 @@
 -- _August'18_   
 --
 -- -------
+--
 -- [Why](WHY) | [Install](INSTALL) | What | [Guide](GUIDE) | [Style](STYLE) 
+--
 -- ------
--- 
+--
+--
+-- ### What is this code all about?
+--
 -- I claim data science is about science; i.e. it is about 
 -- a community carefully curating and improving a collecting of idea. So, in my view,  it is not
 -- enough to merely make conclusions. Rather, those conclusions need to be monitoried and updated (when appropriate).

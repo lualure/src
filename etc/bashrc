@@ -123,6 +123,7 @@ doco() { ## ## generate html from lua code ## doc
        if [ "$i" -nt "$Lure/lib/docs/$stem.html" ];then
          ./locco.lua $i
          str=$(_docheader $stem)
+         sed -i'.bak'  's?</head>?<link rel="shortcut icon" type="image/x-icon" href="https://raw.githubusercontent.com/lualure/info/master/img/favicon.ico"></head>?1'  $Lure/lib/docs/$stem.html 
          sed -i'.bak'  's/<title>.*/<title>'$stem'<\/title>/1'  $Lure/lib/docs/$stem.html 
          sed -i'.bak'  's?'$Lure/lib/$stem'.lua??1'  $Lure/lib/docs/$stem.html 
          cat $Lure/lib/docs/$stem.html |

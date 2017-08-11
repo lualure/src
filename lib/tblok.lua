@@ -1,17 +1,17 @@
 -- # tableok : unit tests for table
 
 require "show"	
-local rand=  require "random"
+local R=  require "random"
 local the=  require "config"
-local o=    require "tests"	
-local tbl=  require "tbl"
-local row=  require "row"
+local O=    require "tests"	
+local TBL=  require "tbl"
+local ROW=  require "row"
 local super=require "superrange"
-local lst=require "lists"
+local LST=require "lists"
 ----------------------------------------------------------
 -- process 14 rows
  local function _test1()
-   local t=tbl.create(the.here .. "/data/weather.csv")
+   local t=TBL.create(the.here .. "/data/weather.csv")
   print(t.spec)
    assert(#t.rows==14)
    assert(t.rows[14].cells[1]=="rainy")
@@ -23,29 +23,26 @@ end
 ----------------------------------------------------------
 -- process 400 rows
 local function _test3()
-  local function someShow(i,j) 
-    local r=i.rows[j]
-    local tmp={j,r.dom}
-    for _,c in pairs(i.goals)  do
-      tmp[#tmp+1] = r.cells[c.pos] end
-    print(tmp)
-  end
-  local t=tbl.create(the.here .. "/data/auto.csv")
-  tbl.dominates(t)
-  for j=1,5 do someShow(t,j) end
+  print(22)
+  local dom={}
+  local t=TBL.create(the.here .. "/data/auto.csv")
+  for j,row in pairs(t.rows) do
+      dom[row.id] = ROW.dominate(row,t) end
+  table.sort(t.rows, function (x,y)
+              return dom[x.id] > dom[y.id] end)
   print(t.spec)
-  print("...")
-  for j=#t.rows-5,#t.rows do someShow(t,j) end
-  --for i=1,250 do row.dominates(t.rows[i],t) print(t.rows[i].dom) end
+  for j=1,5               do print(t.rows[j]) end
+  print("")
+  for j=#t.rows-5,#t.rows do print(t.rows[j]) end
 end 
 ----------------------------------------------------------
 local function _test4(f,y)
    y = y or "dom"
    -- local function y(r,t) return row.dominate(r,t) end
    f = f or "/data/auto.csv"
-   local t1=tbl.create(the.here .. f)
+   local t1=TBL.create(the.here .. f)
    print(f,#t1.rows)
-   local t2=tbl.discretize(t1, y) -- tbl[y](t1)) --  y, false)
+   local t2=TBL.discretize(t1, y) -- tbl[y](t1)) --  y, false)
    for _,r1 in pairs(t1.rows) do
      local found = false
      for _,r2 in pairs(t2.rows) do
@@ -60,14 +57,12 @@ local function _test4(f,y)
    --for k=1,5 do print(t2.rows[k].cells) end
 end
 ---------------------------------------------
-rand.r(1)
+R.r(1)
 
 local function _test1(f) _test4(f) end
 local function _test2() _test4("/data/xomo_all_short.csv") end
-local function _test3() _test4("/data/POM3A_short.csv") end
+--local function _test3() _test4("/data/POM3A_short.csv") end
 
-o.k{_test1} --_test2,_test3}
--- o.k{_test1,_test2,_test3,test4}
---_test4()
+O.k{_test1,_test2,_test3,test4}
 
 

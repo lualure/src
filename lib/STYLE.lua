@@ -4,7 +4,7 @@
 --
 -- ------
 --
--- [Why](WHY) | [Install](INSTALL) | [What](WHAT) | [Guide](Guide) | Style 
+-- [Why](WHY) | [Install](INSTALL) | [What](WHAT) | [Guide](GUIDE) | Style 
 --
 -- ----------------------------------------------------------
 --

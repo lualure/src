@@ -17,8 +17,8 @@ local function klass(z)
 ----------------------------------------------
 local function _test1()
   local t,n={},NUM.create()
-  for _=1,100  do
-    local w=R.r()^0.5
+  for _=1,50  do
+    local w=R.r()
     NUM.update(n,klass(w))
     t[#t+1] = {w, klass(w)} end
   print("\nWe have many unsupervised ranges.")
