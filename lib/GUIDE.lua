@@ -48,8 +48,8 @@
 --     tests   lists    sample         superrange
 --             random   spy            trees
 --             str      sym
---                     sk
---                     tiles                     
+--                      sk
+--                      tiles                     
 --
 -- ### Base code
 --
