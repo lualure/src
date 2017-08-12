@@ -114,15 +114,16 @@ local function DATA(csvString)
   local comments = "#.*"           
   local nonsep   = "([^" .. sep .. "]+)" 
   local padding  = "%s*(.-)%s*"   
-  local out =  { rows={}, spec={}, goals={} , less={}, more={}, 
+  local out =  { rows={}, spec={}, goals={} , less={}, more={}, klass={}, 
                  all={nums={}, syms={}, cols={}}, -- all columns
                  x  ={nums={}, syms={}, cols={}}, -- all independent columns
                  y  ={nums={}, syms={}, cols={}}}  -- all depednent   columns
   -- column headers have magic symbols that help categorize each column
   local spec =  {
      {when= "%$", what= NUM, weight= 1, where= {out.all.cols, out.x.cols, out.all.nums, out.x.nums}},
-     {when= "<",  what= NUM, weight=-1, where= {out.all.cols, out.y.cols, out.all.nums, out.goals, out.less, out.y.nums}},
-     {when= ">",  what= NUM, weight= 1, where= {out.all.cols, out.y.cols, out.all.nums, out.goals, out.more, out.y.nums}},
+     {when= "<",  what= NUM, weight=-1, where= {out.all.cols, out.y.cols, out.all.nums, out.y.nums, out.goals, out.less}},
+     {when= ">",  what= NUM, weight= 1, where= {out.all.cols, out.y.cols, out.all.nums, out.y.nums, out.goals, out.more}},
+     {when= "!",  what= SYM, weight= 1, where= {out.all.cols, out.y.cols, out.all.syms, out.y.syms, out.klass}},
      {when= "",   what= SYM, weight= 1, where= {out.all.cols, out.x.cols, out.all.syms, out.x.syms}}}
   -- Convert csv text to table, kill white, convert number strings to strings
   local first,use= true,{}
@@ -139,7 +140,7 @@ local function DATA(csvString)
       end
       first = false
       return out end  end
-  -- Iterator over lines of text, appyling fun to each line
+  -- Iterator over lines of text, appyling fun to each line  
   local function lines(txt)
    local n,pos = 0,1          
    return function ()    
@@ -164,11 +165,12 @@ local function DATA(csvString)
   -- main
   for n,line in lines(csvString) do
     if n==1 then
+      out.spec = line
       for col,txt in pairs(line) do header(col,txt) end
     else
       out.rows[#out.rows+1] = line end end
   return out 
-end -- end DATA
+end -- end data
 
 print(DATA(nasa93).y)
 ---------------------------------------------
