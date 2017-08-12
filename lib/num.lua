@@ -74,7 +74,7 @@ local function update(i,x)
 local function watch()
   local i = create()
   return i, function (x) return update(i,x) end end
-----------------------------------------------------
+  ----------------------------------------------------
 -- ### Updates
 -- Update a watcher `i` with many values from `t`.
 -- Optionally:
@@ -90,6 +90,12 @@ local function updates(t,f,all)
   for _,one in pairs(t) do
     update(all, f(one)) end 
   return all end
+----------------------------------------------------
+-- ### Normalization
+
+local function norm(i,x)
+  if x==the.ignore then return x end
+  return (x - i.lo) / (i.hi - i.lo + 1e-32) end
 ----------------------------------------------------
 -- ### Distance
 -- Using a watcher `i`, work of the distance between
@@ -126,12 +132,6 @@ local function discretize(i,x)
     r = b.label
     if x<=b.most then break end end
   return r end
-----------------------------------------------------
--- ### Normalization
-
-local function norm(i,x)
-  if x==the.ignore then return x end
-  return (x - i.lo) / (i.hi - i.lo + 1e-32) end
 ----------------------------------------------------
 -- ### Parametric significance tests
 -- `ttest` accepts two `num`s called `i,j`.
@@ -195,6 +195,7 @@ local function same(i,j)
 return {create=create, watch=watch,
         update=update, updates=updates,
         norm=norm,
+        distance=distance,
         same=same, ttest=ttest, hedges=hedges}
 
 --------------------------------------------------------

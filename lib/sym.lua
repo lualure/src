@@ -135,6 +135,7 @@ local function ke(i)
 -- ### External Interface
 
 return {create=create, update=update, updates=updates, 
+        distance=distance,
         ent=ent, spread=ent, discretize=discretize,
         ke=ke,watch=watch}
 

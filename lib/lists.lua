@@ -124,6 +124,28 @@ local function maprint(t, first, last)
   if last then
     print("...")
     for j=#t+last, #t do print(j,t[j]) end end end
+
+
+-- `mprint` = matrix print. Displays a list of lists,
+-- all the columns (right) aligned.
+local function mprint(ts,sep) 
+  sep = sep or ", "
+  local fmt,w={},{}
+  local function width(col,x)
+    if not w[col] then w[col]=0 end
+    local tmp= #tostring(x)
+    if tmp > w[col] then 
+      w[col] = tmp 
+      fmt[col] = "%" .. tmp .. "s" end 
+  end ----------------------------
+  for _,t in pairs(ts) do
+    for col,x in pairs(t) do width(col,x) end end
+  for i,t in pairs(ts) do
+    io.write(
+      string.format(
+        table.concat(fmt,sep)  .. "\n",
+        unpack(t))) end end
+
 -----------------------------------
 -- ### Copying (and saming)
 
@@ -138,7 +160,7 @@ local function copy(t)  --recursive
 -------------------------------------------------------
 -- ### Public interface
 
-return { maprint=maprint,sort=sort,
+return { maprint=maprint,sort=sort,mprint=mprint,
          without=without, firsts=firsts,lasts=lasts,first=first, last=last,same=same,copy=copy,
          shallowCopy=shallowCopy, member=member,map=map, bsearch=bsearch,
          push=push,map2=map2, collect=collect,shuffle=shuffle}

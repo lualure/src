@@ -44,5 +44,13 @@ local function _bsearch()
     a[i]=i^0.5 end
   assert(LST.bsearch(a,5)==25) end
 
+local function _mprints()
+  LST.mprint({{"name", "age","shoesize","state"},
+              {"----", "---","--------","-----"},
+  {10,20,1,300},
+         {100,1,400.001111,400},
+         {3,"aa",33,"apples"}}," |  ") end
 R.seed()
-O.k{_test1,_mapping,_copy,_bsearch}
+--O.k{_test1,_mapping,_copy,_bsearch}
+
+_mprints()

@@ -6,17 +6,16 @@ local the=  require "config"
 local O=    require "tests"	
 local TBL=  require "tbl"
 local ROW=  require "row"
-local super=require "superrange"
 local LST=require "lists"
 ----------------------------------------------------------
 -- process 14 rows
- local function _test1()
+ local function _test0()
    local t=TBL.create(the.here .. "/data/weather.csv")
   print(t.spec)
    assert(#t.rows==14)
    assert(t.rows[14].cells[1]=="rainy")
-   assert(o.nstr(t.all.nums[1].mu,4) == o.nstr(73.5714,4))
-   assert(o.nstr(t.all.nums[1].sd,4) ==  o.nstr(6.5717,4))
+   assert(O.nstr(t.all.nums[1].mu,4) == O.nstr(73.5714,4))
+   assert(O.nstr(t.all.nums[1].sd,4) ==  O.nstr(6.5717,4))
    assert(t.x.syms[1].counts["overcast"] == 4)
    assert(t.x.syms[2].counts["TRUE"]==6)
 end
@@ -57,12 +56,32 @@ local function _test4(f,y)
    --for k=1,5 do print(t2.rows[k].cells) end
 end
 ---------------------------------------------
+--
+local function _test6(show,f)
+   y = y or "goal1"
+   -- local function y(r,t) return row.dominate(r,t) end
+   f = f or "/data/weather.csv"
+   local t1=TBL.create(the.here .. f)
+   print("")
+   for _,row1 in pairs(t1.rows) do
+      local row2=TBL.nearest(t1,row1)
+      local row3=TBL.furthest(t1,row1)
+      io.write(".")
+      if show then
+        print("")
+        print(row1.cells)
+        print(row2.cells ,"nearest")
+        print(row3.cells,"furthest") end
+   end 
+end 
 R.r(1)
 
 local function _test1(f) _test4(f) end
 local function _test2() _test4("/data/xomo_all_short.csv") end
---local function _test3() _test4("/data/POM3A_short.csv") end
+local function _test5() _test4("/data/POM3A_short.csv") end
 
-O.k{_test1,_test2,_test3,test4}
-
+--O.k{_test0,_test1,_test2,_test3,_test5}
+_test6(true)
+_test6(false,"/data/auto.csv")
+_test6(false,"/data/xomo_all_short.csv")
 

@@ -84,7 +84,7 @@ local function categories(i,txt)
     {when= "%$", what= NUM, weight= 1, where= {i.all.cols, i.x.cols, i.all.nums,                  i.x.nums}},
     {when= "<",  what= NUM, weight=-1, where= {i.all.cols, i.y.cols, i.all.nums, i.goals, i.less, i.y.nums}},
     {when= ">",  what= NUM, weight= 1, where= {i.all.cols, i.y.cols, i.all.nums, i.goals, i.more, i.y.nums}},
-    {when= "!",  what= SYM, weight= 1, where= {i.all.cols, i.y.cols,             i.all.syms}},
+    {when= "!",  what= SYM, weight= 1, where= {i.all.cols, i.y.syms, i.y.cols,   i.all.syms}},
     {when= "",   what= SYM, weight= 1, where= {i.all.cols, i.x.cols,             i.all.syms,      i.x.syms}}}
   for _,want in pairs(spec) do
     if string.find(txt,want.when) ~= nil then
@@ -155,6 +155,33 @@ local function copy(i, from)
       data(j, LST.copy(r.cells),r) end end
   return j 
 end
+------------------------------------------------------------
+-- ### near,far
+local function nearfar(i,row1, other, best, better)
+  out   = row1
+  for _,row2 in pairs(other or i.rows) do
+    if row1.id ~= row2.id then 
+      d = ROW.distance(row1,row2,i)
+      if better(d,best) then
+        best,out = d, row2 end end end
+  return out end
+
+local function furthest(i,row1, other)
+  return nearfar(i, row1, other, 
+                    -1,   function (x,y) return x > y end)  end
+
+local function nearest(i,row1, other)
+  return nearfar(i, row1,  other, 
+                    10^32, function (x,y) return x < y end) end
+
+local function knn(i,row1,k,other) 
+  k= k or the.tbl.k
+  tmp,out = {},{}
+  for _,row2 in pairs(other or i.rows) do
+    tmp[#tmp + 1] = {d= ROW.distance(row1,row2), row=row2} end
+  table.sort(tmp, function (x,y) return x.d < y.d end)
+  for j=1,k do out[j] = tmp[j] end
+  return out end
 -------------------------------------------------------------
 -- suspect this is broken
 --
@@ -169,6 +196,12 @@ end
 -- ### Goal functions
 --
 -- Feature extractors from a ROW.
+
+local function klass(t,cells)
+  return cells[t.y.syms[1].pos] end 
+
+local function klassfn(t)
+  return function (r) return klass(t,r.cells) end end
 
 local function goallast(t,n) 
   return function(r) 
@@ -231,11 +264,16 @@ local function fromCsv(f)
   local out = create()
   CSV(f, function (cells) update(out,cells) end)
   return out end
+
+
 -------------------------------------------------------------
 -- ### External interface
 
 return {copy=copy, header=header,update=update,
-        create=fromCsv,goal1=goal1,dom=dom,goaln=goaln,goallast=goallast,
+        furthest=furthest, nearest=nearest, knn=knn,
+        createPrim=create,
+        create=fromCsv,klassfn=klassfn, klass=klass,
+        goal1=goal1,dom=dom,goaln=goaln,goallast=goallast,
         discretize=discretizeRows,discretize1=discretizeCells}
 
 --------------------------------------------------------

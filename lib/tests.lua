@@ -20,6 +20,8 @@
 --
 -------------------------------------
 -- Track and report the `pass`, `fail` counts.
+
+local _ = require "config"
 local pass,fail = 0,0
 
 local function report() 
@@ -58,6 +60,7 @@ local function tests(t)
     print("# test:", s) 
     pass = pass + 1
     local t1= os.clock()
+    defaults()
     local passed,err = pcall(x) 
     local t2= os.clock()
     print((t2-t1) .. " secs")

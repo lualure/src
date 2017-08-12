@@ -107,7 +107,7 @@ local function dominate(i,t,f)
 -----------------------------------------------------------
 -- External Interface
 
-return {create=create, update=update,dominate=dominate,copy=copy}
+return {create=create, update=update,distance=distance,dominate=dominate,copy=copy}
 
 ---------------------------------------------------------
 --
