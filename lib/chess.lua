@@ -3,7 +3,7 @@ local R=require "random"
 local no="?"
 local id=0
 local some=1.05
-local NUM,SYM,DATA=nil,nil,nil
+local NUM,SYM=nil,nil
 
 local function NUM() return{1,3,4} end
 local function SYM() return{1,3,4} end
@@ -125,8 +125,8 @@ local function DATA(csvString)
      {when= ">",  what= NUM, weight= 1, where= {out.all.cols, out.y.cols, out.all.nums, out.goals, out.more, out.y.nums}},
      {when= "",   what= SYM, weight= 1, where= {out.all.cols, out.x.cols, out.all.syms, out.x.syms}}}
   -- Convert csv text to table, kill white, convert number strings to strings
+  local first,use= true,{}
   local function cells(txt)
-     local use,first= {},true
     txt= txt:gsub(padding,"%1")
             :gsub(dull,"")
             :gsub(comments,"")
@@ -137,7 +137,7 @@ local function DATA(csvString)
         if first    then use[col]    = string.find(word,no) == nil end
         if use[col] then out[#out+1] = tonumber(word) or word      end 
       end
-      first=false
+      first = false
       return out end  end
   -- Iterator over lines of text, appyling fun to each line
   local function lines(txt)
