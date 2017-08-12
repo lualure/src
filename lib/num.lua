@@ -68,6 +68,11 @@ local function update(i,x)
     if i.n > 1 then 
       i.sd = (i.m2 / (i.n - 1))^0.5 end end 
   return i end
+
+local function about(i)
+  return {{pos=i.pos},{txt=i.txt},{n=i.n},{mu=i.mu},
+          {sd=i.sd},{lo=i.lo},{hi=i.hi}} end
+
 ---------------------------------------------------
 -- ### Handy short cut
 
@@ -96,6 +101,14 @@ local function updates(t,f,all)
 local function norm(i,x)
   if x==the.ignore then return x end
   return (x - i.lo) / (i.hi - i.lo + 1e-32) end
+---------------------------------------------------
+-- ## Like
+local function like(i,x,_)
+  local var   = i.sd^2
+  local denom = (2*math.pi*var)^.5
+  local num   =  2.7182818^(-1*(x-i.mu)^2/(2*var))
+  return num/(denom + 10^-64)  end
+ 
 ----------------------------------------------------
 -- ### Distance
 -- Using a watcher `i`, work of the distance between
@@ -194,7 +207,8 @@ local function same(i,j)
 
 return {create=create, watch=watch,
         update=update, updates=updates,
-        norm=norm,
+        norm=norm, about=about,
+        like=like,
         distance=distance,
         same=same, ttest=ttest, hedges=hedges}
 

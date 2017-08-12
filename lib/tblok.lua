@@ -74,14 +74,19 @@ local function _test6(show,f)
         print(row3.cells,"furthest") end
    end 
 end 
+local function _test7(f)
+   f = f or "/data/weather.csv"
+   local t1=TBL.create(the.here .. f)
+   TBL.show(t1)
+end 
 R.r(1)
 
 local function _test1(f) _test4(f) end
 local function _test2() _test4("/data/xomo_all_short.csv") end
 local function _test5() _test4("/data/POM3A_short.csv") end
 
---O.k{_test0,_test1,_test2,_test3,_test5}
+O.k{_test0,_test1,_test2,_test3,_test5}
 _test6(true)
 _test6(false,"/data/auto.csv")
 _test6(false,"/data/xomo_all_short.csv")
-
+_test7("/data/auto.csv")

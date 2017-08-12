@@ -20,6 +20,7 @@ function defaults() return {
             min=2, 
             maxDepth=10},
   tbl=    { k=5 },
+  nb =    { k=1,m=2},
   chop=   { m=0.5,
             cohen=0.2},
   num=    { conf=95,

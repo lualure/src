@@ -155,6 +155,26 @@ local function copy(i, from)
       data(j, LST.copy(r.cells),r) end end
   return j 
 end
+
+
+local function show(i)
+  local function worker(t)
+    if #t > 0 then
+      print("")
+      local rows={{}}
+      for _,head in pairs(t) do
+        local about = head.what.about(head)
+        local row,cols={},{}
+        for i=1,#about do
+          for col,val in pairs(about[i]) do
+            cols[#cols+1] = col
+            row[#row+1] = val  end end
+        rows[1]       = cols
+        rows[#rows+1] = row
+      end
+      LST.mprint(rows," |  ") end end
+   worker(i.all.syms)
+   worker(i.all.nums) end
 ------------------------------------------------------------
 -- ### near,far
 local function nearfar(i,row1, other, best, better)
@@ -271,7 +291,7 @@ local function fromCsv(f)
 
 return {copy=copy, header=header,update=update,
         furthest=furthest, nearest=nearest, knn=knn,
-        createPrim=create,
+        createPrim=create,show=show,
         create=fromCsv,klassfn=klassfn, klass=klass,
         goal1=goal1,dom=dom,goaln=goaln,goallast=goallast,
         discretize=discretizeRows,discretize1=discretizeCells}

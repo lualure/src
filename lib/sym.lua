@@ -27,7 +27,7 @@ local the=require "config"
 -- Create a new watcher.
 
 local function create()
-  return {n=0, counts={}, most=0,mode=nil,_ent=nil } end
+  return {n=0, nk=0,counts={}, most=0,mode=nil,_ent=nil } end
 ------------------------------------------------------
 -- ### Update
 -- Update a watcher `i` with one value `x`.
@@ -36,11 +36,21 @@ local function update(i,x)
   if x ~= the.ignore then
     i._ent = nil 
     i.n = i.n + 1
-    local seen = i.counts[x]
-    seen = seen and seen+1 or 1
+    if not i.counts[x] then
+      i.nk = i.nk + 1
+      i.counts[x] = 0 end
+    local seen = i.counts[x] + 1
     i.counts[x] = seen 
     if seen > i.most then
       i.most, i.mode = seen,x end end end
+
+local function about(i)
+  local syms=0
+  for _,__ in pairs(i.counts) do syms=syms+1 end
+  return {{pos=i.pos}, {txt=i.txt}, {n=i.n},
+          {mode=i.mode},{most=i.most},{syms=syms}} end
+
+
 -------------------------------------------------------
 -- ## Handy short cout
 
@@ -88,6 +98,11 @@ end
 
 local function norm(i,x)
   return x end
+
+local function like(i,x,prior)
+ return ((i.counts[x] or 0) + the.nb.m*prior) /
+         (i.n + the.nb.m)  end
+
 ----------------------------------------------------
 -- ### Discretizing a symnol
 -- Just returns that symbol.
@@ -135,7 +150,7 @@ local function ke(i)
 -- ### External Interface
 
 return {create=create, update=update, updates=updates, 
-        distance=distance,
+        distance=distance,about=about,like=like,
         ent=ent, spread=ent, discretize=discretize,
         ke=ke,watch=watch}
 
