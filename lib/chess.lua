@@ -3,7 +3,6 @@ local R=require "random"
 local no="?"
 local id=0
 local some=1.05
-local NUM,SYM=nil,nil
 
 local function NUM() return{1,3,4} end
 local function SYM() return{1,3,4} end
@@ -104,111 +103,25 @@ local nasa93=[[
 93,h,h,h,vh,n,h,n,vh,n,n,vh,vh,h,n,n,n,n,l,l,n,n,n,  3.0, 38,231,12.0
 ]]
 
----------------------------------------------------------------------------
--- csv DATA reader
--- Returns a data table, coilum headers initialized to NUM or SYM
-local function DATA(csvString)
-  local no       = "?"
-  local sep      = ","
-  local dull     = "['\"\t\n\r]*" 
-  local comments = "#.*"           
-  local nonsep   = "([^" .. sep .. "]+)" 
-  local padding  = "%s*(.-)%s*"   
-  local out =  { rows={}, spec={}, goals={} , less={}, more={}, klass={}, 
-                 all={nums={}, syms={}, cols={}}, -- all columns
-                 x  ={nums={}, syms={}, cols={}}, -- all independent columns
-                 y  ={nums={}, syms={}, cols={}}}  -- all depednent   columns
-  -- column headers have magic symbols that help categorize each column
-  local spec =  {
-     {when= "%$", what= NUM, weight= 1, where= {out.all.cols, out.x.cols, out.all.nums, out.x.nums}},
-     {when= "<",  what= NUM, weight=-1, where= {out.all.cols, out.y.cols, out.all.nums, out.y.nums, out.goals, out.less}},
-     {when= ">",  what= NUM, weight= 1, where= {out.all.cols, out.y.cols, out.all.nums, out.y.nums, out.goals, out.more}},
-     {when= "!",  what= SYM, weight= 1, where= {out.all.cols, out.y.cols, out.all.syms, out.y.syms, out.klass}},
-     {when= "",   what= SYM, weight= 1, where= {out.all.cols, out.x.cols, out.all.syms, out.x.syms}}}
-  -- Convert csv text to table, kill white, convert number strings to strings
-  local first,use= true,{}
-  local function cells(txt)
-    txt= txt:gsub(padding,"%1")
-            :gsub(dull,"")
-            :gsub(comments,"")
-    if #txt > 0 then
-      local out,col={},0
-      for word in string.gmatch(txt,nonsep) do
-        col=col+1
-        if first    then use[col]    = string.find(word,no) == nil end
-        if use[col] then out[#out+1] = tonumber(word) or word      end 
-      end
-      first = false
-      return out end  end
-  -- Iterator over lines of text, appyling fun to each line  
-  local function lines(txt)
-   local n,pos = 0,1          
-   return function ()    
-     while pos < #txt do
-       local s, e = string.find(txt, "[^\r\n]+", pos)
-       if s then       
-          pos = e + 1 
-          n=n+1
-          return n,cells(string.sub(txt, s, e))
-      end end end end
-  -- initialize NUM or SYM column headers from column header string
-  local function header(col,txt)
-    for _,want in pairs(spec) do
-      if string.find(txt,want.when) ~= nil then
-        local one = want.what()
-        one.pos= col
-        one.txt= txt
-        one.weight= want.weight
-        for _,where in pairs(want.where) do
-          where[ #where+1 ] = one end end end
-    return one  end
-  -- main
-  for n,line in lines(csvString) do
-    if n==1 then
-      out.spec = line
-      for col,txt in pairs(line) do header(col,txt) end
-    else
-      out.rows[#out.rows+1] = line end end
-  return out 
-end -- end data
-
-print(DATA(nasa93).y)
----------------------------------------------
--- ### Misc utils
-
-local function newid() id=id+1; return id end
-
-local function zero1(x)
-  if x>1 then return 1 end
-  if x<0 then return 0 end
-end
-local function shuffle( t )
-  for i= 1,#t do
-    local j = i + math.floor((#t - i) * R.r() + 0.5)
-    t[i],t[j] = t[j], t[i] 
-  end
-  return t end
----------------------------------------------
--- ### Rows of tables
-local function ROW(tbl,cells)  return {
-  id=newid(),
-  cells=cells } end
-
 ---------------------------------------------
 -- ### `Num`eric columns
 
 local function NUM(col) 
-  local function norm(num,x)
+  local num = {
+      lo=  10^64,
+      hi= -10^64,
+      col= col}
+  local function norm(x)
     return (x - num.lo) / (num.hi - num.lo + 1e-32) 
   end ---------------------------------------------
-  local function update(num,x) 
+  local function update(x) 
     if x ~= no then
       if x < num.lo then num.lo = x end
       if x > num.hi then num.hi = x end
     end
     return x 
   end --------------------------------------------
-  local function distance(num,x,y) 
+  local function distance(x,y) 
     if x==no and y== no then
       return 0,0 
     elseif x==no then
@@ -223,12 +136,8 @@ local function NUM(col)
     end
     return (x-y)^2, 1 
   end -------------------------------------------
-  local num = {
-      lo=  10^64,
-      hi= -10^64,
-      col= col}
-  num.update = function (x)   return update(num,x) end 
-  num.distance = function (x,y) return distance(num,x,y) end
+  num.update   = update
+  num.distance = distance
   return num
 end 
 ---------------------------------------------
@@ -247,41 +156,139 @@ local function SYM(col)
     update   = function (x) return x end,
     distance = distance} 
 end 
-------------------------------------------
--- ### Tables 
 
-local function TABLE(rows0,xcols,ycols) 
-  local function types(cells,out) 
-    for j,v in pairs(cells) do
-      what = type(v) == 'number' and NUM or SYM
-      out[#out+1] = what(col) end
-    return out 
-  end ----------------------
-  local function update(t,cells) 
-    t.rows[#t.rows] = ROW(cells)
-    for i,x in pairs(t.headers) do x.update(cells[i]) end 
-  end ----------------------
-  local function updates(t, listOfCells) 
-    for _,cells in pairs(listOfCells) do update(t,cells) end
-  end ---------------------
-  local function distance(t, row1, row2, cols) 
-    cols = cols or t.xcols
+local function CSV(source)
+  local files    = {csv=true, dat=true,txt=true}
+  local no       = "?"
+  local sep      = ","
+  local dull     = "['\"\t\n\r]*" 
+  local comments = "#.*"           
+  local nonsep   = "([^" .. sep .. "]+)" 
+  local padding  = "%s*(.-)%s*"   
+  local first,use= true,{}
+  local id       = -1
+  -- Turn a line of text info a list of cells
+  local function cells(txt)
+    txt= txt:gsub(padding,"%1")
+            :gsub(dull,"")
+            :gsub(comments,"")
+    if #txt > 0 then
+      local out,col={},0
+      for word in string.gmatch(txt,nonsep) do
+        col=col+1
+        if first    then use[col]    = string.find(word,no) == nil end
+        if use[col] then out[#out+1] = tonumber(word) or word      end 
+      end
+      first = false
+      id=id+1
+      return {id=id, cells=out}  end  end
+  -- Iterator fomr lines of text from a string.
+  if  files[ string.sub(source,-3,-1) ] then
+    io.input(source)
+    local line = io.read()
+    return function() 
+      while line do
+        local tmp = cells(line)
+        line = io.read()
+        return tmp  end end 
+  else
+    local pos = 0          
+    return function ()    
+      while pos < #source do
+        local s, e = string.find(source, "[^\r\n]+", pos)
+        if s then       
+          pos = e + 1 
+          return cells(string.sub(source, s, e))  end end end end
+  -- Iterator fomr lines of text from a file.
+end
+---------------------------------------------------------------------------
+-- csv DATA reader
+-- Returns a data table, coilum headers initialized to NUM or SYM
+local function DATA(source)
+  local data = { rows= {}, spec={}, goals={}, less={}, more={}, klass={}, 
+              all = {nums={}, syms={}, cols={}}, -- all columns
+              x   = {nums={}, syms={}, cols={}}, -- all independent columns
+              y   = {nums={}, syms={}, cols={}}}  -- all depednent   columns
+  local cols = data.x.cols
+  -- Column headers have magic symbols label them into mutlitple categories.
+  local spec =  {
+     {when= "%$", what= NUM, weight= 1, where= {data.all.cols, data.x.cols, data.all.nums, data.x.nums}},
+     {when= "<",  what= NUM, weight=-1, where= {data.all.cols, data.y.cols, data.all.nums, data.y.nums, data.goals, data.less}},
+     {when= ">",  what= NUM, weight= 1, where= {data.all.cols, data.y.cols, data.all.nums, data.y.nums, data.goals, data.more}},
+     {when= "!",  what= SYM, weight= 1, where= {data.all.cols, data.y.cols, data.all.syms, data.y.syms, data.klass}},
+     {when= "",   what= SYM, weight= 1, where= {data.all.cols, data.x.cols, data.all.syms, data.x.syms}}}
+  -- Using `spec`, initial NUM or SYM column headers from column header `txt`.
+  local function header(col,txt)
+    for _,want in pairs(spec) do
+      if string.find(txt,want.when) ~= nil then
+        local one = want.what()
+        one.pos= col
+        one.txt= txt
+        one.weight= want.weight
+        for _,where in pairs(want.where) do
+          where[ #where+1 ] = one end end end
+    return one  end
+  -- Convert csv text to table, kill white, convert number strings to strings
+  -- Main
+  local function update(row)
+    if #data.spec == 0 then
+       data.spec = row.cells
+       for col,txt in pairs(row.cells) do -- initialize the column headers
+          header(col,txt) end
+    else
+       for _,header in pairs(data.all.cols) do -- update the column headers
+         header.update(row.cells[ header.pos ]) end 
+       data.rows[#data.rows+1] = row  end
+    return i
+  end
+  local function distance(row1, row2) 
     local d,n = 0, 10^-64
-    for i in some(cols) do 
-      incd, incn = header[i].dist(row1[i].cells, row2[i].cells)
+    for _,col in pairs(cols) do 
+      incd, incn = col.distance( row1.cells[col.pos], row2.cells[col.pos] )
       d = d + incd
       n = n + incn end
     return d^0.5/n^0.5 
   end ---------------------
-  local function furthest(t,one)
-     local best,out=-1,one
-     for j,row in pairs(t.rows) do
-        local d= distance(t,one,two) 
+  local function furthest(one)
+     local best,out = -1,one
+     for j,row in pairs(data.rows) do
+        local d= distance(one,two) 
         if d > best then
           best,out=d,two end end
      return out
   end
-  local reset = nil
+  data.clone = function () return DATA().update{cells=data.spec,id=1} end
+  data.update= update
+  data.distance=distance
+  data.furthest=furthest
+  if source then
+    for row in CSV(source) do
+      data.update(row) end end
+  return data
+end
+
+print(DATA().clone())
+---------------------------------------------
+-- ### Misc utils
+
+local function zero1(x)
+  if x>1 then return 1 end
+  if x<0 then return 0 end
+end
+local function shuffle( t )
+  for i= 1,#t do
+    local j = i + math.floor((#t - i) * R.r() + 0.5)
+    t[i],t[j] = t[j], t[i] 
+  end
+  return t end
+
+
+------------------------------------------
+-- ### Tree 
+
+local function TREE(data)
+  local i = {data=data, north=nil, south=nil,east=nil, west=nil, left=nil,right=nil,c}
+   local reset = nil
   local function xy(t,row)
     if not t.memo[row.id] then 
       local a= distance(t,row,west)
