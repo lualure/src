@@ -1,8 +1,5 @@
 require "show"
 local R=require "random"
-local no="?"
-local id=0
-local some=1.05
 
 local function NUM() return{1,3,4} end
 local function SYM() return{1,3,4} end
@@ -267,64 +264,60 @@ local function DATA(source)
   return data
 end
 
-print(DATA().clone())
 ---------------------------------------------
 -- ### Misc utils
 
-local function zero1(x)
-  if x>1 then return 1 end
-  if x<0 then return 0 end
-end
 local function shuffle( t )
   for i= 1,#t do
     local j = i + math.floor((#t - i) * R.r() + 0.5)
     t[i],t[j] = t[j], t[i] 
   end
-  return t end
+  return t 
+end -------------------------
 
 
 ------------------------------------------
 -- ### Tree 
 
-local function TREE(data)
-  local i = {data=data, north=nil, south=nil,east=nil, west=nil, left=nil,right=nil,c}
-   local reset = nil
-  local function xy(t,row)
-    if not t.memo[row.id] then 
-      local a= distance(t,row,west)
-      local b= distance(t,row,east)
-      if b > some.c then
-        reset(t, t.west, row)
-        return xy(t,row)
-      elseif a > some.c then
-        reset(t, row, t.east)
-        return xy(t,row)
-      end
-      local x= (a^2 + c^2 - b^2) / (2*c)  
-      local y= a^2 - x^2
-      local tmp= {x= zero1(x),
-                  y= zero1(y < 0 and 0 or y^0.5)}
-      t.memo[row.id] = tmp end
-    return t.memo[row.id]
+local function grid(data)
+  local c,left, right = 0,nil, nil
+  local function any(t)
+    return t[ math.floor((#t-1) * R.r() + 0.5) ] end
+  local function zero1(x)
+    if x>1 then return 1 end
+    if x<0 then return 0 end end
+  local function xy(row,c)
+    local a= data.distance(row, left)
+    local b= data.distance(row, right)
+    local x= zero1((a^2 + c^2 - b^2) / (2*c))  
+    local y= zero1(a^2 - x^2)^0.5
+    return {x=x, y=y, row=row} end
+  left  = any( data.rows )
+  right = data.furthest( left ) 
+  c     = data.distance( left, right ) 
+  for _,row in pairs( shuffle(data.rows) ) do
+    all[#all + 1] =  xy(row,c)  end
+  return { data=data, all=all,  c=c, 
+           left=left, right=right}
+end
+
+local function quad(xs,ys)
+  local nw,ne,sw,se = {},{},{},{}
+  table.sort(xs, function (a,b) return a.x < b.x end)
+  table.sort(ys, function (a,b) return a.y < b.y end)
+  local xmid = xs[ math.floor(#xs/2) ].x
+  local ymid = ys[ math.floor(#ys/2) ].y
+  for _,row in pairs(xs) do
+    local x = rows.id].x
+    local y = all[rows.id].y
+    local what
+    if x <= xmid then
+      what =  y <= ymid and sw or se
+    else
+      what =  y <= ymid and nw or ne
+    end
+    what[ #what+1 ] = row
   end
-  local function reset(t,west,east)
-    t.memo = {}
-    t.west = west or any(t.rows)
-    t.east = east or furthest(t,t.west) 
-    t.c    = distance(t,west,east) 
-  end
-local function defaultXcols(most,out)
-    for i=1, most - 1 do out[#out+1]  = i end
-    return out
-  end ---------------------
-  t= {
-    types = types(rows0[1],{}),
-    xcols = xcols or defaultXcols(#rows0[1], {}),
-    ycols = ycols or {#rows0[1]},
-    rows  = {},
-    updates= function (rows) return updates(t,rows) end  } 
-  reset(t)
-  return t
 end
 ------------------------------------------
 
