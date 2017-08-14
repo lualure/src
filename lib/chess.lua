@@ -238,6 +238,8 @@ local function DATA(source)
        data.rows[#data.rows+1] = row  end
     return i
   end
+  local function updates(rows)
+    for _,row in pair(rows) do update(row) end end
   local function distance(row1, row2) 
     local d,n = 0, 10^-64
     for _,col in pairs(cols) do 
@@ -256,6 +258,7 @@ local function DATA(source)
   end
   data.clone = function () return DATA().update{cells=data.spec,id=1} end
   data.update= update
+  data.updates= updates
   data.distance=distance
   data.furthest=furthest
   if source then
@@ -291,7 +294,7 @@ local function grid(data)
     local b= data.distance(row, right)
     local x= zero1((a^2 + c^2 - b^2) / (2*c))  
     local y= zero1(a^2 - x^2)^0.5
-    return {x=x, y=y, row=row} end
+    return {x=x, y=y, cells=cells.cells} end
   left  = any( data.rows )
   right = data.furthest( left ) 
   c     = data.distance( left, right ) 
@@ -301,23 +304,27 @@ local function grid(data)
            left=left, right=right}
 end
 
-local function quad(xs,ys)
-  local nw,ne,sw,se = {},{},{},{}
-  table.sort(xs, function (a,b) return a.x < b.x end)
-  table.sort(ys, function (a,b) return a.y < b.y end)
-  local xmid = xs[ math.floor(#xs/2) ].x
-  local ymid = ys[ math.floor(#ys/2) ].y
-  for _,row in pairs(xs) do
-    local x = rows.id].x
-    local y = all[rows.id].y
-    local what
-    if x <= xmid then
-      what =  y <= ymid and sw or se
-    else
-      what =  y <= ymid and nw or ne
-    end
-    what[ #what+1 ] = row
+local function quad(all, key, up, min)
+  local data =DATA().updates(all)
+  if #all < min then return end
+  if up then
+    if not same(all, up) then return end 
+    up[key]= all 
   end
+  local kids = { nw={}, sw={}, ne={}, sw={} }
+  local mid = math.floor(#all/2)
+  table.sort(all, function (a,b) return a.x < b.x end)
+  local xmid = all[ mid ].x
+  table.sort(all, function (a,b) return a.y < b.y end)
+  local ymid = all[ mid ].y
+  for _,xy in pairs(all) do
+    if xy.y <= ymid then
+      local what = xy.x < xmid and "sw" and "se"
+    else
+      local what = xy.x < xmid and "nw" and "ne"
+    end 
+    kids[what][ #kids[what] +1 ] = xy.cells  
+  end 
+  for k,v in pairs(all) do
+    quad(v, k, all, min) end 
 end
-------------------------------------------
-
