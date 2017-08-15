@@ -288,56 +288,56 @@ local function zero1(x)
 ------------------------------------------
 -- ### Tree 
 
-local function showg(g, depth)
+local function showt(t, depth)
   pre = string.repn("|.. ",depth)
-  print(pre, g.c, #g.data.rows)
+  print(pre, g.c, #t.data.rows)
   for _,key in pairs{"nw", "ne", "sw", "se"} do
-    if #g[key] >0 then
+    if #t[key] >0 then
       print(pre, key, ":")
-      showg(g[key], depth+1) end end 
+      showt(t[key], depth+1) end end 
 end
 
-local function GRID(data,min, depth,up,key,xy)
+local function TREE(data,min, depth,up,key,xy)
   min   = min or #data.rows^0.5
   depth = depth or 10
   if #data.rows < min then return end
   if depth == 0  then return end
-  local g= { data = data, 
-             show = function () showg(g,0) end, }
+  local t= { data = data,  
+             show = function () showt(t,0) end, }
   if up then
     if same(data, up.data) then return end
-    up[key] = g end
+    up[key] = t end
   local function mid(key,xy) 
     table.sort(data.rows, function (a,b) return 
                xy[a.id][key] < xy[b.id][key] end)
     return data.rows[ math.floor(#data.rows/2) ][key] end
   local function xys(out) 
     for _,row in pairs( data.rows ) do
-      local a= data.distance(row, g.left)
-      local b= data.distance(row, g.right)
-      local x= zero1((a^2 + g.c^2 - b^2) / (2*g.c))  
+      local a= data.distance(row, t.left)
+      local b= data.distance(row, t.right)
+      local x= zero1((a^2 + t.c^2 - b^2) / (2*t.c))  
       local y= zero1(a^2 - x^2)^0.5
       out[row.id] = {x=x, y=y}  end 
     return out end
-  g.left    = any( data.rows )
-  g.right   = data.furthest( g.left ) 
-  g.c       = data.distance( g.left, g.right ) 
+  t.left    = any( data.rows )
+  t.right   = data.furthest( t.left ) 
+  t.c       = data.distance( t.left, t.right ) 
   xy        = xy or xys{}
-  g.xmid    = mid("x",xy)
-  g.ymid    = mid("y",xy)
-  local kids=  {}
+  t.xmid    = mid("x",xy)
+  t.ymid    = mid("y",xy)
+  local kids= {}
   for _,row in pairs(data.rows) do
-    if xy[row.id].y <= g.ymid then
-      local what = xy[row.id].x < g.xmid and "sw" and "se"
+    if xy[row.id].y <= t.ymid then
+      local what = xy[row.id].x < t.xmid and "sw" and "se"
     else
-      local what = xy[row.id].x < g.xmid and "nw" and "ne"
+      local what = xy[row.id].x < t.xmid and "nw" and "ne"
     end 
     kids[what][ #kids[what] +1 ] = row  
   end 
   for key,kid in pairs(kids) do
     GRID( data.clone().updates(kid), 
-          min, depth-1, g, key, all, xy) end
-  return g
+          min, depth-1, t, key, all, xy) end
+  return t
 end
 
 
