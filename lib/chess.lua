@@ -290,7 +290,7 @@ local function zero1(x)
 
 local function showg(g, depth)
   pre = string.repn("|.. ",depth)
-  print(pre, #g.data.rows)
+  print(pre, g.c, #g.data.rows)
   for _,key in pairs{"nw", "ne", "sw", "se"} do
     if #g[key] >0 then
       print(pre, key, ":")
