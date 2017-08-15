@@ -277,6 +277,12 @@ local function shuffle( t )
   end
   return t 
 end -------------------------
+local function any(t)
+  return t[ math.floor((#t-1) * R.r() + 0.5) ] 
+end -------------------------
+local function zero1(x)
+    if x>1 then return 1 end
+    if x<0 then return 0 end end
 
 
 ------------------------------------------
@@ -286,54 +292,51 @@ local function showg(g, depth)
   pre = string.repn("|.. ",depth)
   print(pre, #g.data.rows)
   for _,key in pairs{"nw", "ne", "sw", "se"} do
-    if g[key] then
+    if #g[key] >0 then
       print(pre, key, ":")
       showg(g[key], depth+1) end end 
 end
 
-local function GRID(data,min, depth,up,key)
+local function GRID(data,min, depth,up,key,xy)
   min   = min or #data.rows^0.5
   depth = depth or 10
   if #data.rows < min then return end
   if depth == 0  then return end
   local g= { data = data, 
-             show = function () showg(g,0) end,
-             c=0, left=nil, right = nil, 
-             ne=nil,nw=nil, se=nil , sw=nil} 
+             show = function () showg(g,0) end, }
   if up then
     if same(data, up.data) then return end
     up[key] = g end
-  local function any(t)
-    return t[ math.floor((#t-1) * R.r() + 0.5) ] end
-  local function rows2data(rows)
-    return data.clone().updates.( shuffle(rows) ) end
-  local function zero1(x)
-    if x>1 then return 1 end
-    if x<0 then return 0 end end
-  g.left  = any( data.rows )
-  g.right = data.furthest( g.left ) 
-  g.c     = data.distance( g.left, g.right ) 
-  local all,kids,mid = {}, {},math.floor(#data.rows/2)
-  for _,row in pairs( data.rows ) do
-    local a= data.distance(row, g.left)
-    local b= data.distance(row, g.right)
-    local x= zero1((a^2 + c^2 - b^2) / (2*c))  
-    local y= zero1(a^2 - x^2)^0.5
-    all[#all + 1] =  {x=x, y=y, row=row}  end
-  table.sort(all, function (a,b) return a.x < b.x end)
-  local xmid = all[ mid ].x
-  table.sort(all, function (a,b) return a.y < b.y end)
-  local ymid = all[ mid ].y
-  for _,one in pairs(all) do
-    if one.y <= ymid then
-      local what = one.x < xmid and "sw" and "se"
+  local function mid(key,xy) 
+    table.sort(data.rows, function (a,b) return 
+               xy[a.id][key] < xy[b.id][key] end)
+    return data.rows[ math.floor(#data.rows/2) ][key] end
+  local function xys(out) 
+    for _,row in pairs( data.rows ) do
+      local a= data.distance(row, g.left)
+      local b= data.distance(row, g.right)
+      local x= zero1((a^2 + g.c^2 - b^2) / (2*g.c))  
+      local y= zero1(a^2 - x^2)^0.5
+      out[row.id] = {x=x, y=y}  end 
+    return out end
+  g.left    = any( data.rows )
+  g.right   = data.furthest( g.left ) 
+  g.c       = data.distance( g.left, g.right ) 
+  xy        = xy or xys{}
+  g.xmid    = mid("x",xy)
+  g.ymid    = mid("y",xy)
+  local kids=  {}
+  for _,row in pairs(data.rows) do
+    if xy[row.id].y <= g.ymid then
+      local what = xy[row.id].x < g.xmid and "sw" and "se"
     else
-      local what = one.x < xmid and "nw" and "ne"
+      local what = xy[row.id].x < g.xmid and "nw" and "ne"
     end 
-    kids[what][ #kids[what] +1 ] = one.row  
+    kids[what][ #kids[what] +1 ] = row  
   end 
   for key,kid in pairs(kids) do
-    GRID( rows2data(kid), min, depth-1, g, key) end
+    GRID( data.clone().updates(kid), 
+          min, depth-1, g, key, all, xy) end
   return g
 end
 
