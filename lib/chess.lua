@@ -228,6 +228,7 @@ local function DATA(source)
   -- Convert csv text to table, kill white, convert number strings to strings
   -- Main
   local function update(row)
+    print(">>",row)
     if #data.spec == 0 then
        data.spec = row.cells
        for col,txt in pairs(row.cells) do -- initialize the column headers
@@ -235,11 +236,14 @@ local function DATA(source)
     else
        for _,header in pairs(data.all.cols) do -- update the column headers
          header.update(row.cells[ header.pos ]) end 
-       data.rows[#data.rows+1] = row  end
+       data.rows[ #data.rows+1 ] = row  end
     return i
   end
   local function updates(rows)
-    for _,row in pair(rows) do update(row) end end
+    print("!!!! ",rows)
+    for _,row in pairs(rows) do update(row) end 
+    return data
+  end
   local function distance(row1, row2) 
     local d,n = 0, 10^-64
     for _,col in pairs(cols) do 
@@ -256,9 +260,10 @@ local function DATA(source)
           best,out=d,two end end
      return out
   end
-  data.clone = function () return DATA().update{cells=data.spec,id=1} end
+  data.clone = function () 
+    return DATA().updates({cells=data.spec,id=1})  end
   data.update= update
-  data.updates= function (rows) updates(rows) ;return data end
+  data.updates= function (rows) return updates(rows) end
   data.distance=distance
   data.furthest=furthest
   if source then
@@ -284,7 +289,6 @@ local function zero1(x)
     if x>1 then return 1 end
     if x<0 then return 0 end end
 
-
 ------------------------------------------
 -- ### Tree 
 
@@ -298,15 +302,17 @@ local function showt(t, depth)
 end
 
 local function TREE(data,min, depth,up,key,xy)
-  min   = min or #data.rows^0.5
+  min   = min or (#data.rows)^0.5
   depth = depth or 10
-  if #data.rows < min then return end
-  if depth == 0  then return end
-  local t= { data = data,  
-             show = function () showt(t,0) end, }
-  if up then
-    if same(data, up.data) then return end
-    up[key] = t end
+  if #data.rows < min or depth == 0 or 
+     up and same(data, up.date) 
+  then
+    if up then up.deadends.updates(data.rows) end
+    return nil  
+  end
+  local t = { data = data, deadends = data.clone(),   
+              show = function () showt(t,0) end }
+  up[key] = t 
   local function mid(key,xy) 
     table.sort(data.rows, function (a,b) return 
                xy[a.id][key] < xy[b.id][key] end)
@@ -319,13 +325,13 @@ local function TREE(data,min, depth,up,key,xy)
       local y= zero1(a^2 - x^2)^0.5
       out[row.id] = {x=x, y=y}  end 
     return out end
-  t.left    = any( data.rows )
-  t.right   = data.furthest( t.left ) 
-  t.c       = data.distance( t.left, t.right ) 
-  xy        = xy or xys{}
-  t.xmid    = mid("x",xy)
-  t.ymid    = mid("y",xy)
-  local kids= {}
+  t.left  = any( data.rows )
+  t.right = data.furthest( t.left ) 
+  t.c     = data.distance( t.left, t.right ) 
+  xy      = xy or xys{}
+  t.xmid  = mid("x",xy)
+  t.ymid  = mid("y",xy)
+  local kids = {}
   for _,row in pairs(data.rows) do
     if xy[row.id].y <= t.ymid then
       local what = xy[row.id].x < t.xmid and "sw" and "se"
@@ -335,9 +341,8 @@ local function TREE(data,min, depth,up,key,xy)
     kids[what][ #kids[what] +1 ] = row  
   end 
   for key,kid in pairs(kids) do
-    GRID( data.clone().updates(kid), 
-          min, depth-1, t, key, all, xy) end
+    TREE( data.clone().updates(kid), min, depth-1, t, key, all, xy) end
   return t
 end
 
-
+print(TREE(DATA(nasa93)))
