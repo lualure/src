@@ -173,8 +173,8 @@ local function show(i)
         rows[#rows+1] = row
       end
       LST.mprint(rows," |  ") end end
-   worker(i.all.syms)
-   worker(i.all.nums) end
+  worker(i.all.syms)
+  worker(i.all.nums) end
 ------------------------------------------------------------
 -- ### near,far
 local function nearfar(i,row1, other, best, better)

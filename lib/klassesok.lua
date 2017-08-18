@@ -9,9 +9,9 @@ local function _test1(f)
     print("\n----| ".. k .. " |-------------------------------")
     TBL.show(v) end
 end
+
 local function _test2(f)
   f = f or "/data/weather.csv"
-  
   KLASSES.create(the.here .. f, KLASSES.incNB)
 end
 

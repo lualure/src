@@ -34,6 +34,7 @@ local function create()
 
 local function update(i,x)
   if x ~= the.ignore then
+    i.mode = i.mode or x
     i._ent = nil 
     i.n = i.n + 1
     if not i.counts[x] then
@@ -48,7 +49,7 @@ local function about(i)
   local syms=0
   for _,__ in pairs(i.counts) do syms=syms+1 end
   return {{pos=i.pos}, {txt=i.txt}, {n=i.n},
-          {mode=i.mode},{most=i.most},{syms=syms}} end
+          {mode=i.mode or ''},{most=i.most},{syms=syms}} end
 
 
 -------------------------------------------------------
