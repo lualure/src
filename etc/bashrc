@@ -155,7 +155,8 @@ show() { ## FUN ## display definition of FUN ## shell
 oks() { ## ## run all the Xok.lua files ## lua
   ls ${Lure}/lib/*ok.lua | 
   grep -v _allok |
-  gawk '{sub(/.lua/,"",$0) 
+  sed 's/\.lua//' |
+  gawk '{
          sub(/^.*\//,"",$0)
          print " print(); print() " 
          print "local THiss=\""$0"\"" 
@@ -164,7 +165,7 @@ oks() { ## ## run all the Xok.lua files ## lua
          print " print(\"-- \" .. THiss) " 
          print " print(BAr .. BAr .. BAr)"  
          print " print(); print(); " 
-         print " require \"" $0 "\""}' > ${Lure}/lib/_allok.lua
+         print " require \""$0"\""}' > ${Lure}/lib/_allok.lua
   cd ${Lure}/lib
   lure _allok.lua
   rm  _allok.lua
