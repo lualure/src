@@ -13,17 +13,17 @@ local LST=require "lists"
 -- Short hand for string.format(
 
 local function fmt(control, ...)
-  return string.format(control, unpack{...}) end
+  return string.format(control, table.unpack{...}) end
 
 -- Shorthand for io.write(string.format(
 
 local function say(control, ...)
-  return io.write(string.format(control, unpack{...})) end
+  return io.write(string.format(control, table.unpack{...})) end
 
 -- As above, but add a new line
 
 local function sayln(control, ...)
-  return io.write(string.format(control.."\n", unpack{...})) end
+  return io.write(string.format(control.."\n", table.unpack{...})) end
 
 -- Apply a format to a list off items
 

@@ -144,7 +144,7 @@ local function mprint(ts,sep)
     io.write(
       string.format(
         table.concat(fmt,sep)  .. "\n",
-        unpack(t))) end end
+        table.unpack(t))) end end
 
 -----------------------------------
 -- ### Copying (and saming)
