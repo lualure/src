@@ -1,0 +1,4 @@
+# changecwfirst path dwLure to the localtion of Lure src
+# change the last path to the localtion of luajit
+
+alias lua='Lure="/home/ubuntu/workspace" /home/ubuntu/luajit-2.0/src/luajit '
