@@ -12,7 +12,7 @@ install:
 asciiquarium:
 	/usr/games/asciiquarium 
 
-.SILENT:
+#.SILENT:
 
 push:
 	git commit -am saving; git push; git status
