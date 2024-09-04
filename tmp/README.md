@@ -2,9 +2,10 @@
 [Why](https://lualure.github.io/info/WHY) |
 [What](https://lualure.github.io/info/WHAT) |
 [Guide](https://lualure.github.io/info/GUIDE) |
-[License](LICENSE.md) |
-![](https://img.shields.io/badge/tests-passed-green)
-![](https://img.shields.io/badge/tests-failed-red)
+[Licenses](LICENSE.md) |
+<img align=top src="https://img.shields.io/badge/tests-passed-green?style=for-the-badge&logo=TestCafe">
+
+#36B6E5
 
 <img align=right src="https://avatars6.githubusercontent.com/u/30064709?v=4&s=200">
 
