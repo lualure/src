@@ -20,7 +20,7 @@ def noop(*l: list) -> list:  # *l means "all positional apramaters"
 # see https://gist.github.com/rene-d/9e584a7dd2935d0f461904b9f2950007
 def red(s:str)    -> str:  return f"\033[0;31m{s}\033[0m"
 def green(s:str)  -> str:  return f"\033[0;32m{s}\033[0m"
-def yellow(s:str) -> str:  return f"\033[1;33m{s}\033[0m"
+def yellow(s:str) -> str:  return f"\033[1;34m{s}\033[0m"
 
 class go: # classes are boxes that stores names. Names can be accessed via "dir"
     def _all(): 

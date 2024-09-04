@@ -1,10 +1,17 @@
 # make files store all your short cuts, your build methods
 # notepad for everything you might want to run the future
 
+# three use cases: 
+# 1) coming back to the code, ages later. need dodo on what all this means
+# 2) explainin the code to someone else
+# 3) run or re-run on particular function
+# 4) running all the tests
+# 5) updaing readme.md witha. new badge
+
 SHELL=/usr/bin/bash
 .SILENT: # tun off all the verbose output .
 
-LOUD=\033[1;33m 
+LOUD=\033[1;34m 
 SOFT=\033[0m
 
 # the first rule is the default. just typing "make" calls the default
