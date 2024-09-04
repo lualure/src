@@ -23,10 +23,10 @@ class go:
     def noop(_): 
         "do nothing"
         pass
-    def ok(i):  
+    def passed(i):  
         "do pass"
         sys.exit(0)
-    def fail(i): 
+    def failed(i): 
         "do fail"
         sys.exit(1)
     def arg(i): 
