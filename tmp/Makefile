@@ -2,7 +2,7 @@
 # notepad for everything you might want to run the future
 
 SHELL=/usr/bin/bash
-.SILENT: # tun off all the verbose output
+.SILENT: # tun off all the verbose output .
 
 LOUD=\033[1;33m 
 SOFT=\033[0m
