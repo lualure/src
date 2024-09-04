@@ -42,7 +42,7 @@ matrix : ## they are coming to get you
 	cmatrix -u 7 -b
 
 push : ## save your work
-	git commit -am saving; git push; git status
+	echo -en "\033[33mWhy this push? \033[0m"; read x; git commit -am "$$x"; git push; git status
 
 # "sed -i" edits "in place". be careful!
 failed:; sed -i 's/tests-passed-green/tests-failed-red/' README.md
