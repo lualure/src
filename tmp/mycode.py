@@ -1,4 +1,4 @@
-import sys,ast
+import random,sys,ast
 
 def coerce(s):
     try: return ast.literal_eval(s)
@@ -13,13 +13,15 @@ def red(s):    return f"\033[0;31m{s}\033[0m"
 def green(s):  return f"\033[0;32m{s}\033[0m"
 def yellow(s): return f"\033[1;33m{s}\033[0m"
 
-print("red",red("red"))
-print("green",green("green"))
-print("yellow",yellow("yellow"))
-
 class go:
+    def _all():   return [s for s in dir(go) if  s[0] !="_"]
+    def _show(s): 
+        doc = getattr(go,s).__doc__ or ""
+        print(f"\t-{yellow(s)}\t: {doc.replace("\n"," ")}")
+    def show(_):  [go._show(s) for s in go._all()]
+    
     def noop(_): 
-        "do nothong"
+        "do nothing"
         pass
     def ok(i):  
         "do pass"
@@ -28,11 +30,19 @@ class go:
         "do fail"
         sys.exit(1)
     def arg(i): 
-        "cli arg type coercion"
+        """cli arg type coercion
+        and stuff"""
         print(">>",i,type(i))
+    def rand(seed): 
+        "show random"
+        random.seed(seed or SEED)
+        print(random.random())
 
+SEED=1234567891
 for i,s in enumerate(sys.argv):
-    fun = getattr(go, s[1:], None)
+    s=s[1:]
+    fun = getattr(go, s, None)
     if fun:
-        print(fun.__doc__)
+        random.seed(SEED)
+        
         fun( arg(i+1) ) 
