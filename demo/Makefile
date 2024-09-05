@@ -52,7 +52,7 @@ matrix : ## they are coming to get you
 
 push : ## save your work
 	echo -en "$(LOUD)Why this push? $(SOFT)"; read x; git commit -am "$$x"
-	git push; git status
+	- git push; git status
 
 # "sed -i" edits "in place". be careful!
 failed:; sed -i 's/tests-passed-green/tests-failed-red/' README.md
