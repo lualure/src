@@ -6,7 +6,8 @@
 # 2) explainin the code to someone else
 # 3) run or re-run on particular function
 # 4) running all the tests
-# 5) updaing readme.md witha. new badge
+# 5) defending again malicious input e.g. sudo rm -rf /
+# 6) updaing readme.md witha. new badge
 
 SHELL=/usr/bin/bash
 .SILENT: # tun off all the verbose output .
