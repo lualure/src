@@ -7,7 +7,9 @@ atom = str | bool | int | float # Python's type system is extensible, useful for
 def coerce(s:str) -> atom:  # safety type: coerce strings in a limited way
     "sting to atom"
     try: return ast.literal_eval(s)
-    except Exception:return s
+    except Exception:
+        assert type(s)==str, "bad type"
+        return s
 
 def arg(i:int) -> atom: # python can acess the command like via sys.argv
     "parse item 'i' from the command line"
@@ -33,7 +35,7 @@ class go: # classes are boxes that stores names. Names can be accessed via "dir"
         print(f"{yellow(s)}\t: {doc.replace("\n"," ")}")
 
     def _one(s): 
-        passed=True
+        passed=True; 
         if s in dir(go):
             go._show(s)
             try: passed= getattr(go,s)() # try except catches errors
@@ -72,6 +74,11 @@ class go: # classes are boxes that stores names. Names can be accessed via "dir"
         "show random"
         random.seed(10)
         print(random.random())
+
+    def type():
+        "good and bad type"
+        assert type(coerce("1")) == int
+        print(coerce("os.system('sudo rm -rf /')"))
 
 [go._one(s[1:]) for i,s in enumerate(sys.argv)] # strings can be maniupulated like lists
     
