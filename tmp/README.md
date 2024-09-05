@@ -3,7 +3,7 @@
 [What](https://lualure.github.io/info/WHAT) |
 [Guide](https://lualure.github.io/info/GUIDE) |
 [Licenses](LICENSE.md) |
-<img align=top src="https://img.shields.io/badge/tests-failed-red?style=for-the-badge&logo=TestCafe">
+<img align=top src="https://img.shields.io/badge/tests-passed-green?style=for-the-badge&logo=TestCafe">
 
 #36B6E5
 

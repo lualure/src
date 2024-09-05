@@ -49,7 +49,8 @@ matrix : ## they are coming to get you
 	cmatrix -u 7 -b
 
 push : ## save your work
-	echo -en "$(LOUD)Why this push? $(SOFT)"; read x; git commit -am "$$x"; git push; git status
+	echo -en "$(LOUD)Why this push? $(SOFT)"; read x; git commit -am "$$x"
+	git push; git status
 
 # "sed -i" edits "in place". be careful!
 failed:; sed -i 's/tests-passed-green/tests-failed-red/' README.md
@@ -60,5 +61,3 @@ test : ## run tests
 
 watch : ## watch tests
 	watch -ctn 2 make test
-
-
