@@ -1,7 +1,7 @@
 #!/usr/bin/env python3.13
 
-import traceback,random,sys,ast # Python has many useful packages
-
+import traceback,random,sys,ast # Python has many useful packages now
+ 
 atom = str | bool | int | float # Python's type system is extensible, useful for do
 
 def coerce(s:str) -> atom:  # safety type: coerce strings in a limited way
@@ -57,7 +57,7 @@ class go: # classes are boxes that stores names. Names can be accessed via "dir"
     
     def noop(): 
         "do nothing"
-        assert 3==3
+        assert 3==4
         pass
 
     def fail(): 
